@@ -9,7 +9,7 @@ const Header = () => {
 
   return (
     <header>
-      <div className="navbar navbar-dark navbar-expand-lg bg-dark">
+      <div className="navbar navbar-dark navbar-expand-md bg-dark">
         <div className="navbar-inner container">
           <button
             className="navbar-toggler"
