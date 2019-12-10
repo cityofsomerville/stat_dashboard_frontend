@@ -1,7 +1,6 @@
 import React from 'react';
 
 import DataBlock, {
-  KeyMetrics,
   BlockContent,
   WeeklyTrends,
   DataRow,
@@ -11,24 +10,17 @@ import Tabs from 'components/Tabs';
 import ExploreData from 'components/ExploreData';
 
 const CityWork = () => (
-  <DataBlock>
-    <h2>City Work</h2>
-    <div className="row p-3">
-      <KeyMetrics
-        metrics={[
-          { count: 28, label: '311 calls', trend: 'positive' },
-          { count: 16, label: 'work orders opened', trend: 'negative' },
-          { count: 18, label: 'work orders closed', trend: 'no_change' }
-        ]}
-      />
-      <div className="col-md-8">
-        <p>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+  <DataBlock
+    heading="City Work"
+    keyMetrics={[
+      { count: 28, label: '311 calls', trend: 'positive' },
+      { count: 16, label: 'work orders opened', trend: 'negative' },
+      { count: 18, label: 'work orders closed', trend: 'no_change' }
+    ]}
+    introduction="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
           commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
-          et magnis dis parturient montes, nascetur ridiculus mus.
-        </p>
-      </div>
-    </div>
+          et magnis dis parturient montes, nascetur ridiculus mus."
+  >
     <Tabs
       uuid="citywork"
       labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}

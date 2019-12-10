@@ -58,8 +58,30 @@ export const DataCol = ({ children }) => (
   <div className="col-lg mx-1 mb-3 mb-lg-0 bg-primary">{children}</div>
 );
 
-const DataBlock = ({ children }) => (
-  <section className="border p-3">{children}</section>
+const DataBlock = ({ heading, keyMetrics, introduction, children }) => (
+  <section className="border p-3">
+    <h2>{heading}</h2>
+    <div className="row p-3">
+      <KeyMetrics metrics={keyMetrics} />
+      <div className="col-md-8">
+        <p>{introduction}</p>
+      </div>
+    </div>
+    {children}
+  </section>
 );
+
+DataBlock.propTypes = {
+  heading: PropTypes.string.isRequired,
+  keyMetrics: PropTypes.arrayOf(
+    PropTypes.shape({
+      type: PropTypes.string,
+      label: PropTypes.string,
+      trend: PropTypes.number
+    })
+  ).isRequired,
+  introduction: PropTypes.string,
+  children: PropTypes.node.isRequired
+};
 
 export default DataBlock;
