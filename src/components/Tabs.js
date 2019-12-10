@@ -6,7 +6,6 @@ const Label = ({ labelId, panelId, selected, onClick, children }) => (
   <a
     href={`#${panelId}`}
     role="tab"
-    key={labelId}
     aria-selected={selected}
     aria-controls={panelId}
     id={labelId}
@@ -51,6 +50,7 @@ const Tabs = ({ uuid, labels, children }) => {
             panelId={`panel-${uuid}-${i}`}
             labelId={`label-${uuid}-${i}`}
             onClick={() => setActiveTab(i)}
+            key={`label-${uuid}-${i}`}
           >
             {label}
           </Label>
@@ -59,7 +59,7 @@ const Tabs = ({ uuid, labels, children }) => {
       <div role="tabpanel" className="tab-content">
         {children.map((panel, i) => (
           <Panel
-            key={i}
+            key={`panel-${uuid}-${i}`}
             selected={activeTab === i}
             panelId={`panel-${uuid}-${i}`}
             labelId={`label-${uuid}-${i}`}
