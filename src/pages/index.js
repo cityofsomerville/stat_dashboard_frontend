@@ -1,13 +1,19 @@
 import React from 'react';
 
 import Layout from 'components/Layout';
-import Image from 'components/Image';
 import SEO from 'components/SEO';
+import CityWork from 'components/CityWork';
+import PublicSafety from 'components/PublicSafety';
+import PermitsLicenses from 'components/PermitsLicenses';
+import CityWebsite from 'components/CityWebsite';
 
 const IndexPage = () => (
   <Layout>
     <SEO title="Home" />
-    <p>Content goes here!</p>
+    <CityWork />
+    <PublicSafety />
+    <PermitsLicenses />
+    <CityWebsite />
   </Layout>
 );
 
