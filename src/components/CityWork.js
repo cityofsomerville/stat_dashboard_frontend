@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import startOfToday from 'date-fns/startOfToday';
@@ -7,12 +8,21 @@ import DataBlock, {
   BlockContent,
   WeeklyTrends,
   DataRow,
-  DataCol
+  DataCol,
+  KeyMetrics
 } from 'components/DataBlock';
+
+import CityWorkKeyMetrics from 'components/CityWorkKeyMetrics';
 import Tabs from 'components/Tabs';
 import ExploreData from 'components/ExploreData';
 import { getTickets, getActions, getTypes } from 'data/Requests';
 import GroupedBarChart from 'charts/GroupedBarChart';
+
+import {
+  fetchTickets,
+  fetchActionsByDay,
+  fetchTypesById
+} from 'data/cityWork/actions';
 
 const today = startOfToday();
 
@@ -90,7 +100,7 @@ const getWeeklyTrends = (tickets, types) => {
   return weeklyTrends.slice(0, 3);
 };
 
-const CityWork = () => {
+const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
   const [tickets, setTickets] = useState([]);
   const [actions, setActions] = useState({});
   const [types, setTypes] = useState({});
@@ -121,6 +131,15 @@ const CityWork = () => {
         console.log(err);
       }
     })();
+    fetchTickets({
+      startDate: subDays(today, 14),
+      endDate: today
+    });
+    fetchActionsByDay({
+      startDate: subDays(today, 7),
+      endDate: today
+    });
+    fetchTypesById();
   }, []);
 
   if (Object.keys(actions).length) {
@@ -148,25 +167,18 @@ const CityWork = () => {
   }
 
   return (
-    <DataBlock
-      heading="City Work"
-      keyMetrics={[
-        { count: calls311, label: '311 calls', trend: 'positive' },
-        {
-          count: workOrdersCreated,
-          label: 'work orders created',
-          trend: 'negative'
-        },
-        {
-          count: workOrdersClosed,
-          label: 'work orders closed',
-          trend: 'no_change'
-        }
-      ]}
-      introduction="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-            commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
-            et magnis dis parturient montes, nascetur ridiculus mus."
-    >
+    <DataBlock>
+      <h2>City Work</h2>
+      <div className="row p-3">
+        <CityWorkKeyMetrics />
+        <div className="col-md-8">
+          <p>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+            commodo ligula eget dolor. Aenean massa. Cum sociis natoque
+            penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+          </p>
+        </div>
+      </div>
       <Tabs
         uuid="citywork"
         labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}
@@ -247,4 +259,8 @@ const InProgress = () => (
   </BlockContent>
 );
 
-export default CityWork;
+export default connect(null, {
+  fetchTickets,
+  fetchActionsByDay,
+  fetchTypesById
+})(CityWork);

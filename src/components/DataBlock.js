@@ -7,7 +7,8 @@ export const KeyMetrics = ({ metrics }) => (
     <ul>
       {metrics.map((metric, i) => (
         <li key={i}>
-          <strong>{metric.count}</strong> {metric.label}
+          {/* TODO: skeleton state */}
+          <strong>{metric.figure}</strong> {metric.label} ({metric.delta})
         </li>
       ))}
     </ul>
@@ -17,9 +18,9 @@ export const KeyMetrics = ({ metrics }) => (
 KeyMetrics.propTypes = {
   metrics: PropTypes.arrayOf(
     PropTypes.shape({
-      count: PropTypes.number,
+      figure: PropTypes.number,
       label: PropTypes.string,
-      trend: PropTypes.string
+      delta: PropTypes.string
     })
   ).isRequired
 };
@@ -58,29 +59,11 @@ export const DataCol = ({ children }) => (
   <div className="col-lg mx-1 mb-3 mb-lg-0">{children}</div>
 );
 
-const DataBlock = ({ heading, keyMetrics, introduction, children }) => (
-  <section className="border p-3">
-    <h2>{heading}</h2>
-    <div className="row p-3">
-      <KeyMetrics metrics={keyMetrics} />
-      <div className="col-md-8">
-        <p>{introduction}</p>
-      </div>
-    </div>
-    {children}
-  </section>
+const DataBlock = ({ children }) => (
+  <section className="border p-3">{children}</section>
 );
 
 DataBlock.propTypes = {
-  heading: PropTypes.string.isRequired,
-  keyMetrics: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.string,
-      label: PropTypes.string,
-      trend: PropTypes.number
-    })
-  ).isRequired,
-  introduction: PropTypes.string,
   children: PropTypes.node.isRequired
 };
 
