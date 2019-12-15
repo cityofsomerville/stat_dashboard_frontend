@@ -11,10 +11,10 @@ const debounce = (func, delay) => {
 };
 
 export default class GroupedBarChart {
-  constructor({ data, targetId }) {
+  constructor({ data, columns, targetId }) {
     this.data = data;
-    this.keys = data.columns.slice(1);
-    this.groupKey = data.columns[0];
+    this.keys = columns.slice(1);
+    this.groupKey = columns[0];
 
     this.targetId = targetId;
     this.targetElement = document.getElementById(targetId);

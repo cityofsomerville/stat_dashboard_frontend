@@ -4,3 +4,5 @@ export const SOCRATA_DATASETS = {
   Somerville_Services_Types: 'ikh2-c6hz',
   Somerville_Permits: 'vxgw-vmky'
 };
+
+export const SOCRATA_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSS";

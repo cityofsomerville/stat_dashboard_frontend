@@ -20,7 +20,7 @@ KeyMetrics.propTypes = {
     PropTypes.shape({
       figure: PropTypes.number,
       label: PropTypes.string,
-      delta: PropTypes.string
+      delta: PropTypes.number
     })
   ).isRequired
 };

@@ -1,14 +1,15 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import { KeyMetrics } from 'components/DataBlock';
+import { getKeyMetrics } from 'data/cityWork/selectors';
 
-export default connect(({ cityWork }) => {
+export default connect(state => {
+  const keyMetrics = getKeyMetrics(state);
   return {
     metrics: [
-      { label: 'work orders created', ...cityWork.keyMetrics.created },
-      { label: 'work orders closed', ...cityWork.keyMetrics.closed },
-      { label: '311 calls', ...cityWork.keyMetrics.calls }
+      { label: 'work orders created', ...keyMetrics.created },
+      { label: 'work orders closed', ...keyMetrics.closed },
+      { label: '311 calls', ...keyMetrics.calls }
     ]
   };
 })(KeyMetrics);
