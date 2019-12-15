@@ -1,7 +1,7 @@
 import React from 'react';
 
-import WorkOrderChart from 'components/WorkOrderChart';
-import WeeklyTrendsAll from 'components/WeeklyTrendsAll';
+import WorkOrderChart from 'components/CityWork/WorkOrderChart';
+import WeeklyTrendsAll from 'components/CityWork/WeeklyTrendsAll';
 import { BlockContent, DataCol } from 'components/DataBlock';
 
 const Summary = () => (

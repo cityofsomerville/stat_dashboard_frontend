@@ -6,7 +6,7 @@ import { getWorkOrderChartData } from 'data/cityWork/selectors';
 
 class WorkOrderChart extends React.Component {
   componentDidUpdate(prevProps) {
-    if (this.props.chartData && this.props.chartData.data.length) {
+    if (this.props.chartData.data.length !== prevProps.chartData.data.length) {
       this.chart = new GroupedBarChart({
         data: this.props.chartData.data,
         columns: this.props.chartData.columns,

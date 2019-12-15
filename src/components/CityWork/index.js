@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import startOfToday from 'date-fns/startOfToday';
 
@@ -8,15 +7,13 @@ import DataBlock, {
   BlockContent,
   WeeklyTrends,
   DataRow,
-  DataCol,
-  KeyMetrics
+  DataCol
 } from 'components/DataBlock';
 
-import CityWorkKeyMetrics from 'components/CityWorkKeyMetrics';
+import CityWorkKeyMetrics from 'components/CityWork/CityWorkKeyMetrics';
 import Tabs from 'components/Tabs';
 import ExploreData from 'components/ExploreData';
-import { getTickets, getActions, getTypes } from 'data/Requests';
-import Summary from 'components/Summary';
+import Summary from 'components/CityWork/Summary';
 
 import {
   fetchTickets,
@@ -36,7 +33,7 @@ const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
       endDate: today
     });
     fetchTypesById();
-  }, []);
+  }, [fetchTickets, fetchActionsByDay, fetchTypesById]);
 
   return (
     <DataBlock>

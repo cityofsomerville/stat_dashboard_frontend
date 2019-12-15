@@ -9,33 +9,13 @@ export const types = [
   'TICKETS_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
-const bucketByColumn = (set, column, transform) =>
-  set.reduce((memo, item) => {
-    if (!memo[item[column]]) {
-      memo[item[column]] = {};
-    }
-    if (!memo[item[column]][item.code]) {
-      memo[item[column]][item.code] = [];
-    }
-    memo[item[column]][item.code].push(item);
-    return memo;
-  }, {});
-
-const typesById = types =>
-  types.reduce((memo, type) => {
-    return {
-      ...memo,
-      [type.id]: type
-    };
-  }, {});
-
 export const fetchActionsByDay = ({ startDate, endDate }) => {
   return async dispatch => {
     try {
       const actions = await getActions({ startDate, endDate });
       dispatch({
         type: types.ACTIONS_BY_DAY_SUCCESS,
-        payload: bucketByColumn(actions, 'action_day')
+        payload: actions
       });
     } catch (err) {
       console.log(err);
@@ -71,7 +51,7 @@ export const fetchTypesById = () => {
       const typesResponse = await getTypes();
       dispatch({
         type: types.TYPES_BY_ID_SUCCESS,
-        payload: typesById(typesResponse)
+        payload: typesResponse
       });
     } catch (err) {
       console.log(err);
