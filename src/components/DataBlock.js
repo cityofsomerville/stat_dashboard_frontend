@@ -55,7 +55,7 @@ export const BlockContent = ({ children }) => (
 export const DataRow = ({ children }) => <div className="row">{children}</div>;
 
 export const DataCol = ({ children }) => (
-  <div className="col-lg mx-1 mb-3 mb-lg-0 bg-primary">{children}</div>
+  <div className="col-lg mx-1 mb-3 mb-lg-0">{children}</div>
 );
 
 const DataBlock = ({ heading, keyMetrics, introduction, children }) => (

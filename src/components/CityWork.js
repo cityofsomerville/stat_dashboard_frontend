@@ -83,10 +83,11 @@ const getWeeklyTrends = (tickets, types) => {
           lastWeekCount
         };
       })
-      .sort((a, b) => b.countIncrease - a.countIncrease)
-      .slice(0, 3);
+      .sort((a, b) => b.countIncrease - a.countIncrease);
+    // .slice(0, 3);
   }
-  return weeklyTrends;
+  console.log(weeklyTrends);
+  return weeklyTrends.slice(0, 3);
 };
 
 const CityWork = () => {
@@ -190,7 +191,7 @@ class SummaryChart extends React.Component {
   }
 
   render() {
-    return <svg id="chart-container" width="800" height="500" />;
+    return <div id="chart-container" />;
   }
 }
 
@@ -203,12 +204,10 @@ const Summary = ({ weeklyTrends, chartData }) => (
     </p>
     <div className="row">
       <DataCol>
-        multi series bar chart showing: total work orders opened and total work
-        orders closed by day for the past 7 days
+        <SummaryChart data={chartData} />
       </DataCol>
       <WeeklyTrends metrics={weeklyTrends} />
     </div>
-    <SummaryChart data={chartData} />
   </BlockContent>
 );
 
