@@ -7,6 +7,7 @@ export const types = [
   'TYPES_BY_ID_ERROR',
   'TICKETS_SUCCESS',
   'TICKETS_ERROR',
+  'TYPES_TICKETS_LOADED',
   'SET_CATEGORY_PRESET',
   'SET_DATE_PRESET'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
@@ -65,31 +66,33 @@ export const fetchTypesById = () => {
 };
 
 export const fetchTypesTickets = ({ startDate, endDate }) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
-      // const typesResponse = await getTypes();
-      // const tickets = await getTickets({ startDate, endDate });
-      Promise.all([
-        async () => {
+      // request both tickets and types -- order doesn't matter
+      return Promise.all([
+        (async () => {
           const typesResponse = await getTypes();
-          dispatch({
+          return dispatch({
             type: types.TYPES_BY_ID_SUCCESS,
             payload: typesResponse
           });
-        },
-        async () => {
+        })(),
+        (async () => {
           const tickets = await getTickets({ startDate, endDate });
-          dispatch({
+          return dispatch({
             type: types.TICKETS_SUCCESS,
             payload: tickets
           });
-        }
+        })()
+        // once both have been stored, calculate weekly trends
       ]).then(() => {
-        console.log('finished');
+        const state = getState();
+        return dispatch({
+          type: types.TYPES_TICKETS_LOADED,
+          tickets: state.cityWork.tickets,
+          typesById: state.cityWork.typesById
+        });
       });
-      // dispatch({
-      //   type: types.TYPES_TICKETS_LOADED
-      // });
     } catch (err) {
       console.log(err);
       dispatch({

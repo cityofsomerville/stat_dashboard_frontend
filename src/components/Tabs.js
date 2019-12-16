@@ -27,7 +27,7 @@ const Panel = ({ selected, panelId, labelId, children }) => (
     key={labelId}
     role="tabpanel"
   >
-    {children}
+    {selected ? children : null}
   </div>
 );
 

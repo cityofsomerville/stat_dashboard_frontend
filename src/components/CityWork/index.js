@@ -18,21 +18,31 @@ import Summary from 'components/CityWork/Summary';
 import {
   fetchTickets,
   fetchActionsByDay,
-  fetchTypesById
+  fetchTypesById,
+  fetchTypesTickets
 } from 'data/cityWork/actions';
 
-const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
+const CityWork = ({
+  fetchTickets,
+  fetchActionsByDay,
+  fetchTypesById,
+  fetchTypesTickets
+}) => {
   useEffect(() => {
     const today = startOfToday();
-    fetchTickets({
-      startDate: subDays(today, 14),
-      endDate: today
-    });
+    // fetchTickets({
+    //   startDate: subDays(today, 14),
+    //   endDate: today
+    // });
     fetchActionsByDay({
       startDate: subDays(today, 7),
       endDate: today
     });
-    fetchTypesById();
+    // fetchTypesById();
+    fetchTypesTickets({
+      startDate: subDays(today, 14),
+      endDate: today
+    });
   }, [fetchTickets, fetchActionsByDay, fetchTypesById]);
 
   return (
@@ -100,5 +110,6 @@ const InProgress = () => (
 export default connect(null, {
   fetchTickets,
   fetchActionsByDay,
-  fetchTypesById
+  fetchTypesById,
+  fetchTypesTickets
 })(CityWork);
