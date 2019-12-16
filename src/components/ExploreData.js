@@ -36,7 +36,7 @@ const ExploreData = ({
         dis parturient montes, nascetur ridiculus mus.
       </p>
       <form>
-        <label for="category">Category</label>
+        <label htmlFor="category">Category</label>
         {/* TODO: aria-describedby explanation of this field */}
         <select
           id="category"
@@ -44,17 +44,21 @@ const ExploreData = ({
           onChange={e => setCategoryPreset(e.target.value)}
         >
           {Object.keys(CATEGORY_PRESETS).map(preset => (
-            <option value={preset}>{preset}</option>
+            <option key={preset} value={preset}>
+              {preset}
+            </option>
           ))}
         </select>
-        <label for="date_range">Date Range</label>
+        <label htmlFor="date_range">Date Range</label>
         <select
           id="date_range"
           value={datePreset}
           onChange={e => setDatePreset(e.target.value)}
         >
           {Object.keys(DATE_PRESETS).map(preset => (
-            <option value={preset}>{preset}</option>
+            <option key={preset} value={preset}>
+              {preset}
+            </option>
           ))}
         </select>
       </form>
