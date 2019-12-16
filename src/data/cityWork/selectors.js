@@ -3,6 +3,8 @@ import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import startOfYesterday from 'date-fns/startOfYesterday';
 import subDays from 'date-fns/subDays';
+import isBefore from 'date-fns/isBefore';
+import parseISO from 'date-fns/parseISO';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
 
@@ -21,14 +23,11 @@ export const getWorkOrders = createSelector(
       closed: { figure: null, delta: null }
     };
 
-    // FIXME
-    // const yesterday = action.payload[format(startOfYesterday(), SOCRATA_TIMESTAMP)];
-    // const twoDaysAgo = action.payload[format(subDays(startOfYesterday(), 1), SOCRATA_TIMESTAMP)];
     const yesterday =
-      actionsByDay[format(subDays(startOfYesterday(), 1), SOCRATA_TIMESTAMP)];
+      actionsByDay[format(startOfYesterday(), SOCRATA_TIMESTAMP)];
 
     const twoDaysAgo =
-      actionsByDay[format(subDays(startOfYesterday(), 2), SOCRATA_TIMESTAMP)];
+      actionsByDay[format(subDays(startOfYesterday(), 1), SOCRATA_TIMESTAMP)];
 
     if (yesterday && twoDaysAgo) {
       const createdYesterday = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
@@ -92,7 +91,9 @@ export const getKeyMetrics = createSelector(
 export const getWorkOrderChartData = createSelector(
   actionsByDaySelector,
   actionsByDay => {
-    const dates = Object.keys(actionsByDay);
+    const dates = Object.keys(actionsByDay).sort((a, b) => {
+      return isBefore(parseISO(a), parseISO(b));
+    });
     return {
       data: dates.map(date => ({
         Date: format(new Date(date), 'MMM d'),
@@ -119,7 +120,8 @@ export const getWeeklyTrends = createSelector(
     if (Object.keys(types).length && tickets.length) {
       const ticketsByWeek = tickets.reduce(
         (memo, ticket) => {
-          if (new Date(ticket.last_modified) >= startOfWeek) {
+          // const ticketTime = new Date(ticket.last_modified);
+          if (isBefore(parseISO(ticket.last_modified), startOfWeek)) {
             upsertTicket(memo.lastWeek, ticket);
           } else {
             upsertTicket(memo.thisWeek, ticket);

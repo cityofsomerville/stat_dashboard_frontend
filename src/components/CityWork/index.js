@@ -12,7 +12,7 @@ import DataBlock, {
 
 import CityWorkKeyMetrics from 'components/CityWork/CityWorkKeyMetrics';
 import Tabs from 'components/Tabs';
-import ExploreData from 'components/ExploreData';
+import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
 
 import {
@@ -53,7 +53,7 @@ const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
         labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}
       >
         <Summary />
-        <ExploreData />
+        <CityWorkExploreData />
         <InternalWork />
         <InProgress />
       </Tabs>

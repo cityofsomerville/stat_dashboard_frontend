@@ -2,32 +2,23 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
-
-const DATE_PRESETS = {
-  '7 days': {},
-  '30 days': {},
-  '3 months': {},
-  '1 year': {},
-  'Custom...': {}
-};
-
-const CATEGORY_PRESETS = {
-  'Significant Calls': [],
-  'Quality of Life': [],
-  'Custom...': []
-};
+import { DATE_PRESETS } from 'data/Constants';
 
 const ExploreData = ({
-  datePresetSelection,
-  startDate,
-  endDate,
-  categoryPresetSelection,
-  selectedCategories,
-  categoryList
-}) => {
-  const [datePreset, setDatePreset] = useState(datePresetSelection);
-  const [categoryPreset, setCategoryPreset] = useState(categoryPresetSelection);
+  // dates
+  selectedDates,
 
+  // categories
+  categoryList,
+  categoryPresets,
+  selectedCategories,
+
+  // methods
+  setCategoryPreset,
+  setDatePreset,
+  setCategories,
+  setDateRange
+}) => {
   return (
     <BlockContent>
       <p>
@@ -40,19 +31,22 @@ const ExploreData = ({
         {/* TODO: aria-describedby explanation of this field */}
         <select
           id="category"
-          value={categoryPreset}
+          value={selectedCategories.preset}
           onChange={e => setCategoryPreset(e.target.value)}
         >
-          {Object.keys(CATEGORY_PRESETS).map(preset => (
+          {Object.keys(categoryPresets).map(preset => (
             <option key={preset} value={preset}>
               {preset}
             </option>
           ))}
+          <option key="Custom..." value="Custom...">
+            Custom...
+          </option>
         </select>
         <label htmlFor="date_range">Date Range</label>
         <select
           id="date_range"
-          value={datePreset}
+          value={selectedDates.preset}
           onChange={e => setDatePreset(e.target.value)}
         >
           {Object.keys(DATE_PRESETS).map(preset => (
@@ -66,13 +60,13 @@ const ExploreData = ({
       <DataRow>
         <DataCol>
           stacked area chart, showing: <br />
-          totals in {categoryPreset} <br />
-          over the past {datePreset}
+          totals in {selectedCategories.preset} <br />
+          over the past {selectedDates.preset}
         </DataCol>
         <DataCol>
           map, showing: <br />
-          locations of {categoryPreset} <br />
-          over the past {datePreset}. <br />
+          locations of {selectedCategories.preset} <br />
+          over the past {selectedDates.preset}. <br />
           some locations may be anonymized.
         </DataCol>
       </DataRow>
@@ -81,17 +75,18 @@ const ExploreData = ({
 };
 
 ExploreData.propTypes = {
-  datePresetSelection: PropTypes.string,
-  startDate: PropTypes.object,
-  endDate: PropTypes.object,
-  categoryPresetSelection: PropTypes.string,
-  selectedCategories: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      type: PropTypes.string
+  selectedCategories: PropTypes.shape({
+    preset: PropTypes.string,
+    categories: PropTypes.array
+  }),
+  selectedDates: PropTypes.shape({
+    preset: PropTypes.string,
+    range: PropTypes.shape({
+      startDate: PropTypes.object,
+      endDate: PropTypes.object
     })
-  ),
-  categoryList: PropTypes.arrayOf(PropTypes.string)
+  }),
+  categoryList: PropTypes.object
 };
 
 ExploreData.defaultProps = {

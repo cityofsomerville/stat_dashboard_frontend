@@ -3,19 +3,19 @@ import cn from 'classnames';
 import PropTypes from 'prop-types';
 
 const Label = ({ labelId, panelId, selected, onClick, children }) => (
-  <a
-    href={`#${panelId}`}
+  <button
     role="tab"
     aria-selected={selected}
     aria-controls={panelId}
     id={labelId}
     onClick={onClick}
-    className={cn('nav-item', 'nav-link', {
+    className={cn('nav-item', 'nav-link', 'mr-1', {
+      'border-bottom': !selected,
       active: selected
     })}
   >
     {children}
-  </a>
+  </button>
 );
 
 const Panel = ({ selected, panelId, labelId, children }) => (
