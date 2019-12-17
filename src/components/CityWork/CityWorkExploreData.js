@@ -1,6 +1,9 @@
 import { connect } from 'react-redux';
 
-import { fetchCityWorkExploreData } from 'data/cityWork/actions';
+import {
+  fetchCityWorkExploreData,
+  updateSelectionKey
+} from 'data/cityWork/actions';
 import { getMapData, getChartData } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
@@ -30,6 +33,7 @@ export default connect(
     };
   },
   {
-    fetchData: fetchCityWorkExploreData
+    fetchData: fetchCityWorkExploreData,
+    updateSelectionKey
   }
 )(ExploreData);

@@ -39,7 +39,7 @@ Panel.propTypes = {
 };
 
 const Tabs = ({ uuid, labels, children }) => {
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
 
   return (
     <div className="tabs">

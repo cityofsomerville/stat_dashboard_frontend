@@ -43,11 +43,21 @@ class ExploreData extends React.Component {
     return key;
   }
 
-  componentDidUpdate(prevProps) {
+  fetchIfNecessary() {
     const requestKey = this.getRequestKey();
     if (requestKey && !this.props.dataStore[requestKey]) {
       this.props.fetchData(requestKey);
+    } else if (requestKey && this.props.selectionKey !== requestKey) {
+      this.props.updateSelectionKey(requestKey);
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    this.fetchIfNecessary();
+  }
+
+  componentDidMount() {
+    this.fetchIfNecessary();
   }
 
   render() {

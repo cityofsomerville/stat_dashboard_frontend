@@ -25,7 +25,6 @@ export const getTickets = async ({ startDate, endDate }) => {
       .query()
       .withDataset(SOCRATA_DATASETS.Somerville_Services)
       .where(dateRange)
-      .where('status = "Closed"')
       .limit(10000)
       .getRows()
       .on('success', resolve)

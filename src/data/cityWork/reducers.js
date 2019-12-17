@@ -95,6 +95,8 @@ const exploreDataKey = (state = initialState.exploreDataKey, action) => {
   switch (action.type) {
     case types.EXPLORE_DATA_SUCCESS:
       return action.key;
+    case types.UPDATE_SELECTION_KEY:
+      return action.key;
     default:
       return state;
   }
