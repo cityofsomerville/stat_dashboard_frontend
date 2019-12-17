@@ -26,7 +26,7 @@ export default class StackedAreaChart {
     this.width = 800;
     this.height = 500;
     this.ratio = 2 / 3;
-    this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
+    this.margin = { top: 0, right: 20, bottom: 20, left: 20 };
 
     // todo: pick high-contrast, universal palette
     this.color = d3

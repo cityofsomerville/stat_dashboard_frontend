@@ -21,11 +21,11 @@ const ExploreDataMap = ({ markers }) => (
   <>
     <style type="text/css">{`
       .leaflet-container {
-        height: 400px;
+        height: 300px;
         width: 499px;
       }
   `}</style>
-    <Map center={position} zoom={13}>
+    <Map center={position} zoom={12}>
       <TileLayer
         url="http://tiles.mapc.org/basemap/{z}/{x}/{y}.png"
         attribution='Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>'
