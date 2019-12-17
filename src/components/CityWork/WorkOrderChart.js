@@ -15,6 +15,16 @@ class WorkOrderChart extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.chartData) {
+      this.chart = new GroupedBarChart({
+        data: this.props.chartData.data,
+        columns: this.props.chartData.columns,
+        targetId: 'chart-container'
+      });
+    }
+  }
+
   render() {
     return <div id="chart-container" />;
   }

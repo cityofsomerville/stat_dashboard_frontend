@@ -90,7 +90,9 @@ export default class StackedAreaChart {
 
     self.yAxis = self.chart.append('g');
 
-    self.resize();
+    if (self.data.length) {
+      self.resize();
+    }
   }
 
   renderChart() {

@@ -21,10 +21,12 @@ export default connect(
           273, // graffiti
           504, // rats
           301 // potholes
-        ],
+        ]
         // other presets can be added here if desired! follow the format:
         // 'Preset Name': [ /* ids of categories */ ]
-        'Custom...': []
+
+        // TODO: fix this!
+        //'Custom...': []
       },
       dataStore: state.cityWork.exploreDataCache,
       selectionKey: state.cityWork.exploreDataKey,
