@@ -1,3 +1,4 @@
+import format from 'date-fns/format';
 import subDays from 'date-fns/subDays';
 import startOfToday from 'date-fns/startOfToday';
 import endOfYesterday from 'date-fns/endOfYesterday';
@@ -12,21 +13,24 @@ export const SOCRATA_DATASETS = {
 export const SOCRATA_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
 export const DATE_PRESETS = {
-  '7 days': { startDate: subDays(startOfToday, 7), endDate: endOfYesterday() },
+  '7 days': {
+    startDate: format(subDays(startOfToday(), 7), SOCRATA_TIMESTAMP),
+    endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
+  },
   '30 days': {
-    startDate: subDays(startOfToday, 30),
-    endDate: endOfYesterday()
+    startDate: format(subDays(startOfToday(), 30), SOCRATA_TIMESTAMP),
+    endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
   },
   '3 months': {
-    startDate: subDays(startOfToday, 90),
-    endDate: endOfYesterday()
+    startDate: format(subDays(startOfToday(), 90), SOCRATA_TIMESTAMP),
+    endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
   },
   '1 year': {
-    startDate: subDays(startOfToday, 365),
-    endDate: endOfYesterday()
+    startDate: format(subDays(startOfToday(), 365), SOCRATA_TIMESTAMP),
+    endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
   },
   'Custom...': {
-    startDate: subDays(startOfToday, 7),
-    endDate: endOfYesterday()
+    startDate: format(subDays(startOfToday(), 7), SOCRATA_TIMESTAMP),
+    endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
   }
 };

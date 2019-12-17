@@ -1,35 +1,31 @@
 import { connect } from 'react-redux';
 
-import {
-  setDatePreset,
-  setCategoryPreset,
-  setDateRange,
-  setCategories
-} from 'data/cityWork/actions';
+import { fetchCityWorkExploreData } from 'data/cityWork/actions';
 import { getWeeklyTrends } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
-
-const QUALITY_OF_LIFE = [
-  273, // graffiti
-  504, // rats
-  301 // potholes
-];
 
 export default connect(
   state => {
     return {
-      selectedDates: state.cityWork.selectedDates,
-      selectedCategories: state.cityWork.selectedCategories,
+      selectedCategoryPreset: 'Weekly Trends',
+      selectedDatePreset: '7 days',
 
       categoryList: state.cityWork.typesById,
       categoryPresets: {
-        'Weekly Trends': getWeeklyTrends(state),
-        'Quality of Life': QUALITY_OF_LIFE
-      }
+        'Weekly Trends': state.cityWork.weeklyTrends.map(trend => trend.type),
+        'Quality of Life': [
+          273, // graffiti
+          504, // rats
+          301 // potholes
+        ],
+        // other presets can be added here if desired! follow the format:
+        // 'Preset Name': [ /* ids of categories */ ]
+        'Custom...': []
+      },
+      dataStore: state.cityWork.exploreDataCache
     };
   },
   {
-    setDatePreset: () => {},
-    setCategoryPreset: () => {}
+    fetchData: fetchCityWorkExploreData
   }
 )(ExploreData);

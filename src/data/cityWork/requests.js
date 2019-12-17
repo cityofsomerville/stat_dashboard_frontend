@@ -1,5 +1,6 @@
 import soda from 'soda-js';
 import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO';
 
 import { SOCRATA_DATASETS } from 'data/Constants';
 
@@ -59,6 +60,29 @@ export const getTypes = async () => {
     consumer
       .query()
       .withDataset(SOCRATA_DATASETS.Somerville_Services_Types)
+      .getRows()
+      .on('success', resolve)
+      .on('error', reject);
+  });
+};
+
+export const getCityWorkExploreData = async key => {
+  const properties = JSON.parse(key);
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(properties.dateRange.startDate),
+    endDate: parseISO(properties.dateRange.endDate),
+    dateField: 'last_modified'
+  });
+  const typeSelection = properties.categories
+    .map(id => `type = "${id}"`)
+    .join(' or ');
+
+  return await new Promise((resolve, reject) => {
+    consumer
+      .query()
+      .withDataset(SOCRATA_DATASETS.Somerville_Services)
+      .where(dateRange)
+      .where(typeSelection)
       .getRows()
       .on('success', resolve)
       .on('error', reject);

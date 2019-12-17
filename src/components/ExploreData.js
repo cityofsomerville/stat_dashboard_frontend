@@ -1,96 +1,113 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import format from 'date-fns/format';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
-import { DATE_PRESETS } from 'data/Constants';
+import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
 
-const ExploreData = ({
-  // dates
-  selectedDates,
+class ExploreData extends React.Component {
+  constructor(props) {
+    super(props);
 
-  // categories
-  categoryList,
-  categoryPresets,
-  selectedCategories,
+    this.state = {
+      selectedCategoryPreset: props.selectedCategoryPreset,
+      selectedCategories: null,
+      selectedDatePreset: props.selectedDatePreset,
+      selectedDateRange: null
+    };
+  }
 
-  // methods
-  setCategoryPreset,
-  setDatePreset,
-  setCategories,
-  setDateRange
-}) => {
-  return (
-    <BlockContent>
-      <p>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-        ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-        dis parturient montes, nascetur ridiculus mus.
-      </p>
-      <form>
-        <label htmlFor="category">Category</label>
-        {/* TODO: aria-describedby explanation of this field */}
-        <select
-          id="category"
-          value={selectedCategories.preset}
-          onChange={e => setCategoryPreset(e.target.value)}
-        >
-          {Object.keys(categoryPresets).map(preset => (
-            <option key={preset} value={preset}>
-              {preset}
-            </option>
-          ))}
-          <option key="Custom..." value="Custom...">
-            Custom...
-          </option>
-        </select>
-        <label htmlFor="date_range">Date Range</label>
-        <select
-          id="date_range"
-          value={selectedDates.preset}
-          onChange={e => setDatePreset(e.target.value)}
-        >
-          {Object.keys(DATE_PRESETS).map(preset => (
-            <option key={preset} value={preset}>
-              {preset}
-            </option>
-          ))}
-        </select>
-      </form>
+  getRequestKey() {
+    let { selectedCategories, selectedDateRange } = this.state;
+    let key = null;
 
-      <DataRow>
-        <DataCol>
-          stacked area chart, showing: <br />
-          totals in {selectedCategories.preset} <br />
-          over the past {selectedDates.preset}
-        </DataCol>
-        <DataCol>
-          map, showing: <br />
-          locations of {selectedCategories.preset} <br />
-          over the past {selectedDates.preset}. <br />
-          some locations may be anonymized.
-        </DataCol>
-      </DataRow>
-    </BlockContent>
-  );
-};
+    if (this.state.selectedCategoryPreset !== 'Custom...') {
+      selectedCategories = this.props.categoryPresets[
+        this.state.selectedCategoryPreset
+      ];
+    }
+
+    if (this.state.selectedDatePreset !== 'Custom...') {
+      selectedDateRange = DATE_PRESETS[this.state.selectedDatePreset];
+    }
+
+    if (selectedCategories && selectedCategories.length && selectedDateRange) {
+      key = JSON.stringify({
+        categories: selectedCategories.sort(),
+        dateRange: selectedDateRange
+      });
+    }
+
+    return key;
+  }
+
+  componentDidUpdate(prevProps) {
+    const requestKey = this.getRequestKey();
+    if (requestKey && !this.props.dataStore[requestKey]) {
+      this.props.fetchData(requestKey);
+    }
+  }
+
+  render() {
+    return (
+      <BlockContent>
+        <p>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+          commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
+          et magnis dis parturient montes, nascetur ridiculus mus.
+        </p>
+        <form>
+          <label htmlFor="category">Category</label>
+          {/* TODO: aria-describedby explanation of this field */}
+          <select
+            id="category"
+            value={this.state.selectedCategoryPreset}
+            onChange={e =>
+              this.setState({ selectedCategoryPreset: e.target.value })
+            }
+          >
+            {Object.keys(this.props.categoryPresets).map(preset => (
+              <option key={preset} value={preset}>
+                {preset}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="date_range">Date Range</label>
+          <select
+            id="date_range"
+            value={this.state.selectedDatePreset}
+            onChange={e =>
+              this.setState({ selectedDatePreset: e.target.value })
+            }
+          >
+            {Object.keys(DATE_PRESETS).map(preset => (
+              <option key={preset} value={preset}>
+                {preset}
+              </option>
+            ))}
+          </select>
+        </form>
+
+        <DataRow>
+          <DataCol>
+            stacked area chart, showing: <br />
+            totals in {this.state.selectedCategoryPreset} <br />
+            over the past {this.state.selectedDatePreset}
+          </DataCol>
+          <DataCol>
+            map, showing: <br />
+            locations of {this.state.selectedCategoryPreset} <br />
+            over the past {this.state.selectedDatePreset}. <br />
+            some locations may be anonymized.
+          </DataCol>
+        </DataRow>
+      </BlockContent>
+    );
+  }
+}
 
 ExploreData.propTypes = {
-  selectedCategories: PropTypes.shape({
-    preset: PropTypes.string,
-    categories: PropTypes.array
-  }),
-  selectedDates: PropTypes.shape({
-    preset: PropTypes.string,
-    range: PropTypes.shape({
-      startDate: PropTypes.object,
-      endDate: PropTypes.object
-    })
-  }),
   categoryList: PropTypes.object
-};
-
-ExploreData.defaultProps = {
-  datePresetSelection: '7 days'
 };
 
 export default ExploreData;

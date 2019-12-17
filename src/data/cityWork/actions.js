@@ -1,4 +1,10 @@
-import { getTickets, getActions, getTypes } from 'data/cityWork/requests';
+import {
+  getTickets,
+  getActions,
+  getTypes,
+  getCityWorkExploreData
+} from 'data/cityWork/requests';
+import { getWeeklyTrends } from 'data/cityWork/utils';
 
 export const types = [
   'ACTIONS_BY_DAY_SUCCESS',
@@ -8,8 +14,8 @@ export const types = [
   'TICKETS_SUCCESS',
   'TICKETS_ERROR',
   'TYPES_TICKETS_LOADED',
-  'SET_CATEGORY_PRESET',
-  'SET_DATE_PRESET'
+  'EXPLORE_DATA_SUCCESS',
+  'EXPLORE_DATA_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 export const fetchActionsByDay = ({ startDate, endDate }) => {
@@ -89,8 +95,10 @@ export const fetchTypesTickets = ({ startDate, endDate }) => {
         const state = getState();
         return dispatch({
           type: types.TYPES_TICKETS_LOADED,
-          tickets: state.cityWork.tickets,
-          typesById: state.cityWork.typesById
+          payload: getWeeklyTrends(
+            state.cityWork.typesById,
+            state.cityWork.tickets
+          )
         });
       });
     } catch (err) {
@@ -103,23 +111,22 @@ export const fetchTypesTickets = ({ startDate, endDate }) => {
   };
 };
 
-export const setCategoryPreset = preset => {
-  return {
-    type: types.SET_CATEGORY_PRESET,
-    payload: preset
-  };
-};
-
-export const setDatePreset = preset => {
-  return {
-    type: types.SET_DATE_PRESET,
-    payload: preset
-  };
-};
-
-export const setDateRange = range => {
-  return {
-    type: types.SET_DATE_PRESET,
-    payload: range
+export const fetchCityWorkExploreData = key => {
+  return async dispatch => {
+    try {
+      const response = await getCityWorkExploreData(key);
+      dispatch({
+        type: types.EXPLORE_DATA_SUCCESS,
+        payload: {
+          [key]: response
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.EXPLORE_DATA_ERROR,
+        payload: err
+      });
+    }
   };
 };

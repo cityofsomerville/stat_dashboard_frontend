@@ -27,10 +27,8 @@ const initialState = {
   typesById: {}, // types, error
   tickets: [], // tickets, error. possibly just store all tickets here
 
-  weeklyTrends: [], // could be { categories: [], trends: [] }
-
-  selectedCategories: { preset: 'Weekly Trends', categories: [] },
-  selectedDates: { preset: '7 days', range: DATE_PRESETS['7 days'] }
+  weeklyTrends: [],
+  exploreDataCache: {}
 };
 
 const actionsByDay = (state = initialState.actionsByDay, action) => {
@@ -84,83 +82,20 @@ const typesById = (state = initialState.typesById, action) => {
 };
 
 const weeklyTrends = (state = initialState.weeklyTrends, action) => {
-  const getWeeklyTrends = (types, tickets) => {
-    let weeklyTrends = [];
-    const startOfWeek = subDays(startOfToday(), 7);
-    const upsertTicket = (bucket, ticket) => {
-      if (!bucket[ticket.type]) {
-        bucket[ticket.type] = [];
-      }
-      bucket[ticket.type].push(ticket);
-    };
-
-    if (Object.keys(types).length && tickets.length) {
-      const ticketsByWeek = tickets.reduce(
-        (memo, ticket) => {
-          if (isBefore(parseISO(ticket.last_modified), startOfWeek)) {
-            upsertTicket(memo.lastWeek, ticket);
-          } else {
-            upsertTicket(memo.thisWeek, ticket);
-          }
-          return memo;
-        },
-        { lastWeek: {}, thisWeek: {} }
-      );
-      weeklyTrends = Object.keys(ticketsByWeek.thisWeek)
-        .map(key => {
-          const thisWeekCount = ticketsByWeek.thisWeek[key].length;
-          const lastWeekCount = ticketsByWeek.lastWeek[key]
-            ? ticketsByWeek.lastWeek[key].length
-            : 0;
-          return {
-            trend: Math.round(
-              ((thisWeekCount - lastWeekCount) / lastWeekCount) * 100
-            ),
-            countIncrease: thisWeekCount - lastWeekCount,
-            label: types[key].name,
-            type: types[key].ancestor_id,
-            thisWeekCount,
-            lastWeekCount
-          };
-        })
-        .sort((a, b) => b.countIncrease - a.countIncrease)
-        .slice(0, 3);
-    }
-    return weeklyTrends;
-  };
-
   switch (action.type) {
     case types.TYPES_TICKETS_LOADED:
-      return getWeeklyTrends(action.typesById, action.tickets);
-    default:
-      return state;
-  }
-};
-
-const selectedCategories = (
-  state = initialState.selectedCategories,
-  action
-) => {
-  switch (action.type) {
-    case types.SET_CATEGORY_PRESET:
+      console.log(action.payload);
       return action.payload;
     default:
       return state;
   }
 };
 
-const selectedDates = (state = initialState.selectedDates, action) => {
+const exploreDataCache = (state = initialState.exploreDataCache, action) => {
   switch (action.type) {
-    case types.SET_DATE_PRESET:
-      if (Object.keys(DATE_PRESETS).indexOf(action.payload) > -1) {
-        return {
-          preset: action.payload,
-          range: DATE_PRESETS[action.payload]
-        };
-      }
-      return state;
-    case types.SET_DATE_RANGE:
-      return Object.assign({}, state, { range: action.payload });
+    case types.EXPLORE_DATA_SUCCESS:
+      console.log(action.payload);
+      return Object.assign({}, state, action.payload);
     default:
       return state;
   }
@@ -171,6 +106,5 @@ export default combineReducers({
   tickets,
   typesById,
   weeklyTrends,
-  selectedCategories,
-  selectedDates
+  exploreDataCache
 });
