@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 
 import { fetchCityWorkExploreData } from 'data/cityWork/actions';
-import { getDataSelection } from 'data/cityWork/selectors';
+import { getMapData, getChartData } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
 export default connect(
   state => {
     return {
+      namespace: 'citywork',
       selectedCategoryPreset: 'Weekly Trends',
       selectedDatePreset: '7 days',
 
@@ -24,7 +25,8 @@ export default connect(
       },
       dataStore: state.cityWork.exploreDataCache,
       selectionKey: state.cityWork.exploreDataKey,
-      dataSelection: getDataSelection(state)
+      mapData: getMapData(state),
+      chartData: getChartData(state)
     };
   },
   {

@@ -2,9 +2,11 @@ import { createSelector } from 'reselect';
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 import startOfYesterday from 'date-fns/startOfYesterday';
+import startOfDay from 'date-fns/startOfDay';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import parseISO from 'date-fns/parseISO';
+import differenceInDays from 'date-fns/differenceInDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
 
@@ -156,7 +158,7 @@ export const getWeeklyTrends = createSelector(
   }
 );
 
-export const getDataSelection = createSelector(
+export const getMapData = createSelector(
   [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
   (exploreDataCache, exploreDataKey, typesById) => {
     let selection = [];
@@ -175,5 +177,70 @@ export const getDataSelection = createSelector(
       }));
     }
     return selection;
+  }
+);
+
+// TODO: genericize this
+const createDateBuckets = ({ startDate, endDate, categories }) => {
+  const set = {};
+  const start = startOfDay(parseISO(startDate));
+  const end = startOfDay(parseISO(endDate));
+  const size = differenceInDays(end, start);
+
+  for (let i = size; i >= 0; i--) {
+    set[format(subDays(end, i), SOCRATA_TIMESTAMP)] = categories.reduce(
+      (memo, category) => ({ ...memo, [category]: [] }),
+      {}
+    );
+  }
+  return set;
+};
+
+export const getChartData = createSelector(
+  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
+  (exploreDataCache, exploreDataKey, typesById) => {
+    let data = { data: [], columns: [] };
+    if (
+      exploreDataCache &&
+      exploreDataKey &&
+      exploreDataCache[exploreDataKey]
+    ) {
+      const { categories, dateRange } = JSON.parse(exploreDataKey);
+      let ticketsByDay = createDateBuckets({
+        ...dateRange,
+        categories: categories.map(category => typesById[category].name)
+      });
+      const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
+        return isBefore(parseISO(a), parseISO(b));
+      });
+
+      exploreDataCache[exploreDataKey].forEach(ticket => {
+        const dateKey = format(
+          startOfDay(parseISO(ticket.last_modified)),
+          SOCRATA_TIMESTAMP
+        );
+        const type = typesById[ticket.type];
+        ticketsByDay[dateKey][type.name].push(ticket);
+      });
+      data.columns = orderedDates;
+      data.data = orderedDates.reduce((memo, day) => {
+        const ticketsForDay = ticketsByDay[day];
+        const counts = Object.keys(ticketsForDay).reduce(
+          (memo, type) => ({
+            ...memo,
+            [type]: ticketsForDay[type].length
+          }),
+          {}
+        );
+        return [
+          ...memo,
+          {
+            ...counts,
+            date: parseISO(day)
+          }
+        ];
+      }, []);
+    }
+    return data;
   }
 );

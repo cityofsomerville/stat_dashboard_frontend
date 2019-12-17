@@ -85,7 +85,6 @@ const typesById = (state = initialState.typesById, action) => {
 const weeklyTrends = (state = initialState.weeklyTrends, action) => {
   switch (action.type) {
     case types.TYPES_TICKETS_LOADED:
-      console.log(action.payload);
       return action.payload;
     default:
       return state;

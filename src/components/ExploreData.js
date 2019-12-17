@@ -5,6 +5,8 @@ import format from 'date-fns/format';
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import ExploreDataMap from 'components/ExploreDataMap';
 import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
+import ChartContainer from 'charts/ChartContainer';
+import StackedAreaChart from 'charts/StackedAreaChart';
 
 class ExploreData extends React.Component {
   constructor(props) {
@@ -90,12 +92,16 @@ class ExploreData extends React.Component {
 
         <DataRow>
           <DataCol>
-            stacked area chart, showing: <br />
-            totals in {this.state.selectedCategoryPreset} <br />
-            over the past {this.state.selectedDatePreset}
+            <ChartContainer
+              data={this.props.chartData.data}
+              columns={this.props.chartData.columns}
+              chartClass={StackedAreaChart}
+              name={`explore-data-${this.props.namespace}`}
+              cachebust={this.props.selectionKey}
+            />
           </DataCol>
           <DataCol>
-            <ExploreDataMap markers={this.props.dataSelection} />
+            <ExploreDataMap markers={this.props.mapData} />
           </DataCol>
         </DataRow>
       </BlockContent>
@@ -104,7 +110,9 @@ class ExploreData extends React.Component {
 }
 
 ExploreData.propTypes = {
-  categoryList: PropTypes.object
+  categoryList: PropTypes.object,
+  namespace: PropTypes.string,
+  mapData: PropTypes.array
 };
 
 export default ExploreData;
