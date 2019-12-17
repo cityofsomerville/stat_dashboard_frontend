@@ -12,28 +12,28 @@ import DataBlock, {
 
 import CityWorkKeyMetrics from 'components/CityWork/CityWorkKeyMetrics';
 import Tabs from 'components/Tabs';
-import ExploreData from 'components/ExploreData';
+import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
 
 import {
   fetchTickets,
   fetchActionsByDay,
-  fetchTypesById
+  fetchTypesById,
+  fetchTypesTickets
 } from 'data/cityWork/actions';
 
-const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
+const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
   useEffect(() => {
     const today = startOfToday();
-    fetchTickets({
-      startDate: subDays(today, 14),
-      endDate: today
-    });
     fetchActionsByDay({
       startDate: subDays(today, 7),
       endDate: today
     });
-    fetchTypesById();
-  }, [fetchTickets, fetchActionsByDay, fetchTypesById]);
+    fetchTypesTickets({
+      startDate: subDays(today, 14),
+      endDate: today
+    });
+  }, [fetchActionsByDay, fetchTypesTickets]);
 
   return (
     <DataBlock>
@@ -53,7 +53,7 @@ const CityWork = ({ fetchTickets, fetchActionsByDay, fetchTypesById }) => {
         labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}
       >
         <Summary />
-        <ExploreData />
+        <CityWorkExploreData />
         <InternalWork />
         <InProgress />
       </Tabs>
@@ -100,5 +100,6 @@ const InProgress = () => (
 export default connect(null, {
   fetchTickets,
   fetchActionsByDay,
-  fetchTypesById
+  fetchTypesById,
+  fetchTypesTickets
 })(CityWork);

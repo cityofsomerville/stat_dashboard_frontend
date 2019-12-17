@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 
+import { CHART_COLORS } from 'data/Constants';
+
 const debounce = (func, delay) => {
   let inDebounce;
   return function() {
@@ -26,22 +28,12 @@ export default class GroupedBarChart {
     this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
 
     // todo: pick high-contrast, universal palette
-    this.color = d3
-      .scaleOrdinal()
-      .range([
-        '#98abc5',
-        '#8a89a6',
-        '#7b6888',
-        '#6b486b',
-        '#a05d56',
-        '#d0743c',
-        '#ff8c00'
-      ]);
+    this.color = d3.scaleOrdinal().range(CHART_COLORS);
 
     this.init();
   }
 
-  resize() {
+  draw() {
     const containerWidth = this.targetElement.offsetWidth;
 
     if (containerWidth !== this.containerWidth) {
@@ -54,7 +46,7 @@ export default class GroupedBarChart {
 
   onResize() {
     const fn = event => {
-      this.resize();
+      this.draw();
     };
     debounce(fn.bind(this), 1000)();
   }
@@ -125,7 +117,7 @@ export default class GroupedBarChart {
       .attr('dy', '0.35em')
       .text(d => d);
 
-    self.resize();
+    self.draw();
   }
 
   renderChart() {
