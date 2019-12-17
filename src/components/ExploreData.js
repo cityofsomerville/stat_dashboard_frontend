@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
+import ExploreDataMap from 'components/ExploreDataMap';
 import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
 
 class ExploreData extends React.Component {
@@ -37,7 +38,6 @@ class ExploreData extends React.Component {
         dateRange: selectedDateRange
       });
     }
-
     return key;
   }
 
@@ -95,10 +95,7 @@ class ExploreData extends React.Component {
             over the past {this.state.selectedDatePreset}
           </DataCol>
           <DataCol>
-            map, showing: <br />
-            locations of {this.state.selectedCategoryPreset} <br />
-            over the past {this.state.selectedDatePreset}. <br />
-            some locations may be anonymized.
+            <ExploreDataMap markers={this.props.dataSelection} />
           </DataCol>
         </DataRow>
       </BlockContent>

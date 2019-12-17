@@ -117,9 +117,8 @@ export const fetchCityWorkExploreData = key => {
       const response = await getCityWorkExploreData(key);
       dispatch({
         type: types.EXPLORE_DATA_SUCCESS,
-        payload: {
-          [key]: response
-        }
+        payload: response,
+        key
       });
     } catch (err) {
       console.log(err);

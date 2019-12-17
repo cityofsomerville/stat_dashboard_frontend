@@ -28,7 +28,8 @@ const initialState = {
   tickets: [], // tickets, error. possibly just store all tickets here
 
   weeklyTrends: [],
-  exploreDataCache: {}
+  exploreDataCache: {},
+  exploreDataKey: null
 };
 
 const actionsByDay = (state = initialState.actionsByDay, action) => {
@@ -91,11 +92,21 @@ const weeklyTrends = (state = initialState.weeklyTrends, action) => {
   }
 };
 
+const exploreDataKey = (state = initialState.exploreDataKey, action) => {
+  switch (action.type) {
+    case types.EXPLORE_DATA_SUCCESS:
+      return action.key;
+    default:
+      return state;
+  }
+};
+
 const exploreDataCache = (state = initialState.exploreDataCache, action) => {
   switch (action.type) {
     case types.EXPLORE_DATA_SUCCESS:
-      console.log(action.payload);
-      return Object.assign({}, state, action.payload);
+      return Object.assign({}, state, {
+        [action.key]: action.payload
+      });
     default:
       return state;
   }
@@ -106,5 +117,6 @@ export default combineReducers({
   tickets,
   typesById,
   weeklyTrends,
+  exploreDataKey,
   exploreDataCache
 });

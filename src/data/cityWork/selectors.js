@@ -14,6 +14,8 @@ const WORK_ORDERS_CLOSED_CATEGORY = 6;
 const actionsByDaySelector = state => state.cityWork.actionsByDay;
 const ticketsSelector = state => state.cityWork.tickets;
 const typesByIdSelector = state => state.cityWork.typesById;
+const exploreDataCacheSelector = state => state.cityWork.exploreDataCache;
+const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 
 export const getWorkOrders = createSelector(
   actionsByDaySelector,
@@ -151,5 +153,27 @@ export const getWeeklyTrends = createSelector(
         .slice(0, 3);
     }
     return weeklyTrends;
+  }
+);
+
+export const getDataSelection = createSelector(
+  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
+  (exploreDataCache, exploreDataKey, typesById) => {
+    let selection = [];
+    if (
+      exploreDataCache &&
+      exploreDataKey &&
+      exploreDataCache[exploreDataKey]
+    ) {
+      selection = exploreDataCache[exploreDataKey].map(ticket => ({
+        id: ticket.id,
+        latitude: ticket.latitude,
+        longitude: ticket.longitude,
+        title: typesById[ticket.type] ? typesById[ticket.type].name : '',
+        date: format(parseISO(ticket.last_modified), 'yyyy-MM-dd'),
+        type: typesById[ticket.type]
+      }));
+    }
+    return selection;
   }
 );

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { fetchCityWorkExploreData } from 'data/cityWork/actions';
-import { getWeeklyTrends } from 'data/cityWork/selectors';
+import { getDataSelection } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
 export default connect(
@@ -22,7 +22,9 @@ export default connect(
         // 'Preset Name': [ /* ids of categories */ ]
         'Custom...': []
       },
-      dataStore: state.cityWork.exploreDataCache
+      dataStore: state.cityWork.exploreDataCache,
+      selectionKey: state.cityWork.exploreDataKey,
+      dataSelection: getDataSelection(state)
     };
   },
   {
