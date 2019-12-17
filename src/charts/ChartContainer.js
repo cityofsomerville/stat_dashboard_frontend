@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { getWorkOrderChartData } from 'data/cityWork/selectors';
 
 export default class ChartContainer extends React.Component {
   constructor(props) {
@@ -20,10 +17,6 @@ export default class ChartContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.cachebust !== prevProps.cachebust) {
-      // this.chart.update({
-      //   data: this.props.data,
-      //   columns: this.props.columns
-      // });
       this.chart = new this.props.chartClass({
         data: this.props.data,
         columns: this.props.columns,

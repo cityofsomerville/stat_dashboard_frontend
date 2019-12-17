@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import format from 'date-fns/format';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import Map from 'components/Map';
-import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
+import { DATE_PRESETS } from 'data/Constants';
 import ChartContainer from 'charts/ChartContainer';
 import StackedAreaChart from 'charts/StackedAreaChart';
 

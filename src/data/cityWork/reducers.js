@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
 import subDays from 'date-fns/subDays';
-import isBefore from 'date-fns/isBefore';
-import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import startOfToday from 'date-fns/startOfToday';
 
 import { types } from 'data/cityWork/actions';
-import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
+import { SOCRATA_TIMESTAMP } from 'data/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;

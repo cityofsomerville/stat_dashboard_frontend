@@ -22,28 +22,18 @@ import {
   fetchTypesTickets
 } from 'data/cityWork/actions';
 
-const CityWork = ({
-  fetchTickets,
-  fetchActionsByDay,
-  fetchTypesById,
-  fetchTypesTickets
-}) => {
+const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
   useEffect(() => {
     const today = startOfToday();
-    // fetchTickets({
-    //   startDate: subDays(today, 14),
-    //   endDate: today
-    // });
     fetchActionsByDay({
       startDate: subDays(today, 7),
       endDate: today
     });
-    // fetchTypesById();
     fetchTypesTickets({
       startDate: subDays(today, 14),
       endDate: today
     });
-  }, [fetchTickets, fetchActionsByDay, fetchTypesById]);
+  }, [fetchActionsByDay, fetchTypesTickets]);
 
   return (
     <DataBlock>

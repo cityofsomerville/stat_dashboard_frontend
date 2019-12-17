@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import parseISO from 'date-fns/parseISO';
 
 import { CHART_COLORS } from 'data/Constants';
 
@@ -65,10 +64,6 @@ export default class StackedAreaChart {
   cleanChart() {
     window.removeEventListener('resize', this.onResize.bind(this));
     this.targetElement.innerHTML = '';
-    // const tooltip = document.getElementById('tooltip');
-    // if (tooltip) {
-    //   tooltip.parentNode.removeChild(tooltip);
-    // }
   }
 
   init() {

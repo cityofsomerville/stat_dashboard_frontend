@@ -5,6 +5,7 @@ import startOfYesterday from 'date-fns/startOfYesterday';
 import startOfDay from 'date-fns/startOfDay';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
+import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
@@ -66,15 +67,15 @@ export const get311Calls = createSelector(ticketsSelector, tickets => {
     const callsYesterday = tickets.filter(
       ticket =>
         ticket.origin === 'Call Center' &&
-        new Date(ticket.last_modified) >= startOfYesterday
+        isAfter(parseISO(ticket.last_modified), startOfYesterday())
     ).length;
 
     const callsTwoDaysAgo = tickets.filter(ticket => {
-      const ticketDate = new Date(ticket.last_modified);
+      const ticketDate = parseISO(ticket.last_modified);
       return (
         ticket.origin === 'Call Center' &&
-        ticketDate < startOfYesterday() &&
-        ticketDate >= subDays(startOfYesterday(), 1)
+        isBefore(ticketDate, startOfYesterday()) &&
+        isAfter(ticketDate, subDays(startOfYesterday(), 1))
       );
     }).length;
 
