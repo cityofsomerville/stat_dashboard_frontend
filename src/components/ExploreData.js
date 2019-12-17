@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
-import ExploreDataMap from 'components/ExploreDataMap';
+import Map from 'components/Map';
 import { DATE_PRESETS, SOCRATA_TIMESTAMP } from 'data/Constants';
 import ChartContainer from 'charts/ChartContainer';
 import StackedAreaChart from 'charts/StackedAreaChart';
@@ -101,7 +101,7 @@ class ExploreData extends React.Component {
             />
           </DataCol>
           <DataCol>
-            <ExploreDataMap markers={this.props.mapData} />
+            <Map markers={this.props.mapData} />
           </DataCol>
         </DataRow>
       </BlockContent>
