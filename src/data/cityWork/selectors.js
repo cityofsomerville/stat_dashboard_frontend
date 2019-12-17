@@ -244,3 +244,17 @@ export const getChartData = createSelector(
     return data;
   }
 );
+
+export const getCategoryNames = createSelector(
+  [exploreDataKeySelector, typesByIdSelector],
+  (exploreDataKey, typesById) => {
+    let selection = [];
+    if (exploreDataKey && typesById) {
+      const { categories } = JSON.parse(exploreDataKey);
+      const names = categories.map(cat => typesById[cat].name);
+      const last = names.pop();
+      return `${names.join(', ')}, and ${last}`;
+    }
+    return selection;
+  }
+);

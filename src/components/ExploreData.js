@@ -64,9 +64,12 @@ class ExploreData extends React.Component {
     return (
       <BlockContent>
         <p>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
-          et magnis dis parturient montes, nascetur ridiculus mus.
+          Currently viewing tickets closed within the past{' '}
+          {this.state.selectedDatePreset} for preset{' '}
+          {this.state.selectedCategoryPreset}, which contains categories{' '}
+          {this.props.selectedCategoryNames}. The stacked area chart shows the
+          volume of tickets of each type, while the map shows the approximate
+          location of each ticket.
         </p>
         <form>
           <label htmlFor="category">Category</label>

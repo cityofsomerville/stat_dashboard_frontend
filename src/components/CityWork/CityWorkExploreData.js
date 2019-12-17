@@ -4,7 +4,11 @@ import {
   fetchCityWorkExploreData,
   updateSelectionKey
 } from 'data/cityWork/actions';
-import { getMapData, getChartData } from 'data/cityWork/selectors';
+import {
+  getMapData,
+  getChartData,
+  getCategoryNames
+} from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
 export default connect(
@@ -31,7 +35,9 @@ export default connect(
       dataStore: state.cityWork.exploreDataCache,
       selectionKey: state.cityWork.exploreDataKey,
       mapData: getMapData(state),
-      chartData: getChartData(state)
+      chartData: getChartData(state),
+      typesById: state.cityWork.typesById,
+      selectedCategoryNames: getCategoryNames(state)
     };
   },
   {
