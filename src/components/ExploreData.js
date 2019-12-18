@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
-import Map from 'components/Map';
 import { DATE_PRESETS } from 'data/Constants';
 import ChartContainer from 'charts/ChartContainer';
 import StackedAreaChart from 'charts/StackedAreaChart';
+
+const LazyMap = ({ markers }) => {
+  if (typeof window === 'undefined') return <span>loading...</span>;
+  const Component = lazy(() => import('components/Map'));
+  return (
+    <Suspense fallback={<span>loading...</span>}>
+      <Component markers={markers} />
+    </Suspense>
+  );
+};
 
 class ExploreData extends React.Component {
   constructor(props) {
@@ -113,7 +122,7 @@ class ExploreData extends React.Component {
             />
           </DataCol>
           <DataCol>
-            <Map markers={this.props.mapData} />
+            <LazyMap markers={this.props.mapData} />
           </DataCol>
         </DataRow>
       </BlockContent>
