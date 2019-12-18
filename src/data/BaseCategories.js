@@ -106,6 +106,9 @@ const BaseCategories = {
   }
 };
 
-export const DEFAULT_ANCESTOR_ID = '476263';
+const DEFAULT_ANCESTOR_ID = '476263';
+
+export const getBaseCategory = ancestorId =>
+  BaseCategories[ancestorId] || BaseCategories[DEFAULT_ANCESTOR_ID];
 
 export default BaseCategories;

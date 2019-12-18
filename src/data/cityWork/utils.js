@@ -6,6 +6,7 @@ import startOfToday from 'date-fns/startOfToday';
 export const getWeeklyTrends = (types, tickets) => {
   let weeklyTrends = [];
   const startOfWeek = subDays(startOfToday(), 7);
+
   const upsertTicket = (bucket, ticket) => {
     if (!bucket[ticket.type]) {
       bucket[ticket.type] = [];
@@ -43,8 +44,7 @@ export const getWeeklyTrends = (types, tickets) => {
           lastWeekCount
         };
       })
-      .sort((a, b) => b.countIncrease - a.countIncrease)
-      .slice(0, 3);
+      .sort((a, b) => b.countIncrease - a.countIncrease);
   }
   return weeklyTrends;
 };

@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 
 import { WeeklyTrends } from 'components/DataBlock';
-import BaseCategories, { DEFAULT_ANCESTOR_ID } from 'data/BaseCategories';
+import BaseCategories, { getBaseCategory } from 'data/BaseCategories';
+import { getAllWeeklyTrends } from 'data/cityWork/selectors';
 
 export default connect(state => ({
-  metrics: state.cityWork.weeklyTrends.map(category => {
-    const ancestor =
-      BaseCategories[category.ancestor] || BaseCategories[DEFAULT_ANCESTOR_ID];
+  metrics: getAllWeeklyTrends(state).map(category => {
+    const ancestor = getBaseCategory(category.ancestor);
     return {
       ...category,
       img: ancestor.icon,
