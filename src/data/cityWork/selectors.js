@@ -97,7 +97,7 @@ export const getWorkOrderChartData = createSelector(
   actionsByDaySelector,
   actionsByDay => {
     const dates = Object.keys(actionsByDay).sort((a, b) => {
-      return isBefore(parseISO(a), parseISO(b));
+      return differenceInDays(parseISO(a), parseISO(b));
     });
     return {
       data: dates.map(date => ({
@@ -212,7 +212,7 @@ export const getChartData = createSelector(
         categories: categories.map(category => typesById[category].name)
       });
       const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
-        return isBefore(parseISO(a), parseISO(b));
+        return differenceInDays(parseISO(a), parseISO(b));
       });
 
       exploreDataCache[exploreDataKey].forEach(ticket => {
