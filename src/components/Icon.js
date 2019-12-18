@@ -9,7 +9,7 @@ const Icon = ({ img, alt }) => {
       style={{
         width: '2.5rem',
         height: '2.5rem',
-        background: 'rgba(0,100,200,0.2)'
+        background: '#c6d9f1'
       }}
     >
       <img className="d-block w-75 mx-auto mt-1" src={img} alt={alt} />
