@@ -38,16 +38,7 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
   return (
     <DataBlock>
       <h2>City Work</h2>
-      <div className="row p-3">
-        <CityWorkKeyMetrics />
-        <div className="col-md-8">
-          <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-            commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-            penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-          </p>
-        </div>
-      </div>
+      <CityWorkKeyMetrics />
       <Tabs
         uuid="citywork"
         labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}
