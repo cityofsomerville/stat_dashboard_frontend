@@ -106,4 +106,6 @@ const BaseCategories = {
   }
 };
 
+export const DEFAULT_ANCESTOR_ID = '476263';
+
 export default BaseCategories;

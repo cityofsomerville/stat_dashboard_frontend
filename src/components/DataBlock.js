@@ -40,7 +40,7 @@ export const WeeklyTrends = ({ metrics, description }) => (
     <ol className="list-unstyled">
       {metrics.map((metric, i) => (
         <li key={i}>
-          <Icon typeId={metric.ancestor} />
+          <Icon img={metric.img} alt={metric.alt} />
           <strong>{Math.abs(metric.trend)}%</strong>{' '}
           {metric.trend >= 0 ? 'increase' : 'decrease'} in {metric.label}
         </li>
