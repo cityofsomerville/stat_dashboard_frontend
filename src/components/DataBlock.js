@@ -7,10 +7,11 @@ export const KeyMetrics = ({ metrics, summary }) => (
   <div className="row p-3">
     <div className="col-md-4 p-3 mb-3 mb-md-0 bg-dark text-white">
       <h3>Yesterday</h3>
-      <ul>
+      <ul className="list-unstyled">
         {metrics.map((metric, i) => (
           <li key={i}>
             {/* TODO: skeleton state */}
+            <Icon img={metric.img} alt={metric.alt} />
             <strong>{metric.figure}</strong> {metric.label} ({metric.delta})
           </li>
         ))}
@@ -27,7 +28,9 @@ KeyMetrics.propTypes = {
     PropTypes.shape({
       figure: PropTypes.number,
       label: PropTypes.string,
-      delta: PropTypes.number
+      delta: PropTypes.number,
+      icon: PropTypes.object,
+      alt: PropTypes.string
     })
   ).isRequired,
   summary: PropTypes.string
