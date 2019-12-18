@@ -10,6 +10,7 @@ import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
+import { isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -221,11 +222,11 @@ export const getInternalWeeklyTrends = createSelector(
   weeklyTrendsSelector,
   weeklyTrends => {
     let selection = [];
-    selection = [
-      { trend: 135, label: 'tree pruning/trimming', type: 'forestry' },
-      { trend: 77, label: 'sidewalk repair', type: 'dpw' },
-      { trend: 19, label: 'pothole', type: 'dpw' }
-    ];
+    if (weeklyTrends) {
+      selection = weeklyTrends
+        .filter(trend => isServiceRequest(trend.type))
+        .slice(0, 3);
+    }
     return selection;
   }
 );
