@@ -14,6 +14,7 @@ import CityWorkKeyMetrics from 'components/CityWork/CityWorkKeyMetrics';
 import Tabs from 'components/Tabs';
 import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
+import InternalWork from 'components/CityWork/InternalWork';
 
 import {
   fetchTickets,
@@ -51,26 +52,6 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
     </DataBlock>
   );
 };
-
-const InternalWork = () => (
-  <BlockContent>
-    <p>
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-      dis parturient montes, nascetur ridiculus mus.
-    </p>
-    <DataRow>
-      <DataCol>treemap showing: internally generated work by category</DataCol>
-      <WeeklyTrends
-        metrics={[
-          { trend: 135, label: 'tree pruning/trimming', type: 'forestry' },
-          { trend: 77, label: 'sidewalk repair', type: 'dpw' },
-          { trend: 19, label: 'pothole', type: 'dpw' }
-        ]}
-      />
-    </DataRow>
-  </BlockContent>
-);
 
 const InProgress = () => (
   <BlockContent>

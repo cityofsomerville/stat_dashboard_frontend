@@ -10,6 +10,7 @@ import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
+import { isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -19,6 +20,7 @@ const ticketsSelector = state => state.cityWork.tickets;
 const typesByIdSelector = state => state.cityWork.typesById;
 const exploreDataCacheSelector = state => state.cityWork.exploreDataCache;
 const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
+const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
 
 export const getWorkOrders = createSelector(
   actionsByDaySelector,
@@ -107,55 +109,6 @@ export const getWorkOrderChartData = createSelector(
       })),
       columns: ['Date', 'Tickets Opened', 'Tickets Closed']
     };
-  }
-);
-
-export const getWeeklyTrends = createSelector(
-  [ticketsSelector, typesByIdSelector],
-  (tickets, types) => {
-    let weeklyTrends = [];
-    const startOfWeek = subDays(startOfToday(), 7);
-    const upsertTicket = (bucket, ticket) => {
-      if (!bucket[ticket.type]) {
-        bucket[ticket.type] = [];
-      }
-      bucket[ticket.type].push(ticket);
-    };
-
-    if (Object.keys(types).length && tickets.length) {
-      const ticketsByWeek = tickets.reduce(
-        (memo, ticket) => {
-          // const ticketTime = new Date(ticket.last_modified);
-          if (isBefore(parseISO(ticket.last_modified), startOfWeek)) {
-            upsertTicket(memo.lastWeek, ticket);
-          } else {
-            upsertTicket(memo.thisWeek, ticket);
-          }
-          return memo;
-        },
-        { lastWeek: {}, thisWeek: {} }
-      );
-      weeklyTrends = Object.keys(ticketsByWeek.thisWeek)
-        .map(key => {
-          const thisWeekCount = ticketsByWeek.thisWeek[key].length;
-          const lastWeekCount = ticketsByWeek.lastWeek[key]
-            ? ticketsByWeek.lastWeek[key].length
-            : 0;
-          return {
-            trend: Math.round(
-              ((thisWeekCount - lastWeekCount) / lastWeekCount) * 100
-            ),
-            countIncrease: thisWeekCount - lastWeekCount,
-            label: types[key].name,
-            type: types[key].ancestor_id,
-            thisWeekCount,
-            lastWeekCount
-          };
-        })
-        .sort((a, b) => b.countIncrease - a.countIncrease)
-        .slice(0, 3);
-    }
-    return weeklyTrends;
   }
 );
 
@@ -255,6 +208,24 @@ export const getCategoryNames = createSelector(
       const names = categories.map(cat => typesById[cat].name);
       const last = names.pop();
       return `${names.join(', ')}, and ${last}`;
+    }
+    return selection;
+  }
+);
+
+export const getAllWeeklyTrends = createSelector(
+  weeklyTrendsSelector,
+  weeklyTrends => weeklyTrends.slice(0, 3)
+);
+
+export const getInternalWeeklyTrends = createSelector(
+  weeklyTrendsSelector,
+  weeklyTrends => {
+    let selection = [];
+    if (weeklyTrends) {
+      selection = weeklyTrends
+        .filter(trend => isServiceRequest(trend.type))
+        .slice(0, 3);
     }
     return selection;
   }

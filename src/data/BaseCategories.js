@@ -11,6 +11,13 @@ import trees from 'images/trees.svg';
 import utilities from 'images/utilities.svg';
 import street_lights_traffic_signals from 'images/street_lights_traffic_signals.svg';
 import unknown from 'images/unknown.svg';
+import {
+  SERVICE_REQUEST_CATEGORIES,
+  INFORMATION_CALL_CATEGORIES,
+  INTERNAL_CATEGORIES
+} from 'data/cityWork/categorySubsets';
+
+const DEFAULT_ANCESTOR_ID = '476263';
 
 const BaseCategories = {
   '269': {
@@ -106,6 +113,16 @@ const BaseCategories = {
   }
 };
 
-export const DEFAULT_ANCESTOR_ID = '476263';
+export const getBaseCategory = ancestorId =>
+  BaseCategories[ancestorId] || BaseCategories[DEFAULT_ANCESTOR_ID];
+
+export const isServiceRequest = categoryId =>
+  SERVICE_REQUEST_CATEGORIES.indexOf(Number(categoryId)) > -1;
+
+export const isInformationCall = categoryId =>
+  INFORMATION_CALL_CATEGORIES.indexOf(Number(categoryId)) > -1;
+
+export const isInternal = categoryId =>
+  INTERNAL_CATEGORIES.indexOf(Number(categoryId)) > -1;
 
 export default BaseCategories;

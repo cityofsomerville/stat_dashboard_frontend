@@ -7,7 +7,8 @@ import {
 import {
   getMapData,
   getChartData,
-  getCategoryNames
+  getCategoryNames,
+  getAllWeeklyTrends
 } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
@@ -20,7 +21,7 @@ export default connect(
 
       categoryList: state.cityWork.typesById,
       categoryPresets: {
-        'Weekly Trends': state.cityWork.weeklyTrends.map(trend => trend.type),
+        'Weekly Trends': getAllWeeklyTrends(state).map(trend => trend.type),
         'Quality of Life': [
           273, // graffiti
           504, // rats
