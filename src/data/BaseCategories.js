@@ -18,7 +18,6 @@ import {
 } from 'data/cityWork/categorySubsets';
 
 const DEFAULT_ANCESTOR_ID = '476263';
-// cribbed from https://github.com/cityofsomerville/Somerville_Data_Pipes/blob/178b6f39f26e5d7619c3ee7b70c966eae69cdfbc/constituent-services.R
 
 const BaseCategories = {
   '269': {

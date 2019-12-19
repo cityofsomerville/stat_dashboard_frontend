@@ -1,6 +1,6 @@
 // cribbed from https://github.com/cityofsomerville/Somerville_Data_Pipes/blob/178b6f39f26e5d7619c3ee7b70c966eae69cdfbc/constituent-services.R#L126-L130
 // feel free to modify!
-
+// TODO: follow up about centralizing service_request data source
 export const SERVICE_REQUEST_CATEGORIES = [
   269,
   422,
