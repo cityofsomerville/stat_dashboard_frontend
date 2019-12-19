@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import { CHART_COLORS } from 'data/Constants';
+import { CHART_COLORS } from 'charts/Constants';
 
 const debounce = (func, delay) => {
   let inDebounce;
@@ -27,18 +27,7 @@ export default class StackedAreaChart {
     this.ratio = 2 / 3;
     this.margin = { top: 0, right: 20, bottom: 20, left: 20 };
 
-    // todo: pick high-contrast, universal palette
-    this.color = d3
-      .scaleOrdinal()
-      .range([
-        '#98abc5',
-        '#8a89a6',
-        '#7b6888',
-        '#6b486b',
-        '#a05d56',
-        '#d0743c',
-        '#ff8c00'
-      ]);
+    this.color = d3.scaleOrdinal().range(CHART_COLORS);
 
     this.init();
   }

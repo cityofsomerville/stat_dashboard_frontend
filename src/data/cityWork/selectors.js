@@ -230,3 +230,44 @@ export const getInternalWeeklyTrends = createSelector(
     return selection;
   }
 );
+
+const groupBy = (arr, index) =>
+  arr.reduce((memo, item) => {
+    if (!memo[item[index]]) {
+      memo[item[index]] = [];
+    }
+    memo[item[index]].push(item);
+    return memo;
+  }, {});
+
+export const getInternalTreemapData = createSelector(
+  weeklyTrendsSelector,
+  weeklyTrends => {
+    let data = {};
+    const byDept = groupBy(
+      weeklyTrends.filter(trend => isServiceRequest(trend.type)),
+      'dept'
+    );
+
+    data = Object.keys(byDept).map(key => {
+      return {
+        name: key,
+        // children: byDept[key].map(category => ({
+        //   name: category.label,
+        //   value: category.thisWeekCount
+        // }))
+        value: byDept[key].reduce(
+          (memo, category) => memo + category.thisWeekCount,
+          0
+        )
+      };
+    });
+
+    // [
+    //   name: 'Dept',
+    //   children: [all tickets for that dept]
+    // ]
+    console.log(data);
+    return data;
+  }
+);

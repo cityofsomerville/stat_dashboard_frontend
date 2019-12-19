@@ -34,8 +34,8 @@ ChartContainer.propTypes = {
   data: PropTypes.array,
   columns: PropTypes.array,
   name: PropTypes.string.isRequired,
-  chartClass: PropTypes.func.isRequired,
-  cachebust: PropTypes.string
+  chartClass: PropTypes.func.isRequired
+  // cachebust: PropTypes.string
 };
 
 ChartContainer.defaultProps = {

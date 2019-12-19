@@ -7,7 +7,12 @@ import {
   DataCol,
   WeeklyTrends
 } from 'components/DataBlock';
-import { getInternalWeeklyTrends } from 'data/cityWork/selectors';
+import ChartContainer from 'charts/ChartContainer';
+import Treemap from 'charts/Treemap';
+import {
+  getInternalWeeklyTrends,
+  getInternalTreemapData
+} from 'data/cityWork/selectors';
 import { getBaseCategory } from 'data/BaseCategories';
 
 const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
@@ -19,8 +24,12 @@ const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
     </p>
     <DataRow>
       <DataCol>
-        {/* chart: pass in internalTreemapData here */}
-        treemap showing: internally generated work by category
+        <ChartContainer
+          chartClass={Treemap}
+          data={internalTreemapData}
+          name="internal_treemap"
+          cachebust={internalTreemapData.length}
+        />
       </DataCol>
       <WeeklyTrends metrics={internalWeeklyTrends} />
     </DataRow>
@@ -29,6 +38,9 @@ const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
 
 export default connect(state => {
   let internalWeeklyTrends = getInternalWeeklyTrends(state);
+
+  // todo: consider moving this logic to the selector
+  // but will the entire images be stored in memory?
   internalWeeklyTrends = internalWeeklyTrends.map(category => {
     const ancestor = getBaseCategory(category.ancestor);
     return {
@@ -40,6 +52,6 @@ export default connect(state => {
   return {
     internalWeeklyTrends,
     // also need a selector for chart data here
-    internalTreemapData: []
+    internalTreemapData: getInternalTreemapData(state)
   };
 })(InternalWork);
