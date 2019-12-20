@@ -99,6 +99,8 @@ export default class Treemap {
       .join('g')
       .attr('transform', d => `translate(${d.x0},${d.y0})`);
 
+    /*
+    // fix this
     leaf.append('title').text(
       d =>
         `${d
@@ -107,38 +109,30 @@ export default class Treemap {
           .map(d => d.data.name)
           .join('/')}\n${d.value}`
     );
+    */
 
     leaf
       .append('rect')
-      // .attr("id", d => (d.leafUid = DOM.uid("leaf")).id)
       .attr('fill', d => {
         while (d.depth > 1) d = d.parent;
         return self.color(d.data.name);
       })
-      .attr('fill-opacity', 0.6)
       .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0);
 
     leaf
-      .append('clipPath')
-      // .attr("id", d => (d.clipUid = DOM.uid("clip")).id)
-      .append('use');
-    // .attr("xlink:href", d => d.leafUid.href);
+      .append('text')
+      .attr('clip-path', d => d.clipUid)
+      .attr('font-size', 10)
+      .attr('x', 3)
+      .attr('y', 12)
+      .text(d => `${d.data.name}`);
 
     leaf
       .append('text')
-      // .attr("clip-path", d => d.clipUid)
-      .selectAll('tspan')
-      .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(d.value))
-      .join('tspan')
+      .attr('font-size', 10)
       .attr('x', 3)
-      .attr(
-        'y',
-        (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`
-      )
-      .attr('fill-opacity', (d, i, nodes) =>
-        i === nodes.length - 1 ? 0.7 : null
-      )
-      .text(d => d);
+      .attr('y', 22)
+      .text(d => `${d.data.value}`);
   }
 }
