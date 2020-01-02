@@ -55,6 +55,11 @@ export default class Treemap {
   cleanChart() {
     window.removeEventListener('resize', this.onResize.bind(this));
     this.targetElement.innerHTML = '';
+
+    const tooltip = document.getElementById('tooltip');
+    if (tooltip) {
+      tooltip.parentNode.removeChild(tooltip);
+    }
   }
 
   init() {
@@ -67,6 +72,12 @@ export default class Treemap {
       .select(`#${self.targetId}`)
       .append('svg:svg')
       .attr('class', 'chart');
+
+    self.tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'tooltip rounded border p-1 bg-light')
+      .attr('id', 'tooltip');
 
     self.resize();
   }
@@ -97,19 +108,19 @@ export default class Treemap {
       .selectAll('g')
       .data(root.leaves())
       .join('g')
-      .attr('transform', d => `translate(${d.x0},${d.y0})`);
-
-    /*
-    // fix this
-    leaf.append('title').text(
-      d =>
-        `${d
-          .ancestors()
-          .reverse()
-          .map(d => d.data.name)
-          .join('/')}\n${d.value}`
-    );
-    */
+      .attr('transform', d => `translate(${d.x0},${d.y0})`)
+      .style('cursor', 'default')
+      .on('mouseover', d =>
+        self.tooltip
+          .html(`Dept: ${d.data.name}<br/>Tickets: ${d.data.value}`)
+          .style('opacity', 1)
+      )
+      .on('mousemove', d =>
+        self.tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+      )
+      .on('mouseout', d => self.tooltip.style('opacity', 0));
 
     leaf
       .append('rect')
@@ -122,7 +133,6 @@ export default class Treemap {
 
     leaf
       .append('text')
-      .attr('clip-path', d => d.clipUid)
       .attr('font-size', 10)
       .attr('x', 3)
       .attr('y', 12)

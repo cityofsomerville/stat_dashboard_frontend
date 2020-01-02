@@ -18,9 +18,11 @@ import { getBaseCategory } from 'data/BaseCategories';
 const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
   <BlockContent>
     <p>
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-      dis parturient montes, nascetur ridiculus mus.
+      At the same time that they respond to 311 reports, city workers are also
+      proactive about finding work that needs to be done, reporting it, and
+      completing it. This section explores trends in tickets filed internally
+      over the past 7 days. The treemap shows internal tickets completed in the
+      last 7 days grouped by department.
     </p>
     <DataRow>
       <DataCol>
