@@ -19,7 +19,7 @@ import {
 
 const DEFAULT_ANCESTOR_ID = '476263';
 
-const BaseCategories = {
+export const BaseCategories = {
   '269': {
     ancestor_id: '0',
     name: 'Animals & Pets',

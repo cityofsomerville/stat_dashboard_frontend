@@ -9,6 +9,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 
 import { isServiceRequest } from 'data/BaseCategories';
 import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
+import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -204,5 +205,21 @@ export const getInternalTreemapData = createSelector(
     });
 
     return data;
+  }
+);
+
+export const getInProgressHeatmapData = createSelector(
+  ticketsSelector,
+  tickets => {
+    // const types = Object.keys(BaseCategories).map()
+    // const types = tickets.reduce(ticket => {
+    //   if (!memo.indexOf(ticket.)) {
+    //   }
+    //   return memo;
+    // }, []);
+    // let ticketsByDay = createDateBuckets({
+    //   ...dateRange,
+    //   categories: categories.map(category => typesById[category].name)
+    // });
   }
 );
