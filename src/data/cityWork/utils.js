@@ -40,6 +40,7 @@ export const getWeeklyTrends = (types, tickets) => {
           label: types[key].name,
           type: key,
           ancestor: types[key].ancestor_id,
+          dept: ticketsByWeek.thisWeek[key][0].dept,
           thisWeekCount,
           lastWeekCount
         };

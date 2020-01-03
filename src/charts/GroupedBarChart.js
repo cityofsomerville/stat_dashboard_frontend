@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import { CHART_COLORS } from 'data/Constants';
+import { CHART_COLORS } from 'charts/Constants';
 
 const debounce = (func, delay) => {
   let inDebounce;
@@ -27,7 +27,6 @@ export default class GroupedBarChart {
     this.ratio = 2 / 3;
     this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
 
-    // todo: pick high-contrast, universal palette
     this.color = d3.scaleOrdinal().range(CHART_COLORS);
 
     this.init();
