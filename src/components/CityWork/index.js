@@ -5,7 +5,6 @@ import startOfToday from 'date-fns/startOfToday';
 
 import DataBlock, {
   BlockContent,
-  WeeklyTrends,
   DataRow,
   DataCol
 } from 'components/DataBlock';
@@ -16,12 +15,7 @@ import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
 import InternalWork from 'components/CityWork/InternalWork';
 
-import {
-  fetchTickets,
-  fetchActionsByDay,
-  fetchTypesById,
-  fetchTypesTickets
-} from 'data/cityWork/actions';
+import { fetchActionsByDay, fetchTypesTickets } from 'data/cityWork/actions';
 
 const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
   useEffect(() => {
@@ -70,8 +64,6 @@ const InProgress = () => (
 );
 
 export default connect(null, {
-  fetchTickets,
   fetchActionsByDay,
-  fetchTypesById,
   fetchTypesTickets
 })(CityWork);

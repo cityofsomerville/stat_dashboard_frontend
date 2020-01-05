@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import format from 'date-fns/format';
-import startOfToday from 'date-fns/startOfToday';
 import startOfYesterday from 'date-fns/startOfYesterday';
 import startOfDay from 'date-fns/startOfDay';
 import subDays from 'date-fns/subDays';

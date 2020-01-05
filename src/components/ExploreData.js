@@ -131,9 +131,22 @@ class ExploreData extends React.Component {
 }
 
 ExploreData.propTypes = {
-  categoryList: PropTypes.object,
-  namespace: PropTypes.string,
-  mapData: PropTypes.array
+  selectedDatePreset: PropTypes.string,
+  selectedCategoryPreset: PropTypes.string,
+  selectedCategoryNames: PropTypes.array,
+
+  categoryPresets: PropTypes.array.isRequired,
+  chartData: PropTypes.shape({
+    data: PropTypes.array,
+    columns: PropTypes.array
+  }).isRequired,
+  namespace: PropTypes.string.isRequired,
+  selectionKey: PropTypes.string,
+  mapData: PropTypes.array.isRequired,
+  dataStore: PropTypes.shape().isRequired,
+
+  fetchData: PropTypes.func.isRequired,
+  updateSelectionKey: PropTypes.func.isRequired
 };
 
 export default ExploreData;
