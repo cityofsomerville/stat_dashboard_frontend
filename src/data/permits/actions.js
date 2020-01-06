@@ -25,7 +25,7 @@ export const fetchPermitsExploreData = key => {
   };
 };
 
-export const updatePermitsSelectionKey = key => ({
+export const updatePermitsParams = key => ({
   type: types.PERMITS_UPDATE_SELECTION_KEY,
   key
 });

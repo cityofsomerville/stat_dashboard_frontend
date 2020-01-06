@@ -5,9 +5,58 @@ import parseISO from 'date-fns/parseISO';
 const exploreDataCacheSelector = state => state.permits.exploreDataCache;
 const exploreDataKeySelector = state => state.permits.exploreDataKey;
 
+// export const getChartData = createSelector(
+//   [exploreDataCacheSelector, exploreDataKeySelector],
+//   (exploreDataCache, exploreDataKey, typesById) => {
+//     let data = { data: [], columns: [] };
+//     if (
+//       exploreDataCache &&
+//       exploreDataKey &&
+//       exploreDataCache[exploreDataKey]
+//     ) {
+//       const { categories, dateRange } = JSON.parse(exploreDataKey);
+//       let permitsByDay = createDateBuckets({
+//         ...dateRange,
+//         categories
+//       });
+//       const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
+//         return differenceInDays(parseISO(a), parseISO(b));
+//       });
+
+//       exploreDataCache[exploreDataKey].forEach(ticket => {
+//         const dateKey = format(
+//           startOfDay(parseISO(ticket.last_modified)),
+//           SOCRATA_TIMESTAMP
+//         );
+//         const type = typesById[ticket.type];
+//         ticketsByDay[dateKey][type.name].push(ticket);
+//       });
+//       data.columns = orderedDates;
+//       data.data = orderedDates.reduce((memo, day) => {
+//         const ticketsForDay = ticketsByDay[day];
+//         const counts = Object.keys(ticketsForDay).reduce(
+//           (memo, type) => ({
+//             ...memo,
+//             [type]: ticketsForDay[type].length
+//           }),
+//           {}
+//         );
+//         return [
+//           ...memo,
+//           {
+//             ...counts,
+//             date: parseISO(day)
+//           }
+//         ];
+//       }, []);
+//     }
+//     return data;
+//   }
+// );
+
 export const getMapData = createSelector(
   [exploreDataCacheSelector, exploreDataKeySelector],
-  (exploreDataCache, exploreDataKey, typesById) => {
+  (exploreDataCache, exploreDataKey) => {
     let selection = [];
     if (
       exploreDataCache &&

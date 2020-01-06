@@ -53,10 +53,8 @@ class ExploreData extends React.Component {
 
   fetchIfNecessary() {
     const requestKey = this.getRequestKey();
-    if (requestKey && !this.props.dataStore[requestKey]) {
+    if (requestKey && this.props.params !== requestKey) {
       this.props.fetchData(requestKey);
-    } else if (requestKey && this.props.selectionKey !== requestKey) {
-      this.props.updateSelectionKey(requestKey);
     }
   }
 
@@ -118,7 +116,7 @@ class ExploreData extends React.Component {
               columns={this.props.chartData.columns}
               chartClass={StackedAreaChart}
               name={`explore-data-${this.props.namespace}`}
-              cachebust={this.props.selectionKey}
+              cachebust={this.props.params}
             />
           </DataCol>
           <DataCol>
@@ -135,18 +133,18 @@ ExploreData.propTypes = {
   selectedCategoryPreset: PropTypes.string,
   selectedCategoryNames: PropTypes.array,
 
-  categoryPresets: PropTypes.array.isRequired,
+  categoryPresets: PropTypes.shape().isRequired,
   chartData: PropTypes.shape({
     data: PropTypes.array,
     columns: PropTypes.array
   }).isRequired,
   namespace: PropTypes.string.isRequired,
-  selectionKey: PropTypes.string,
+  params: PropTypes.string,
   mapData: PropTypes.array.isRequired,
-  dataStore: PropTypes.shape().isRequired,
+  dataStore: PropTypes.array.isRequired,
 
   fetchData: PropTypes.func.isRequired,
-  updateSelectionKey: PropTypes.func.isRequired
+  updateParams: PropTypes.func.isRequired
 };
 
 export default ExploreData;

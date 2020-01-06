@@ -5,7 +5,7 @@ import DataBlock from 'components/DataBlock';
 import ExploreData from 'components/ExploreData';
 import {
   fetchPermitsExploreData,
-  updatePermitsSelectionKey
+  updatePermitsParams
 } from 'data/permits/actions';
 import {
   getMapData,
@@ -32,10 +32,10 @@ const Permits = ({
   selectedCategoryNames,
   dataStore,
   chartData,
-  selectionKey,
+  params,
   mapData,
   fetchPermitsExploreData,
-  updatePermitsSelectionKey
+  updatePermitsParams
 }) => (
   <DataBlock
     keyMetrics={[
@@ -49,7 +49,7 @@ const Permits = ({
       ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
       dis parturient montes, nascetur ridiculus mus.
     </p>
-    <ExploreData
+    {/*<ExploreData
       namespace="permits_licenses"
       selectedDatePreset="7 days"
       selectedCategoryPreset="All Permit Types"
@@ -57,11 +57,11 @@ const Permits = ({
       categoryPresets={categoryPresets}
       dataStore={dataStore}
       chartData={chartData}
-      selectionKey={selectionKey}
+      params={params}
       mapData={mapData}
-      updateSelectionKey={updatePermitsSelectionKey}
+      updateParams={updatePermitsParams}
       fetchData={fetchPermitsExploreData}
-    />
+    />*/}
   </DataBlock>
 );
 
@@ -74,11 +74,11 @@ export default connect(
       data: [],
       columns: []
     },
-    selectionKey: null,
+    params: null,
     mapData: getMapData(state)
   }),
   {
     fetchPermitsExploreData,
-    updatePermitsSelectionKey
+    updatePermitsParams
   }
 )(Permits);

@@ -115,12 +115,8 @@ export const getMapData = createSelector(
   [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
   (exploreDataCache, exploreDataKey, typesById) => {
     let selection = [];
-    if (
-      exploreDataCache &&
-      exploreDataKey &&
-      exploreDataCache[exploreDataKey]
-    ) {
-      selection = exploreDataCache[exploreDataKey].map(ticket => ({
+    if (exploreDataCache && exploreDataKey) {
+      selection = exploreDataCache.map(ticket => ({
         id: ticket.id,
         latitude: ticket.latitude,
         longitude: ticket.longitude,
@@ -153,11 +149,7 @@ export const getChartData = createSelector(
   [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
   (exploreDataCache, exploreDataKey, typesById) => {
     let data = { data: [], columns: [] };
-    if (
-      exploreDataCache &&
-      exploreDataKey &&
-      exploreDataCache[exploreDataKey]
-    ) {
+    if (exploreDataCache && exploreDataKey) {
       const { categories, dateRange } = JSON.parse(exploreDataKey);
       let ticketsByDay = createDateBuckets({
         ...dateRange,
@@ -167,7 +159,7 @@ export const getChartData = createSelector(
         return differenceInDays(parseISO(a), parseISO(b));
       });
 
-      exploreDataCache[exploreDataKey].forEach(ticket => {
+      exploreDataCache.forEach(ticket => {
         const dateKey = format(
           startOfDay(parseISO(ticket.last_modified)),
           SOCRATA_TIMESTAMP

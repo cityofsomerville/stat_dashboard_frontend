@@ -95,7 +95,7 @@ export const fetchCityWorkExploreData = key => {
   };
 };
 
-export const updateSelectionKey = key => ({
+export const updateCityWorkParams = key => ({
   type: types.UPDATE_SELECTION_KEY,
   key
 });
