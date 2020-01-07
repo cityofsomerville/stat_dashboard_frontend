@@ -103,7 +103,6 @@ const exploreDataKey = (state = initialState.exploreDataKey, action) => {
 const exploreDataCache = (state = initialState.exploreDataCache, action) => {
   switch (action.type) {
     case types.EXPLORE_DATA_SUCCESS:
-      console.log(action);
       return [...action.payload];
     default:
       return state;

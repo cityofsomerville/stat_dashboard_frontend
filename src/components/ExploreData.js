@@ -28,9 +28,9 @@ class ExploreData extends React.Component {
     };
   }
 
-  getRequestKey() {
+  getParams() {
     let { selectedCategories, selectedDateRange } = this.state;
-    let key = null;
+    let params = null;
 
     if (this.state.selectedCategoryPreset !== 'Custom...') {
       selectedCategories = this.props.categoryPresets[
@@ -43,18 +43,19 @@ class ExploreData extends React.Component {
     }
 
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
-      key = JSON.stringify({
+      params = JSON.stringify({
         categories: selectedCategories.sort(),
         dateRange: selectedDateRange
       });
     }
-    return key;
+    return params;
   }
 
   fetchIfNecessary() {
-    const requestKey = this.getRequestKey();
-    if (requestKey && this.props.params !== requestKey) {
-      this.props.fetchData(requestKey);
+    const params = this.getParams();
+    if (params && this.props.params !== params) {
+      console.log('fetching');
+      this.props.fetchData(params);
     }
   }
 
@@ -141,10 +142,8 @@ ExploreData.propTypes = {
   namespace: PropTypes.string.isRequired,
   params: PropTypes.string,
   mapData: PropTypes.array.isRequired,
-  dataStore: PropTypes.array.isRequired,
 
-  fetchData: PropTypes.func.isRequired,
-  updateParams: PropTypes.func.isRequired
+  fetchData: PropTypes.func.isRequired
 };
 
 export default ExploreData;

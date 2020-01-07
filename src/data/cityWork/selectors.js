@@ -8,8 +8,8 @@ import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import { SOCRATA_TIMESTAMP } from 'data/Constants';
 import { isServiceRequest } from 'data/BaseCategories';
+import { groupBy, formatTimestamp, dateRangeBuckets } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -29,11 +29,10 @@ export const getWorkOrders = createSelector(
       closed: { figure: null, delta: null }
     };
 
-    const yesterday =
-      actionsByDay[format(startOfYesterday(), SOCRATA_TIMESTAMP)];
+    const yesterday = actionsByDay[formatTimestamp(startOfYesterday())];
 
     const twoDaysAgo =
-      actionsByDay[format(subDays(startOfYesterday(), 1), SOCRATA_TIMESTAMP)];
+      actionsByDay[formatTimestamp(subDays(startOfYesterday(), 1))];
 
     if (yesterday && twoDaysAgo) {
       const createdYesterday = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
@@ -137,7 +136,7 @@ const createDateBuckets = ({ startDate, endDate, categories }) => {
   const size = differenceInDays(end, start);
 
   for (let i = size; i >= 0; i--) {
-    set[format(subDays(end, i), SOCRATA_TIMESTAMP)] = categories.reduce(
+    set[formatTimestamp(subDays(end, i))] = categories.reduce(
       (memo, category) => ({ ...memo, [category]: [] }),
       {}
     );
@@ -151,40 +150,37 @@ export const getChartData = createSelector(
     let data = { data: [], columns: [] };
     if (exploreDataCache && exploreDataKey) {
       const { categories, dateRange } = JSON.parse(exploreDataKey);
-      let ticketsByDay = createDateBuckets({
-        ...dateRange,
-        categories: categories.map(category => typesById[category].name)
+      let ticketsByDay = dateRangeBuckets({
+        startDate: parseISO(dateRange.startDate),
+        endDate: parseISO(dateRange.endDate)
       });
+
+      Object.keys(ticketsByDay).forEach(key => {
+        ticketsByDay[key] = categories.reduce(
+          (memo, category) => ({
+            ...memo,
+            [typesById[category].name]: 0
+          }),
+          {}
+        );
+      });
+
       const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
         return differenceInDays(parseISO(a), parseISO(b));
       });
 
       exploreDataCache.forEach(ticket => {
-        const dateKey = format(
-          startOfDay(parseISO(ticket.last_modified)),
-          SOCRATA_TIMESTAMP
+        const dateKey = formatTimestamp(
+          startOfDay(parseISO(ticket.created_on))
         );
         const type = typesById[ticket.type];
-        ticketsByDay[dateKey][type.name].push(ticket);
+        ticketsByDay[dateKey][type.name]++;
       });
       data.columns = orderedDates;
-      data.data = orderedDates.reduce((memo, day) => {
-        const ticketsForDay = ticketsByDay[day];
-        const counts = Object.keys(ticketsForDay).reduce(
-          (memo, type) => ({
-            ...memo,
-            [type]: ticketsForDay[type].length
-          }),
-          {}
-        );
-        return [
-          ...memo,
-          {
-            ...counts,
-            date: parseISO(day)
-          }
-        ];
-      }, []);
+      data.data = orderedDates.map(day => ({
+        ...ticketsByDay[day],
+        date: parseISO(day)
+      }));
     }
     return data;
   }
@@ -221,15 +217,6 @@ export const getInternalWeeklyTrends = createSelector(
     return selection;
   }
 );
-
-const groupBy = (arr, index) =>
-  arr.reduce((memo, item) => {
-    if (!memo[item[index]]) {
-      memo[item[index]] = [];
-    }
-    memo[item[index]].push(item);
-    return memo;
-  }, {});
 
 export const getInternalTreemapData = createSelector(
   weeklyTrendsSelector,

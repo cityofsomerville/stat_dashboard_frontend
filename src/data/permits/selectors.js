@@ -3,7 +3,7 @@ import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 
 const exploreDataCacheSelector = state => state.permits.exploreDataCache;
-const exploreDataKeySelector = state => state.permits.exploreDataKey;
+const exploreDataParamsSelector = state => state.permits.exploreDataParams;
 
 // export const getChartData = createSelector(
 //   [exploreDataCacheSelector, exploreDataKeySelector],
@@ -55,15 +55,11 @@ const exploreDataKeySelector = state => state.permits.exploreDataKey;
 // );
 
 export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector],
-  (exploreDataCache, exploreDataKey) => {
+  [exploreDataCacheSelector, exploreDataParamsSelector],
+  (exploreDataCache, exploreDataParams) => {
     let selection = [];
-    if (
-      exploreDataCache &&
-      exploreDataKey &&
-      exploreDataCache[exploreDataKey]
-    ) {
-      selection = exploreDataCache[exploreDataKey].map(permit => ({
+    if (exploreDataCache && exploreDataParams) {
+      selection = exploreDataCache.map(permit => ({
         id: permit.id,
         latitude: permit.latitude,
         longitude: permit.longitude,
@@ -73,6 +69,7 @@ export const getMapData = createSelector(
         type: permit.type
       }));
     }
+    console.log(selection);
     return selection;
   }
 );

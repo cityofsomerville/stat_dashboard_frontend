@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 
 import DataBlock from 'components/DataBlock';
 import ExploreData from 'components/ExploreData';
-import {
-  fetchPermitsExploreData,
-  updatePermitsParams
-} from 'data/permits/actions';
+import { fetchPermitsExploreData } from 'data/permits/actions';
 import {
   getMapData,
   getChartData,
@@ -49,19 +46,17 @@ const Permits = ({
       ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
       dis parturient montes, nascetur ridiculus mus.
     </p>
-    {/*<ExploreData
+    <ExploreData
       namespace="permits_licenses"
       selectedDatePreset="7 days"
       selectedCategoryPreset="All Permit Types"
       selectedCategoryNames={selectedCategoryNames}
       categoryPresets={categoryPresets}
-      dataStore={dataStore}
       chartData={chartData}
       params={params}
       mapData={mapData}
-      updateParams={updatePermitsParams}
       fetchData={fetchPermitsExploreData}
-    />*/}
+    />
   </DataBlock>
 );
 
@@ -74,11 +69,10 @@ export default connect(
       data: [],
       columns: []
     },
-    params: null,
+    params: state.permits.exploreDataParams,
     mapData: getMapData(state)
   }),
   {
-    fetchPermitsExploreData,
-    updatePermitsParams
+    fetchPermitsExploreData
   }
 )(Permits);

@@ -49,7 +49,7 @@ export const getCityWorkExploreData = async key => {
   const dateRange = constructDateRangeQuery({
     startDate: parseISO(properties.dateRange.startDate),
     endDate: parseISO(properties.dateRange.endDate),
-    dateField: 'last_modified'
+    dateField: 'created_on'
   });
   const typeSelection = properties.categories
     .map(id => `type = "${id}"`)
