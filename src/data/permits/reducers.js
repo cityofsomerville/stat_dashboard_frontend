@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
 
 import { types } from 'data/permits/actions';
-import { SOCRATA_TIMESTAMP } from 'data/Constants';
 
 const initialState = {
-  exploreDataCache: {},
+  exploreDataCache: [],
   exploreDataParams: null
 };
 

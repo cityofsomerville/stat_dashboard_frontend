@@ -54,7 +54,6 @@ class ExploreData extends React.Component {
   fetchIfNecessary() {
     const params = this.getParams();
     if (params && this.props.params !== params) {
-      console.log('fetching');
       this.props.fetchData(params);
     }
   }

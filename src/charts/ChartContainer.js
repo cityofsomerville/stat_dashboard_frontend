@@ -8,11 +8,13 @@ export default class ChartContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.chart = new this.props.chartClass({
-      data: this.props.data,
-      columns: this.props.columns,
-      targetId: `chart-container-${this.props.name}`
-    });
+    if (this.data && this.data.length) {
+      this.chart = new this.props.chartClass({
+        data: this.props.data,
+        columns: this.props.columns,
+        targetId: `chart-container-${this.props.name}`
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {

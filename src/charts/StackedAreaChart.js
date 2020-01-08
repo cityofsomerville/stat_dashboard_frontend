@@ -25,10 +25,9 @@ export default class StackedAreaChart {
     this.width = 800;
     this.height = 500;
     this.ratio = 2 / 3;
-    this.margin = { top: 0, right: 20, bottom: 20, left: 20 };
+    this.margin = { top: 0, right: 20, bottom: 20, left: 30 };
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS);
-
     this.init();
   }
 
@@ -39,6 +38,7 @@ export default class StackedAreaChart {
       this.width = containerWidth - this.margin.left - this.margin.right;
       this.height =
         containerWidth * this.ratio - this.margin.top - this.margin.bottom;
+
       this.renderChart();
     }
   }
@@ -57,9 +57,9 @@ export default class StackedAreaChart {
 
   init() {
     const self = this;
+    self.cleanChart();
     window.addEventListener('resize', this.onResize.bind(this));
 
-    self.cleanChart();
     self.chart = d3
       .select(`#${self.targetId}`)
       .append('svg:svg')
@@ -102,7 +102,7 @@ export default class StackedAreaChart {
         new Date(self.columns[0]),
         new Date(self.columns[self.columns.length - 1])
       ])
-      .range([0, self.width - self.margin.left - self.margin.right]);
+      .range([0, self.width]);
 
     // set up the y scale
     const yScale = d3

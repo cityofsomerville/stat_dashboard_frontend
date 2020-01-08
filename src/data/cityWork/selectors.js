@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import format from 'date-fns/format';
 import startOfYesterday from 'date-fns/startOfYesterday';
-import startOfDay from 'date-fns/startOfDay';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
@@ -9,7 +8,7 @@ import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
 import { isServiceRequest } from 'data/BaseCategories';
-import { groupBy, formatTimestamp, dateRangeBuckets } from 'data/utils';
+import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -128,77 +127,50 @@ export const getMapData = createSelector(
   }
 );
 
-// TODO: genericize this
-const createDateBuckets = ({ startDate, endDate, categories }) => {
-  const set = {};
-  const start = startOfDay(parseISO(startDate));
-  const end = startOfDay(parseISO(endDate));
-  const size = differenceInDays(end, start);
-
-  for (let i = size; i >= 0; i--) {
-    set[formatTimestamp(subDays(end, i))] = categories.reduce(
-      (memo, category) => ({ ...memo, [category]: [] }),
-      {}
-    );
+const getTicketsWithCategories = createSelector(
+  [exploreDataCacheSelector, typesByIdSelector],
+  (exploreDataCache, typesById) => {
+    let tickets = [];
+    if (exploreDataCache && typesById) {
+      tickets = exploreDataCache.map(ticket => ({
+        ...ticket,
+        type: typesById[ticket.type].name
+      }));
+    }
+    return tickets;
   }
-  return set;
-};
+);
 
-export const getChartData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
-  (exploreDataCache, exploreDataKey, typesById) => {
-    let data = { data: [], columns: [] };
-    if (exploreDataCache && exploreDataKey) {
+const getParams = createSelector(
+  [exploreDataKeySelector, typesByIdSelector],
+  (exploreDataKey, typesById) => {
+    let data = { categories: [], dateRange: {} };
+    if (exploreDataKey && typesById) {
       const { categories, dateRange } = JSON.parse(exploreDataKey);
-      let ticketsByDay = dateRangeBuckets({
+      data.categories = categories.map(category => typesById[category].name);
+      data.dateRange = {
         startDate: parseISO(dateRange.startDate),
         endDate: parseISO(dateRange.endDate)
-      });
-
-      Object.keys(ticketsByDay).forEach(key => {
-        ticketsByDay[key] = categories.reduce(
-          (memo, category) => ({
-            ...memo,
-            [typesById[category].name]: 0
-          }),
-          {}
-        );
-      });
-
-      const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
-        return differenceInDays(parseISO(a), parseISO(b));
-      });
-
-      exploreDataCache.forEach(ticket => {
-        const dateKey = formatTimestamp(
-          startOfDay(parseISO(ticket.created_on))
-        );
-        const type = typesById[ticket.type];
-        ticketsByDay[dateKey][type.name]++;
-      });
-      data.columns = orderedDates;
-      data.data = orderedDates.map(day => ({
-        ...ticketsByDay[day],
-        date: parseISO(day)
-      }));
+      };
     }
     return data;
   }
 );
 
-export const getCategoryNames = createSelector(
-  [exploreDataKeySelector, typesByIdSelector],
-  (exploreDataKey, typesById) => {
-    let selection = [];
-    if (exploreDataKey && typesById) {
-      const { categories } = JSON.parse(exploreDataKey);
-      const names = categories.map(cat => typesById[cat].name);
-      const last = names.pop();
-      return `${names.join(', ')}, and ${last}`;
-    }
-    return selection;
-  }
+export const getChartData = createSelector(
+  [getTicketsWithCategories, getParams],
+  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
 );
+
+export const getCategoryNames = createSelector(getParams, params => {
+  let selection = [];
+  if (params) {
+    const { categories } = params;
+    const last = categories.pop();
+    return `${categories.join(', ')}, and ${last}`;
+  }
+  return selection;
+});
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,

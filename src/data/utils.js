@@ -28,3 +28,36 @@ export const dateRangeBuckets = ({ startDate, endDate }) => {
   }
   return set;
 };
+
+export const getStackedAreaChartData = (data, params, dateField) => {
+  let chartData = { data: [], columns: [] };
+  if (data && params) {
+    const { categories, dateRange } = params;
+    let dataByDay = dateRangeBuckets(dateRange);
+
+    Object.keys(dataByDay).forEach(key => {
+      dataByDay[key] = categories.reduce(
+        (memo, category) => ({
+          ...memo,
+          [category]: 0
+        }),
+        {}
+      );
+    });
+
+    const orderedDates = Object.keys(dataByDay).sort((a, b) => {
+      return differenceInDays(parseISO(a), parseISO(b));
+    });
+
+    data.forEach(ticket => {
+      const dateKey = formatTimestamp(startOfDay(parseISO(ticket[dateField])));
+      dataByDay[dateKey][ticket.type]++;
+    });
+    chartData.columns = orderedDates;
+    chartData.data = orderedDates.map(day => ({
+      ...dataByDay[day],
+      date: parseISO(day)
+    }));
+  }
+  return chartData;
+};
