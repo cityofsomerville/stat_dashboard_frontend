@@ -8,7 +8,7 @@ export default class ChartContainer extends React.Component {
   }
 
   componentDidMount() {
-    if (this.data && this.data.length) {
+    if (this.props.data && this.props.data.length) {
       this.chart = new this.props.chartClass({
         data: this.props.data,
         columns: this.props.columns,

@@ -22,7 +22,7 @@ const ExploreDataMap = ({ markers }) => (
     <style type="text/css">{`
       .leaflet-container {
         height: 300px;
-        width: 499px;
+        width: 100%;
       }
   `}</style>
     <Map center={position} zoom={12}>

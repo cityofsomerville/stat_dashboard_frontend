@@ -58,8 +58,6 @@ const Permits = ({
 export default connect(
   state => ({
     selectedCategoryNames: ['a', 'b', 'c'],
-
-    dataStore: state.permits.exploreDataCache,
     chartData: getChartData(state),
     params: state.permits.exploreDataParams,
     mapData: getMapData(state)
