@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
+import listify from 'listify';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import { DATE_PRESETS } from 'data/Constants';
@@ -73,9 +74,9 @@ class ExploreData extends React.Component {
           Currently viewing tickets closed within the past{' '}
           {this.state.selectedDatePreset} for preset{' '}
           {this.state.selectedCategoryPreset}, which contains categories{' '}
-          {this.props.selectedCategoryNames}. The stacked area chart shows the
-          volume of tickets of each type, while the map shows the approximate
-          location of each ticket.
+          {listify(this.props.selectedCategoryNames)}. The stacked area chart
+          shows the volume of tickets of each type, while the map shows the
+          approximate location of each ticket.
         </p>
         <form>
           <label htmlFor="category">Category</label>

@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 import DataBlock from 'components/DataBlock';
 import ExploreData from 'components/ExploreData';
 import { fetchPermitsExploreData } from 'data/permits/actions';
-import { getMapData, getChartData } from 'data/permits/selectors';
+import {
+  getMapData,
+  getChartData,
+  getCategoryNames
+} from 'data/permits/selectors';
 
 const categoryPresets = {
   'All Permit Types': [
@@ -57,7 +61,7 @@ const Permits = ({
 
 export default connect(
   state => ({
-    selectedCategoryNames: ['a', 'b', 'c'],
+    selectedCategoryNames: getCategoryNames(state),
     chartData: getChartData(state),
     params: state.permits.exploreDataParams,
     mapData: getMapData(state)

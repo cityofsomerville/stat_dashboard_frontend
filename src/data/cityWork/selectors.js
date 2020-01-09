@@ -163,13 +163,7 @@ export const getChartData = createSelector(
 );
 
 export const getCategoryNames = createSelector(getParams, params => {
-  let selection = [];
-  if (params) {
-    const { categories } = params;
-    const last = categories.pop();
-    return `${categories.join(', ')}, and ${last}`;
-  }
-  return selection;
+  return params.categories;
 });
 
 export const getAllWeeklyTrends = createSelector(

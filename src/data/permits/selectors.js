@@ -46,3 +46,7 @@ export const getMapData = createSelector(
     return selection;
   }
 );
+
+export const getCategoryNames = createSelector(getParams, params => {
+  return params.categories;
+});
