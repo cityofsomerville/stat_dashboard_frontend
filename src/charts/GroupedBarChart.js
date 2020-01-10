@@ -1,62 +1,21 @@
 import * as d3 from 'd3';
 
+import Chart from 'charts/Chart';
 import { CHART_COLORS } from 'charts/Constants';
 
-const debounce = (func, delay) => {
-  let inDebounce;
-  return function() {
-    const context = this;
-    const args = arguments;
-    clearTimeout(inDebounce);
-    inDebounce = setTimeout(() => func.apply(context, args), delay);
-  };
-};
-
-export default class GroupedBarChart {
-  constructor({ data, columns, targetId }) {
-    this.data = data;
-    this.keys = columns.slice(1);
-    this.groupKey = columns[0];
-
-    this.targetId = targetId;
-    this.targetElement = document.getElementById(targetId);
-
-    this.containerWidth = 800;
-    this.width = 800;
-    this.height = 500;
-    this.ratio = 2 / 3;
-    this.margin = { top: 10, right: 10, bottom: 20, left: 40 };
+export default class GroupedBarChart extends Chart {
+  constructor(args) {
+    super({
+      ...args,
+      legend: true,
+      margin: { top: 10, right: 10, bottom: 20, left: 35 }
+    });
+    this.keys = args.columns.slice(1);
+    this.groupKey = args.columns[0];
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS);
 
     this.init();
-  }
-
-  draw() {
-    const containerWidth = this.targetElement.offsetWidth;
-
-    if (containerWidth !== this.containerWidth) {
-      this.width = containerWidth - this.margin.left - this.margin.right;
-      this.height =
-        containerWidth * this.ratio - this.margin.top - this.margin.bottom;
-      this.renderChart();
-    }
-  }
-
-  onResize() {
-    const fn = event => {
-      this.draw();
-    };
-    debounce(fn.bind(this), 1000)();
-  }
-
-  cleanChart() {
-    window.removeEventListener('resize', this.onResize.bind(this));
-    this.targetElement.innerHTML = '';
-    // const tooltip = document.getElementById('tooltip');
-    // if (tooltip) {
-    //   tooltip.parentNode.removeChild(tooltip);
-    // }
   }
 
   init() {
@@ -87,7 +46,6 @@ export default class GroupedBarChart {
 
     self.legend = self.chart
       .append('g')
-      .attr('text-anchor', 'end')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
 
@@ -100,23 +58,23 @@ export default class GroupedBarChart {
           .reverse()
       )
       .join('g')
-      .attr('transform', (d, i) => `translate(0,${i * 20})`);
+      .attr('transform', (d, i) => `translate(${i * 100}, 0)`);
 
     self.rows
       .append('rect')
-      .attr('x', -19)
+      .attr('x', 0)
       .attr('width', 19)
       .attr('height', 19)
       .attr('fill', self.color);
 
     self.rows
       .append('text')
-      .attr('x', -24)
+      .attr('x', 24)
       .attr('y', 9.5)
       .attr('dy', '0.35em')
       .text(d => d);
 
-    self.draw();
+    self.resize();
   }
 
   renderChart() {
@@ -165,6 +123,9 @@ export default class GroupedBarChart {
       .attr('width', x1.bandwidth())
       .attr('height', d => y(0) - y(d.value));
 
-    self.legend.attr('transform', `translate(${self.width},0)`);
+    self.legend.attr(
+      'transform',
+      `translate(${self.margin.left}, ${self.height + self.margin.top})`
+    );
   }
 }

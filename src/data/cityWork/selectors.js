@@ -7,7 +7,6 @@ import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import { isServiceRequest } from 'data/BaseCategories';
 import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
 import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
 

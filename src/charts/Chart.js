@@ -22,8 +22,8 @@ export default class Chart {
     this.ratio = ratio || 2 / 3;
     this.margin = margin || { top: 0, right: 20, bottom: 20, left: 20 };
 
-    window.addEventListener('resize', this.onResize.bind(this));
     this.cleanChart();
+    window.addEventListener('resize', this.onResize.bind(this));
 
     this.chart = d3
       .select(`#${targetId}`)
