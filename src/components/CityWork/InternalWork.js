@@ -30,7 +30,7 @@ const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
           chartClass={Treemap}
           data={internalTreemapData}
           name="internal_treemap"
-          cachebust={internalTreemapData.length}
+          cachebust={`${internalTreemapData.length}`}
         />
       </DataCol>
       <WeeklyTrends metrics={internalWeeklyTrends} />

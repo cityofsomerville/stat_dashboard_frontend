@@ -1,7 +1,5 @@
 import React from 'react';
 
-import animals_pets from 'images/animals_pets.svg';
-
 const Icon = ({ img, alt }) => {
   return (
     <span

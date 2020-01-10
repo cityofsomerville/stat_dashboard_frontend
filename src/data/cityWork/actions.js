@@ -15,8 +15,7 @@ export const types = [
   'TICKETS_ERROR',
   'TYPES_TICKETS_LOADED',
   'EXPLORE_DATA_SUCCESS',
-  'EXPLORE_DATA_ERROR',
-  'UPDATE_SELECTION_KEY'
+  'EXPLORE_DATA_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 export const fetchActionsByDay = ({ startDate, endDate }) => {
@@ -94,8 +93,3 @@ export const fetchCityWorkExploreData = key => {
     }
   };
 };
-
-export const updateSelectionKey = key => ({
-  type: types.UPDATE_SELECTION_KEY,
-  key
-});

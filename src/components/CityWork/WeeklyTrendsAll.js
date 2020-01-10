@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { WeeklyTrends } from 'components/DataBlock';
-import BaseCategories, { getBaseCategory } from 'data/BaseCategories';
+import { getBaseCategory } from 'data/BaseCategories';
 import { getAllWeeklyTrends } from 'data/cityWork/selectors';
 
 export default connect(state => ({

@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
 
-import {
-  fetchCityWorkExploreData,
-  updateSelectionKey
-} from 'data/cityWork/actions';
+import { fetchCityWorkExploreData } from 'data/cityWork/actions';
 import {
   getMapData,
   getChartData,
@@ -33,8 +30,7 @@ export default connect(
         // TODO: fix this!
         //'Custom...': []
       },
-      dataStore: state.cityWork.exploreDataCache,
-      selectionKey: state.cityWork.exploreDataKey,
+      params: state.cityWork.exploreDataKey,
       mapData: getMapData(state),
       chartData: getChartData(state),
       typesById: state.cityWork.typesById,
@@ -42,7 +38,6 @@ export default connect(
     };
   },
   {
-    fetchData: fetchCityWorkExploreData,
-    updateSelectionKey
+    fetchData: fetchCityWorkExploreData
   }
 )(ExploreData);

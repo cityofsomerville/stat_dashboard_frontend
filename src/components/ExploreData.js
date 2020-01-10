@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
+import listify from 'listify';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import { DATE_PRESETS } from 'data/Constants';
@@ -28,9 +29,9 @@ class ExploreData extends React.Component {
     };
   }
 
-  getRequestKey() {
+  getParams() {
     let { selectedCategories, selectedDateRange } = this.state;
-    let key = null;
+    let params = null;
 
     if (this.state.selectedCategoryPreset !== 'Custom...') {
       selectedCategories = this.props.categoryPresets[
@@ -43,20 +44,18 @@ class ExploreData extends React.Component {
     }
 
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
-      key = JSON.stringify({
+      params = JSON.stringify({
         categories: selectedCategories.sort(),
         dateRange: selectedDateRange
       });
     }
-    return key;
+    return params;
   }
 
   fetchIfNecessary() {
-    const requestKey = this.getRequestKey();
-    if (requestKey && !this.props.dataStore[requestKey]) {
-      this.props.fetchData(requestKey);
-    } else if (requestKey && this.props.selectionKey !== requestKey) {
-      this.props.updateSelectionKey(requestKey);
+    const params = this.getParams();
+    if (params && this.props.params !== params) {
+      this.props.fetchData(params);
     }
   }
 
@@ -75,9 +74,9 @@ class ExploreData extends React.Component {
           Currently viewing tickets closed within the past{' '}
           {this.state.selectedDatePreset} for preset{' '}
           {this.state.selectedCategoryPreset}, which contains categories{' '}
-          {this.props.selectedCategoryNames}. The stacked area chart shows the
-          volume of tickets of each type, while the map shows the approximate
-          location of each ticket.
+          {listify(this.props.selectedCategoryNames)}. The stacked area chart
+          shows the volume of tickets of each type, while the map shows the
+          approximate location of each ticket.
         </p>
         <form>
           <label htmlFor="category">Category</label>
@@ -118,7 +117,7 @@ class ExploreData extends React.Component {
               columns={this.props.chartData.columns}
               chartClass={StackedAreaChart}
               name={`explore-data-${this.props.namespace}`}
-              cachebust={this.props.selectionKey}
+              cachebust={this.props.params}
             />
           </DataCol>
           <DataCol>
@@ -131,9 +130,20 @@ class ExploreData extends React.Component {
 }
 
 ExploreData.propTypes = {
-  categoryList: PropTypes.object,
-  namespace: PropTypes.string,
-  mapData: PropTypes.array
+  selectedDatePreset: PropTypes.string,
+  selectedCategoryPreset: PropTypes.string,
+  selectedCategoryNames: PropTypes.array,
+
+  categoryPresets: PropTypes.shape().isRequired,
+  chartData: PropTypes.shape({
+    data: PropTypes.array,
+    columns: PropTypes.array
+  }).isRequired,
+  namespace: PropTypes.string.isRequired,
+  params: PropTypes.string,
+  mapData: PropTypes.array.isRequired,
+
+  fetchData: PropTypes.func.isRequired
 };
 
 export default ExploreData;

@@ -1,16 +1,14 @@
 import { createSelector } from 'reselect';
 import format from 'date-fns/format';
-import startOfToday from 'date-fns/startOfToday';
 import startOfYesterday from 'date-fns/startOfYesterday';
-import startOfDay from 'date-fns/startOfDay';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import { SOCRATA_TIMESTAMP } from 'data/Constants';
 import { isServiceRequest } from 'data/BaseCategories';
+import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -30,11 +28,10 @@ export const getWorkOrders = createSelector(
       closed: { figure: null, delta: null }
     };
 
-    const yesterday =
-      actionsByDay[format(startOfYesterday(), SOCRATA_TIMESTAMP)];
+    const yesterday = actionsByDay[formatTimestamp(startOfYesterday())];
 
     const twoDaysAgo =
-      actionsByDay[format(subDays(startOfYesterday(), 1), SOCRATA_TIMESTAMP)];
+      actionsByDay[formatTimestamp(subDays(startOfYesterday(), 1))];
 
     if (yesterday && twoDaysAgo) {
       const createdYesterday = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
@@ -116,12 +113,8 @@ export const getMapData = createSelector(
   [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
   (exploreDataCache, exploreDataKey, typesById) => {
     let selection = [];
-    if (
-      exploreDataCache &&
-      exploreDataKey &&
-      exploreDataCache[exploreDataKey]
-    ) {
-      selection = exploreDataCache[exploreDataKey].map(ticket => ({
+    if (exploreDataCache && exploreDataKey) {
+      selection = exploreDataCache.map(ticket => ({
         id: ticket.id,
         latitude: ticket.latitude,
         longitude: ticket.longitude,
@@ -134,84 +127,44 @@ export const getMapData = createSelector(
   }
 );
 
-// TODO: genericize this
-const createDateBuckets = ({ startDate, endDate, categories }) => {
-  const set = {};
-  const start = startOfDay(parseISO(startDate));
-  const end = startOfDay(parseISO(endDate));
-  const size = differenceInDays(end, start);
-
-  for (let i = size; i >= 0; i--) {
-    set[format(subDays(end, i), SOCRATA_TIMESTAMP)] = categories.reduce(
-      (memo, category) => ({ ...memo, [category]: [] }),
-      {}
-    );
+const getTicketsWithCategories = createSelector(
+  [exploreDataCacheSelector, typesByIdSelector],
+  (exploreDataCache, typesById) => {
+    let tickets = [];
+    if (exploreDataCache && typesById) {
+      tickets = exploreDataCache.map(ticket => ({
+        ...ticket,
+        type: typesById[ticket.type].name
+      }));
+    }
+    return tickets;
   }
-  return set;
-};
+);
 
-export const getChartData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
-  (exploreDataCache, exploreDataKey, typesById) => {
-    let data = { data: [], columns: [] };
-    if (
-      exploreDataCache &&
-      exploreDataKey &&
-      exploreDataCache[exploreDataKey]
-    ) {
+const getParams = createSelector(
+  [exploreDataKeySelector, typesByIdSelector],
+  (exploreDataKey, typesById) => {
+    let data = { categories: [], dateRange: {} };
+    if (exploreDataKey && typesById) {
       const { categories, dateRange } = JSON.parse(exploreDataKey);
-      let ticketsByDay = createDateBuckets({
-        ...dateRange,
-        categories: categories.map(category => typesById[category].name)
-      });
-      const orderedDates = Object.keys(ticketsByDay).sort((a, b) => {
-        return differenceInDays(parseISO(a), parseISO(b));
-      });
-
-      exploreDataCache[exploreDataKey].forEach(ticket => {
-        const dateKey = format(
-          startOfDay(parseISO(ticket.last_modified)),
-          SOCRATA_TIMESTAMP
-        );
-        const type = typesById[ticket.type];
-        ticketsByDay[dateKey][type.name].push(ticket);
-      });
-      data.columns = orderedDates;
-      data.data = orderedDates.reduce((memo, day) => {
-        const ticketsForDay = ticketsByDay[day];
-        const counts = Object.keys(ticketsForDay).reduce(
-          (memo, type) => ({
-            ...memo,
-            [type]: ticketsForDay[type].length
-          }),
-          {}
-        );
-        return [
-          ...memo,
-          {
-            ...counts,
-            date: parseISO(day)
-          }
-        ];
-      }, []);
+      data.categories = categories.map(category => typesById[category].name);
+      data.dateRange = {
+        startDate: parseISO(dateRange.startDate),
+        endDate: parseISO(dateRange.endDate)
+      };
     }
     return data;
   }
 );
 
-export const getCategoryNames = createSelector(
-  [exploreDataKeySelector, typesByIdSelector],
-  (exploreDataKey, typesById) => {
-    let selection = [];
-    if (exploreDataKey && typesById) {
-      const { categories } = JSON.parse(exploreDataKey);
-      const names = categories.map(cat => typesById[cat].name);
-      const last = names.pop();
-      return `${names.join(', ')}, and ${last}`;
-    }
-    return selection;
-  }
+export const getChartData = createSelector(
+  [getTicketsWithCategories, getParams],
+  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
 );
+
+export const getCategoryNames = createSelector(getParams, params => {
+  return params.categories;
+});
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
@@ -230,15 +183,6 @@ export const getInternalWeeklyTrends = createSelector(
     return selection;
   }
 );
-
-const groupBy = (arr, index) =>
-  arr.reduce((memo, item) => {
-    if (!memo[item[index]]) {
-      memo[item[index]] = [];
-    }
-    memo[item[index]].push(item);
-    return memo;
-  }, {});
 
 export const getInternalTreemapData = createSelector(
   weeklyTrendsSelector,

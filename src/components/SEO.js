@@ -32,6 +32,7 @@ function SEO({ description, lang, meta, title }) {
       htmlAttributes={{
         lang
       }}
+      defer={false}
       title={site.siteMetadata.title}
       meta={[
         {
