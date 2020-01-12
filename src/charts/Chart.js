@@ -34,6 +34,12 @@ export default class Chart {
       .append('g')
       .attr('class', 'main')
       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+
+    this.tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'tooltip rounded border p-1 bg-light')
+      .attr('id', `tooltip-${targetId}`);
   }
 
   resize() {
@@ -57,6 +63,11 @@ export default class Chart {
   cleanChart() {
     window.removeEventListener('resize', this.onResize.bind(this));
     this.targetElement.innerHTML = '';
+
+    const tooltip = document.getElementById(`tooltip-${this.targetId}`);
+    if (tooltip) {
+      tooltip.parentNode.removeChild(tooltip);
+    }
   }
 
   renderChart() {}

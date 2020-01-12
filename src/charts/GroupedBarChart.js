@@ -22,12 +22,6 @@ export default class GroupedBarChart extends Chart {
     const self = this;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    self.cleanChart();
-    self.chart = d3
-      .select(`#${self.targetId}`)
-      .append('svg:svg')
-      .attr('class', 'chart');
-
     self.xAxis = self.chart.append('g');
 
     self.yAxis = self.chart.append('g');
@@ -36,7 +30,22 @@ export default class GroupedBarChart extends Chart {
       .append('g')
       .selectAll('g')
       .data(self.data)
-      .join('g');
+      .join('g')
+      .on('mouseover', d => {
+        self.tooltip
+          .html(
+            `Date: ${d.Date}<br/>
+                Tickets Opened: ${d['Tickets Opened']}<br/>
+                Tickets Closed: ${d['Tickets Closed']}`
+          )
+          .style('opacity', 1);
+      })
+      .on('mousemove', d =>
+        self.tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+      )
+      .on('mouseout', d => self.tooltip.style('opacity', 0));
 
     self.bars = self.dataContainer
       .selectAll('rect')
@@ -104,13 +113,11 @@ export default class GroupedBarChart extends Chart {
 
     self.xAxis
       .attr('transform', `translate(0,${self.height - self.margin.bottom})`)
-      .call(d3.axisBottom(x0).tickSizeOuter(0))
-      .call(g => g.select('.domain').remove());
+      .call(d3.axisBottom(x0).tickSizeOuter(0));
 
     self.yAxis
       .attr('transform', `translate(${self.margin.left},0)`)
-      .call(d3.axisLeft(y).ticks(null, 's'))
-      .call(g => g.select('.domain').remove());
+      .call(d3.axisLeft(y).ticks(null, 's'));
 
     self.dataContainer.attr(
       'transform',
