@@ -1,19 +1,31 @@
-import * as d3 from 'd3';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Chart from 'charts/Chart';
+const DepartmentRow = ({ name, data }) => (
+  <tr>
+    <th scope="row">{name}</th>
+    {data.map(day => (
+      <td>{day.tickets.length}</td>
+    ))}
+  </tr>
+);
 
-export default class Heatmap extends Chart {
-  constructor(args) {
-    super(args);
-    this.init();
-  }
+const Heatmap = ({ data }) => (
+  <table>
+    <caption>I'm a table!</caption>
+    <thead>{/*<tr>
+        <th scope="col">Department</th>
+      </tr>*/}</thead>
+    <tbody>
+      {Object.keys(data).map(dept => (
+        <DepartmentRow name={dept} data={data[dept]} />
+      ))}
+    </tbody>
+  </table>
+);
 
-  init() {
-    const self = this;
-    self.renderChart();
-  }
+Heatmap.propTypes = {
+  data: PropTypes.shape().isRequired
+};
 
-  renderChart() {
-    console.log('render');
-  }
-}
+export default Heatmap;

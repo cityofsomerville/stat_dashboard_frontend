@@ -1,13 +1,21 @@
 import { createSelector } from 'reselect';
 import format from 'date-fns/format';
+import startOfDay from 'date-fns/startOfDay';
 import startOfYesterday from 'date-fns/startOfYesterday';
+import endOfYesterday from 'date-fns/endOfYesterday';
+import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
+import {
+  groupBy,
+  formatTimestamp,
+  getStackedAreaChartData,
+  dateRangeBuckets
+} from 'data/utils';
 import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
@@ -210,15 +218,42 @@ export const getInternalTreemapData = createSelector(
 export const getInProgressHeatmapData = createSelector(
   ticketsSelector,
   tickets => {
-    // const types = Object.keys(BaseCategories).map()
-    // const types = tickets.reduce(ticket => {
-    //   if (!memo.indexOf(ticket.)) {
-    //   }
-    //   return memo;
-    // }, []);
-    // let ticketsByDay = createDateBuckets({
-    //   ...dateRange,
-    //   categories: categories.map(category => typesById[category].name)
-    // });
+    const data = {};
+    const dateRange = {
+      startDate: subDays(startOfToday(), 7),
+      endDate: endOfYesterday()
+    };
+    const dateField = 'last_modified';
+
+    const groupedTickets = groupBy(
+      tickets.filter(ticket =>
+        isAfter(parseISO(ticket[dateField]), dateRange.startDate)
+      ),
+      'dept' // could also use ancestor here
+    );
+
+    Object.keys(groupedTickets).forEach(dept => {
+      const byDay = dateRangeBuckets(dateRange);
+      Object.keys(byDay).forEach(day => {
+        byDay[day] = [];
+      });
+
+      groupedTickets[dept].forEach(ticket => {
+        const dateKey = formatTimestamp(
+          startOfDay(parseISO(ticket[dateField]))
+        );
+        byDay[dateKey].push(ticket);
+      });
+      data[dept] = Object.keys(byDay)
+        .sort((a, b) => {
+          return differenceInDays(parseISO(a), parseISO(b));
+        })
+        .map(date => ({
+          date,
+          tickets: byDay[date]
+        }));
+    });
+
+    return data;
   }
 );

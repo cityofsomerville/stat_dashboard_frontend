@@ -1,8 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
-import ChartContainer from 'charts/ChartContainer';
 import Heatmap from 'charts/Heatmap';
+import { getInProgressHeatmapData } from 'data/cityWork/selectors';
 
 const InProgress = ({ heatmapData }) => (
   <BlockContent>
@@ -13,15 +14,12 @@ const InProgress = ({ heatmapData }) => (
     </p>
     <DataRow>
       <DataCol>
-        <ChartContainer
-          chartClass={Heatmap}
-          data={heatmapData}
-          name="inprogress_heatmap"
-          cachebust={heatmapData}
-        />
+        <Heatmap data={heatmapData} />
       </DataCol>
     </DataRow>
   </BlockContent>
 );
 
-export default InProgress;
+export default connect(state => ({
+  heatmapData: getInProgressHeatmapData(state)
+}))(InProgress);
