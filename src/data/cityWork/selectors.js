@@ -14,7 +14,7 @@ import {
   groupBy,
   formatTimestamp,
   getStackedAreaChartData,
-  dateRangeBuckets
+  getDateRange
 } from 'data/utils';
 import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
 
@@ -218,12 +218,13 @@ export const getInternalTreemapData = createSelector(
 export const getInProgressHeatmapData = createSelector(
   ticketsSelector,
   tickets => {
-    const data = {};
+    let dataset = {};
+    let maxValue = 0;
     const dateRange = {
       startDate: subDays(startOfToday(), 7),
       endDate: endOfYesterday()
     };
-    const dateField = 'last_modified';
+    const dateField = 'created_on';
 
     const groupedTickets = groupBy(
       tickets.filter(ticket =>
@@ -232,9 +233,11 @@ export const getInProgressHeatmapData = createSelector(
       'dept' // could also use ancestor here
     );
 
+    const range = getDateRange(dateRange);
+
     Object.keys(groupedTickets).forEach(dept => {
-      const byDay = dateRangeBuckets(dateRange);
-      Object.keys(byDay).forEach(day => {
+      const byDay = {};
+      range.forEach(day => {
         byDay[day] = [];
       });
 
@@ -243,17 +246,21 @@ export const getInProgressHeatmapData = createSelector(
           startOfDay(parseISO(ticket[dateField]))
         );
         byDay[dateKey].push(ticket);
+        if (byDay[dateKey].length > maxValue) {
+          maxValue = byDay[dateKey].length;
+        }
       });
-      data[dept] = Object.keys(byDay)
-        .sort((a, b) => {
-          return differenceInDays(parseISO(a), parseISO(b));
-        })
-        .map(date => ({
-          date,
-          tickets: byDay[date]
-        }));
+
+      dataset[dept] = range.map(date => ({
+        date: date,
+        tickets: byDay[date]
+      }));
     });
 
-    return data;
+    return {
+      dataset,
+      valueRange: [0, maxValue],
+      dateRange: range.map(d => parseISO(d))
+    };
   }
 );
