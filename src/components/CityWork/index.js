@@ -14,6 +14,7 @@ import Tabs from 'components/Tabs';
 import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
 import InternalWork from 'components/CityWork/InternalWork';
+import InProgress from 'components/CityWork/InProgress';
 
 import { fetchActionsByDay, fetchTypesTickets } from 'data/cityWork/actions';
 
@@ -46,22 +47,6 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
     </DataBlock>
   );
 };
-
-const InProgress = () => (
-  <BlockContent>
-    <p>
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-      dis parturient montes, nascetur ridiculus mus.
-    </p>
-    <DataRow>
-      <DataCol>
-        scatterplot showing: open tickets by category vs. average time to close
-        for that category (workshop this)
-      </DataCol>
-    </DataRow>
-  </BlockContent>
-);
 
 export default connect(null, {
   fetchActionsByDay,

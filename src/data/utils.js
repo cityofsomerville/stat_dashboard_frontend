@@ -17,6 +17,18 @@ export const groupBy = (arr, index) =>
     return memo;
   }, {});
 
+export const getDateRange = ({ startDate, endDate }) => {
+  let set = [];
+  const start = startOfDay(startDate);
+  const end = startOfDay(endDate);
+  const size = differenceInDays(end, start);
+
+  for (let i = size; i >= 0; i--) {
+    set.push(formatTimestamp(subDays(end, i)));
+  }
+  return set;
+};
+
 export const dateRangeBuckets = ({ startDate, endDate }) => {
   const set = {};
   const start = startOfDay(startDate);

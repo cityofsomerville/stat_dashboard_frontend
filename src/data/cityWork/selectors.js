@@ -1,14 +1,22 @@
 import { createSelector } from 'reselect';
 import format from 'date-fns/format';
+import startOfDay from 'date-fns/startOfDay';
 import startOfYesterday from 'date-fns/startOfYesterday';
+import endOfYesterday from 'date-fns/endOfYesterday';
+import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
 import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import { isServiceRequest } from 'data/BaseCategories';
-import { groupBy, formatTimestamp, getStackedAreaChartData } from 'data/utils';
+import {
+  groupBy,
+  formatTimestamp,
+  getStackedAreaChartData,
+  getDateRange
+} from 'data/utils';
+import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -204,5 +212,55 @@ export const getInternalTreemapData = createSelector(
     });
 
     return data;
+  }
+);
+
+export const getInProgressHeatmapData = createSelector(
+  ticketsSelector,
+  tickets => {
+    let dataset = {};
+    let maxValue = 0;
+    const dateRange = {
+      startDate: subDays(startOfToday(), 7),
+      endDate: endOfYesterday()
+    };
+    const dateField = 'created_on';
+
+    const groupedTickets = groupBy(
+      tickets.filter(ticket =>
+        isAfter(parseISO(ticket[dateField]), dateRange.startDate)
+      ),
+      'dept' // could also use ancestor here
+    );
+
+    const range = getDateRange(dateRange);
+
+    Object.keys(groupedTickets).forEach(dept => {
+      const byDay = {};
+      range.forEach(day => {
+        byDay[day] = [];
+      });
+
+      groupedTickets[dept].forEach(ticket => {
+        const dateKey = formatTimestamp(
+          startOfDay(parseISO(ticket[dateField]))
+        );
+        byDay[dateKey].push(ticket);
+        if (byDay[dateKey].length > maxValue) {
+          maxValue = byDay[dateKey].length;
+        }
+      });
+
+      dataset[dept] = range.map(date => ({
+        date: date,
+        tickets: byDay[date]
+      }));
+    });
+
+    return {
+      dataset,
+      valueRange: [0, maxValue],
+      dateRange: range.map(d => parseISO(d))
+    };
   }
 );

@@ -17,6 +17,10 @@ export default class ChartContainer extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.chart.cleanChart();
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.cachebust !== prevProps.cachebust) {
       this.chart = new this.props.chartClass({
