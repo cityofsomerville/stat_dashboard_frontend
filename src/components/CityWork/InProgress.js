@@ -8,9 +8,8 @@ import { getInProgressHeatmapData } from 'data/cityWork/selectors';
 const InProgress = ({ heatmapData }) => (
   <BlockContent>
     <p>
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-      dis parturient montes, nascetur ridiculus mus.
+      The heatmap below shows the number of new tickets opened per department
+      per day within the past 7 days.
     </p>
     <DataRow>
       <DataCol>

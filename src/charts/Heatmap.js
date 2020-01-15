@@ -3,24 +3,29 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
-const Cell = ({ value, range }) => {
-  const scale = d3.scaleSequential(d3.interpolateBlues).domain(range);
+import { HEATMAP_COLORS } from 'charts/Constants';
 
-  return <td style={{ backgroundColor: scale(value) }}>{value}</td>;
+const HeatmapCell = ({ value, range }) => {
+  const scale = d3
+    .scaleQuantize()
+    .domain([0, 100])
+    .range(HEATMAP_COLORS);
+
+  const style = value ? scale(value) : { background: 'white' };
+  return <td style={style}>{value}</td>;
 };
 
-const DepartmentRow = ({ name, data, range }) => (
+const HeatmapRow = ({ name, data, range }) => (
   <tr>
     <th scope="row">{name}</th>
     {data.map(day => (
-      <Cell value={day.tickets.length} range={range} />
+      <HeatmapCell value={day.tickets.length} range={range} key={day.date} />
     ))}
   </tr>
 );
 
 const Heatmap = ({ data }) => (
-  <table>
-    <caption>I'm a table!</caption>
+  <table className="table-hover w-100">
     <thead>
       <tr>
         <th scope="col">Department</th>
@@ -31,7 +36,7 @@ const Heatmap = ({ data }) => (
     </thead>
     <tbody>
       {Object.keys(data.dataset).map(dept => (
-        <DepartmentRow
+        <HeatmapRow
           name={dept}
           data={data.dataset[dept]}
           range={data.valueRange}
