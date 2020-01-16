@@ -46,6 +46,12 @@ export const Metric = ({ figure, average, children }) => {
   );
 };
 
+Metric.propTypes = {
+  figure: PropTypes.number,
+  average: PropTypes.number,
+  children: PropTypes.node
+};
+
 const KeyMetrics = ({ children }) => (
   <div className="col-md-4 p-3 mb-3 mb-md-0 bg-dark text-white">
     <h3 class="h4">Yesterday</h3>
@@ -53,8 +59,11 @@ const KeyMetrics = ({ children }) => (
   </div>
 );
 
-// KeyMetrics.propTypes = {
-
-// };
+KeyMetrics.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
 
 export default KeyMetrics;

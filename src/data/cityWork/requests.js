@@ -77,8 +77,7 @@ export const getDailyAveragePerAction = async () => {
       params: {
         $select: '(count(*)/365) as daily_average,codeDesc',
         $where: `${dateRange}`,
-        $group: 'codeDesc',
-        $limit: 10000
+        $group: 'codeDesc'
       }
     }
   );
@@ -95,8 +94,22 @@ export const getWeeklyAveragePerType = async () => {
     params: {
       $select: 'type,(count(*)/52) as weekly_average',
       $where: `${dateRange}`,
-      $group: 'type',
-      $limit: 10000
+      $group: 'type'
+    }
+  });
+};
+
+// https://data.somervillema.gov/resource/4pyi-uqq6.json?$select=(count(*)/365) as daily_average&$where=(created_on >= '2019-01-16T00:00:00.000' and created_on < '2020-01-16T23:59:59.999') and origin = 'Call Center'
+export const getCallsAverage = async () => {
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(DATE_PRESETS['1 year'].startDate),
+    endDate: parseISO(DATE_PRESETS['1 year'].endDate),
+    dateField: 'created_on'
+  });
+  return await instance.get(formatURL(SOCRATA_DATASETS.Somerville_Services), {
+    params: {
+      $select: '(count(*)/365) as daily_average',
+      $where: `${dateRange} and origin = "Call Center"`
     }
   });
 };

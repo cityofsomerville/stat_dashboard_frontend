@@ -28,6 +28,7 @@ const exploreDataCacheSelector = state => state.cityWork.exploreDataCache;
 const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
 const actionAveragesSelector = state => state.cityWork.actionAverages;
+const callsAverageSelector = state => state.cityWork.callsAverage;
 
 export const getWorkOrderCounts = createSelector(
   [actionsByDaySelector, actionAveragesSelector],
@@ -37,7 +38,7 @@ export const getWorkOrderCounts = createSelector(
       closed: { figure: null, average: null }
     };
     const yesterday = actionsByDay[formatTimestamp(startOfYesterday())];
-    if (yesterday) {
+    if (yesterday && yesterday[WORK_ORDERS_CREATED_CATEGORY].length) {
       counts.created.figure = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
       counts.closed.figure = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
     }
@@ -49,42 +50,33 @@ export const getWorkOrderCounts = createSelector(
   }
 );
 
-export const get311Calls = createSelector(ticketsSelector, tickets => {
-  let metrics = {
-    calls: {
-      figure: null,
-      delta: null
-    }
-  };
-
-  if (tickets.length) {
-    const callsYesterday = tickets.filter(
-      ticket =>
-        ticket.origin === 'Call Center' &&
-        isAfter(parseISO(ticket.last_modified), startOfYesterday())
-    ).length;
-
-    const callsTwoDaysAgo = tickets.filter(ticket => {
-      const ticketDate = parseISO(ticket.last_modified);
-      return (
-        ticket.origin === 'Call Center' &&
-        isBefore(ticketDate, startOfYesterday()) &&
-        isAfter(ticketDate, subDays(startOfYesterday(), 1))
-      );
-    }).length;
-
-    metrics.calls = {
-      figure: callsYesterday,
-      delta: callsYesterday - callsTwoDaysAgo
+export const get311CallCounts = createSelector(
+  [ticketsSelector, callsAverageSelector],
+  (tickets, callsAverage) => {
+    let counts = {
+      calls: { figure: null, average: null }
     };
-  }
-  return metrics;
-});
 
-// export const getKeyMetrics = createSelector(
-//   [getWorkOrders, get311Calls],
-//   (workOrders, calls) => ({ ...workOrders, ...calls })
-// );
+    if (tickets.length) {
+      const callsYesterday = tickets.filter(
+        ticket =>
+          ticket.origin === 'Call Center' &&
+          isAfter(parseISO(ticket.last_modified), startOfYesterday())
+      );
+      counts.calls.figure = callsYesterday.length;
+    }
+
+    if (callsAverage) {
+      counts.calls.average = callsAverage;
+    }
+    return counts;
+  }
+);
+
+export const getKeyMetrics = createSelector(
+  [getWorkOrderCounts, get311CallCounts],
+  (workOrders, calls) => ({ ...workOrders, ...calls })
+);
 
 // TODO: fix these hardcoded type ids
 export const getWorkOrderChartData = createSelector(

@@ -4,7 +4,8 @@ import {
   getTypes,
   getCityWorkExploreData,
   getDailyAveragePerAction,
-  getWeeklyAveragePerType
+  getWeeklyAveragePerType,
+  getCallsAverage
 } from 'data/cityWork/requests';
 import { getWeeklyTrends } from 'data/cityWork/utils';
 
@@ -21,7 +22,9 @@ export const types = [
   'ACTION_AVERAGE_SUCCESS',
   'ACTION_AVERAGE_ERROR',
   'TYPE_AVERAGE_SUCCESS',
-  'TYPE_AVERAGE_ERROR'
+  'TYPE_AVERAGE_ERROR',
+  'CALLS_AVERAGE_SUCCESS',
+  'CALLS_AVERAGE_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 export const fetchActionsByDay = ({ startDate, endDate }) => {
@@ -136,9 +139,28 @@ export const fetchWeeklyAveragePerType = () => {
   };
 };
 
+export const fetchCallsAverage = () => {
+  return async dispatch => {
+    try {
+      const response = await getCallsAverage();
+      dispatch({
+        type: types.CALLS_AVERAGE_SUCCESS,
+        payload: response.data
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.CALLS_AVERAGE_ERROR,
+        payload: err
+      });
+    }
+  };
+};
+
 export const fetchAverages = () => {
   return dispatch => {
     dispatch(fetchDailyAveragePerAction());
     dispatch(fetchWeeklyAveragePerType());
+    dispatch(fetchCallsAverage());
   };
 };

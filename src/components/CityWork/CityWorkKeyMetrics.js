@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import KeyMetrics, { Metric } from 'components/KeyMetrics';
-import { getWorkOrderCounts } from 'data/cityWork/selectors';
+import { getKeyMetrics } from 'data/cityWork/selectors';
 
-const CityWorkKeyMetrics = ({ created, closed }) => (
+const CityWorkKeyMetrics = ({ created, closed, calls }) => (
   <KeyMetrics>
     <Metric figure={created.figure} average={created.average}>
       work orders created
@@ -12,9 +12,12 @@ const CityWorkKeyMetrics = ({ created, closed }) => (
     <Metric figure={closed.figure} average={closed.average}>
       work orders closed
     </Metric>
+    <Metric figure={calls.figure} average={calls.average}>
+      311 calls
+    </Metric>
   </KeyMetrics>
 );
 
 export default connect(state => {
-  return getWorkOrderCounts(state);
+  return getKeyMetrics(state);
 })(CityWorkKeyMetrics);

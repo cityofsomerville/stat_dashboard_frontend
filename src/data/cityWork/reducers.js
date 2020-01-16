@@ -27,6 +27,7 @@ const initialState = {
   tickets: [], // tickets, error. possibly just store all tickets here
   actionAverages: {},
   typeAverages: {},
+  callsAverage: null,
 
   weeklyTrends: [],
   exploreDataCache: [],
@@ -130,6 +131,15 @@ const typeAverages = (state = initialState.typeAverages, action) => {
   }
 };
 
+const callsAverage = (state = initialState.callsAverage, action) => {
+  switch (action.type) {
+    case types.CALLS_AVERAGE_SUCCESS:
+      return Number(action.payload[0].daily_average);
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   actionsByDay,
   tickets,
@@ -138,5 +148,6 @@ export default combineReducers({
   exploreDataKey,
   exploreDataCache,
   actionAverages,
-  typeAverages
+  typeAverages,
+  callsAverage
 });
