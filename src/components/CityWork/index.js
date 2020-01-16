@@ -16,9 +16,13 @@ import Summary from 'components/CityWork/Summary';
 import InternalWork from 'components/CityWork/InternalWork';
 import InProgress from 'components/CityWork/InProgress';
 
-import { fetchActionsByDay, fetchTypesTickets } from 'data/cityWork/actions';
+import {
+  fetchActionsByDay,
+  fetchTypesTickets,
+  fetchAverages
+} from 'data/cityWork/actions';
 
-const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
+const CityWork = ({ fetchActionsByDay, fetchTypesTickets, fetchAverages }) => {
   useEffect(() => {
     const today = startOfToday();
     fetchActionsByDay({
@@ -29,7 +33,8 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
       startDate: subDays(today, 14),
       endDate: today
     });
-  }, [fetchActionsByDay, fetchTypesTickets]);
+    fetchAverages();
+  }, [fetchActionsByDay, fetchTypesTickets, fetchAverages]);
 
   return (
     <DataBlock>
@@ -50,5 +55,6 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets }) => {
 
 export default connect(null, {
   fetchActionsByDay,
-  fetchTypesTickets
+  fetchTypesTickets,
+  fetchAverages
 })(CityWork);

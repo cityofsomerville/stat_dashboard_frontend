@@ -2,7 +2,9 @@ import {
   getTickets,
   getActions,
   getTypes,
-  getCityWorkExploreData
+  getCityWorkExploreData,
+  getDailyAveragePerAction,
+  getWeeklyAveragePerType
 } from 'data/cityWork/requests';
 import { getWeeklyTrends } from 'data/cityWork/utils';
 
@@ -15,7 +17,11 @@ export const types = [
   'TICKETS_ERROR',
   'TYPES_TICKETS_LOADED',
   'EXPLORE_DATA_SUCCESS',
-  'EXPLORE_DATA_ERROR'
+  'EXPLORE_DATA_ERROR',
+  'ACTION_AVERAGE_SUCCESS',
+  'ACTION_AVERAGE_ERROR',
+  'TYPE_AVERAGE_SUCCESS',
+  'TYPE_AVERAGE_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 export const fetchActionsByDay = ({ startDate, endDate }) => {
@@ -91,5 +97,48 @@ export const fetchCityWorkExploreData = key => {
         payload: err
       });
     }
+  };
+};
+
+export const fetchDailyAveragePerAction = () => {
+  return async dispatch => {
+    try {
+      const response = await getDailyAveragePerAction();
+      dispatch({
+        type: types.ACTION_AVERAGE_SUCCESS,
+        payload: response.data
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.ACTION_AVERAGE_ERROR,
+        payload: err
+      });
+    }
+  };
+};
+
+export const fetchWeeklyAveragePerType = () => {
+  return async dispatch => {
+    try {
+      const response = await getWeeklyAveragePerType();
+      dispatch({
+        type: types.TYPE_AVERAGE_SUCCESS,
+        payload: response.data
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.TYPE_AVERAGE_ERROR,
+        payload: err
+      });
+    }
+  };
+};
+
+export const fetchAverages = () => {
+  return dispatch => {
+    dispatch(fetchDailyAveragePerAction);
+    dispatch(fetchWeeklyAveragePerType);
   };
 };

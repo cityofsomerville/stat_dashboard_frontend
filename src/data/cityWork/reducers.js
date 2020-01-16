@@ -5,6 +5,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import { types } from 'data/cityWork/actions';
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
+import { indexBy } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -24,6 +25,8 @@ const initialState = {
   actionsByDay: createActionsByDay(),
   typesById: {}, // types, error
   tickets: [], // tickets, error. possibly just store all tickets here
+  actionAverages: {},
+  typeAverages: {},
 
   weeklyTrends: [],
   exploreDataCache: [],
@@ -109,11 +112,31 @@ const exploreDataCache = (state = initialState.exploreDataCache, action) => {
   }
 };
 
+const actionAverages = (state = initialState.actionAverages, action) => {
+  switch (action.type) {
+    case types.ACTION_AVERAGE_SUCCESS:
+      return Object.assign({}, state, indexBy(action.payload, 'codeDesc'));
+    default:
+      return state;
+  }
+};
+
+const typeAverages = (state = initialState.typeAverages, action) => {
+  switch (action.type) {
+    case types.TYPE_AVERAGE_SUCCESS:
+      return Object.assign({}, state, indexBy(action.payload, 'type'));
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   actionsByDay,
   tickets,
   typesById,
   weeklyTrends,
   exploreDataKey,
-  exploreDataCache
+  exploreDataCache,
+  actionAverages,
+  typeAverages
 });

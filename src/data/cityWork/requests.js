@@ -65,7 +65,7 @@ export const getCityWorkExploreData = async key => {
 };
 
 // https://data.somervillema.gov/resource/f7b7-bfkg.json?$select=(count(*)/365) as daily_average,codeDesc&$group=codeDesc&$where=(action_date >= '2019-01-16T00:00:00.000' and action_date < '2020-01-16T23:59:59.999')
-export const dailyAveragePerAction = async () => {
+export const getDailyAveragePerAction = async () => {
   const dateRange = constructDateRangeQuery({
     startDate: parseISO(DATE_PRESETS['1 year'].startDate),
     endDate: parseISO(DATE_PRESETS['1 year'].endDate),
@@ -85,7 +85,7 @@ export const dailyAveragePerAction = async () => {
 };
 
 // https://data.somervillema.gov/resource/4pyi-uqq6.json?$select=type,(count(*)/52) as weekly_average&$group=type
-export const weeklyAveragesPerCategory = async () => {
+export const getWeeklyAveragePerType = async () => {
   const dateRange = constructDateRangeQuery({
     startDate: parseISO(DATE_PRESETS['1 year'].startDate),
     endDate: parseISO(DATE_PRESETS['1 year'].endDate),
