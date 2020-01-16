@@ -129,24 +129,6 @@ const fetchDailyAveragePerAction = () => {
   };
 };
 
-// const fetchWeeklyAveragePerType = () => {
-//   return async dispatch => {
-//     try {
-//       const response = await getWeeklyAveragePerType();
-//       dispatch({
-//         type: types.TYPE_AVERAGE_SUCCESS,
-//         payload: response.data
-//       });
-//     } catch (err) {
-//       console.log(err);
-//       dispatch({
-//         type: types.TYPE_AVERAGE_ERROR,
-//         payload: err
-//       });
-//     }
-//   };
-// };
-
 const fetchCallsAverage = () => {
   return async dispatch => {
     try {

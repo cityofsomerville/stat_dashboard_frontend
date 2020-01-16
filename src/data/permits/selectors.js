@@ -4,8 +4,37 @@ import parseISO from 'date-fns/parseISO';
 
 import { getStackedAreaChartData } from 'data/utils';
 
+const dailyTotalsSelector = state => state.permits.dailyTotals;
+const typeAveragesSelector = state => state.permits.typeAverages;
 const exploreDataCacheSelector = state => state.permits.exploreDataCache;
 const exploreDataParamsSelector = state => state.permits.exploreDataParams;
+
+export const getPermitsKeyMetrics = createSelector(
+  [dailyTotalsSelector, typeAveragesSelector],
+  (dailyTotals, typeAverages) => {
+    let metrics = {
+      'Residential Building': { figure: null, average: null },
+      'Commercial Building': { figure: null, average: null }
+    };
+    if (dailyTotals) {
+      Object.keys(metrics).forEach(type => {
+        if (dailyTotals[type]) {
+          metrics[type].figure = Number(dailyTotals[type].count);
+        } else {
+          metrics[type].figure = 0;
+        }
+        if (typeAverages[type]) {
+          metrics[type].average = Number(typeAverages[type].daily_average);
+        }
+      });
+    }
+
+    return Object.keys(metrics).map(type => ({
+      ...metrics[type],
+      type: type.toLowerCase()
+    }));
+  }
+);
 
 const getParams = createSelector(
   [exploreDataParamsSelector],

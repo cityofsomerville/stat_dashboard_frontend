@@ -120,7 +120,7 @@ const getTicketsWithCategories = createSelector(
     if (exploreDataCache && typesById) {
       tickets = exploreDataCache.map(ticket => ({
         ...ticket,
-        type: typesById[ticket.type].name
+        type: typesById[ticket.type] ? typesById[ticket.type].name : 'unknown'
       }));
     }
     return tickets;

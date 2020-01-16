@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import DataBlock from 'components/DataBlock';
+import DataBlock, {
+  SectionHeading,
+  SectionDescription
+} from 'components/DataBlock';
 import ExploreData from 'components/ExploreData';
+import PermitsKeyMetrics from 'components/Permits/PermitsKeyMetrics';
 import { fetchPermitsExploreData } from 'data/permits/actions';
 import {
   getMapData,
@@ -33,18 +37,17 @@ const Permits = ({
   fetchPermitsExploreData,
   updatePermitsParams
 }) => (
-  <DataBlock
-    keyMetrics={[
-      { count: 3, label: 'commercial permits', trend: 'positive' },
-      { count: 5, label: 'residential permits', trend: 'negative' }
-    ]}
-  >
+  <DataBlock>
     <h2>Building Permits</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-      ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis
-      dis parturient montes, nascetur ridiculus mus.
-    </p>
+    <SectionHeading>
+      <PermitsKeyMetrics />
+      <SectionDescription>
+        <p>
+          This section explores data on building permits of various types that
+          have been recently issued.
+        </p>
+      </SectionDescription>
+    </SectionHeading>
     <ExploreData
       namespace="permits_licenses"
       selectedDatePreset="7 days"

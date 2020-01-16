@@ -54,11 +54,11 @@ export const getCityWorkExploreData = async key => {
   const typeSelection = properties.categories
     .map(id => `type = "${id}"`)
     .join(' or ');
-  const statusSelection = `status = "Closed"`;
+  // const statusSelection = `status = "Closed"`;
 
   return await instance.get(formatURL(SOCRATA_DATASETS.Somerville_Services), {
     params: {
-      $where: `${dateRange} and (${typeSelection}) and (${statusSelection})`,
+      $where: `${dateRange} and (${typeSelection})`,
       $limit: 10000
     }
   });

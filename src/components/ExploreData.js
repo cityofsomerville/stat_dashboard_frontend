@@ -71,7 +71,7 @@ class ExploreData extends React.Component {
     return (
       <BlockContent>
         <p>
-          Currently viewing tickets closed within the past{' '}
+          Currently viewing tickets opened within the past{' '}
           {this.state.selectedDatePreset} for preset{' '}
           {this.state.selectedCategoryPreset}, which contains categories{' '}
           {listify(this.props.selectedCategoryNames)}. The stacked area chart
