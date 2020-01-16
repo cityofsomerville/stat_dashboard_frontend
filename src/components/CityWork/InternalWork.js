@@ -1,12 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  BlockContent,
-  DataRow,
-  DataCol,
-  WeeklyTrends
-} from 'components/DataBlock';
+import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
+import WeeklyTrends from 'components/WeeklyTrends';
 import ChartContainer from 'charts/ChartContainer';
 import Treemap from 'charts/Treemap';
 import {
@@ -33,7 +29,13 @@ const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
           cachebust={`${internalTreemapData.length}`}
         />
       </DataCol>
-      <WeeklyTrends metrics={internalWeeklyTrends} />
+      <WeeklyTrends metrics={internalWeeklyTrends}>
+        <h3>Internal Trends</h3>
+        <p>
+          These categories showed the greatest increase in new tickets filed
+          internally this week, compared to the weekly average.
+        </p>
+      </WeeklyTrends>
     </DataRow>
   </BlockContent>
 );
@@ -53,7 +55,6 @@ export default connect(state => {
   });
   return {
     internalWeeklyTrends,
-    // also need a selector for chart data here
     internalTreemapData: getInternalTreemapData(state)
   };
 })(InternalWork);

@@ -8,6 +8,15 @@ import { SOCRATA_TIMESTAMP } from 'data/Constants';
 
 export const formatTimestamp = date => format(date, SOCRATA_TIMESTAMP);
 
+export const indexBy = (arr, index) =>
+  arr.reduce(
+    (memo, item) => ({
+      ...memo,
+      [item[index]]: item
+    }),
+    {}
+  );
+
 export const groupBy = (arr, index) =>
   arr.reduce((memo, item) => {
     if (!memo[item[index]]) {

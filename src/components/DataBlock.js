@@ -1,67 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from 'components/Icon';
-
-export const KeyMetrics = ({ metrics, summary }) => (
-  <div className="row p-3">
-    <div className="col-md-4 p-3 mb-3 mb-md-0 bg-dark text-white">
-      <h3>Yesterday</h3>
-      <ul className="list-unstyled">
-        {metrics.map((metric, i) => (
-          <li key={i}>
-            {/* TODO: skeleton state */}
-            <Icon img={metric.img} alt={metric.alt} />
-            <strong>{metric.figure}</strong> {metric.label} ({metric.delta})
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div className="col-md-8">
-      <p>{summary}</p>
-    </div>
-  </div>
+export const SectionHeading = ({ children }) => (
+  <div className="row p-3">{children}</div>
 );
 
-KeyMetrics.propTypes = {
-  metrics: PropTypes.arrayOf(
-    PropTypes.shape({
-      figure: PropTypes.number,
-      label: PropTypes.string,
-      delta: PropTypes.number,
-      icon: PropTypes.object,
-      alt: PropTypes.string
-    })
-  ).isRequired,
-  summary: PropTypes.string
-};
-
-export const WeeklyTrends = ({ metrics, description }) => (
-  <div className="col-lg mx-1 p-3 bg-light">
-    <h3>Trends This Week</h3>
-    {description ? <p>{description}</p> : null}
-    <ol className="list-unstyled">
-      {metrics.map((metric, i) => (
-        <li key={i}>
-          <Icon img={metric.img} alt={metric.alt} />
-          <strong>{Math.abs(metric.trend)}%</strong>{' '}
-          {metric.trend >= 0 ? 'increase' : 'decrease'} in {metric.label}
-        </li>
-      ))}
-    </ol>
-  </div>
+export const SectionDescription = ({ children }) => (
+  <div className="col-md-8">{children}</div>
 );
-
-WeeklyTrends.propTypes = {
-  metrics: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.string,
-      label: PropTypes.string,
-      trend: PropTypes.number
-    })
-  ).isRequired,
-  description: PropTypes.string
-};
 
 export const BlockContent = ({ children }) => (
   <div className="p-3">{children}</div>

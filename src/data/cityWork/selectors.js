@@ -5,7 +5,6 @@ import startOfYesterday from 'date-fns/startOfYesterday';
 import endOfYesterday from 'date-fns/endOfYesterday';
 import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
-import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
@@ -16,7 +15,7 @@ import {
   getStackedAreaChartData,
   getDateRange
 } from 'data/utils';
-import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
+import { isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -27,79 +26,57 @@ const typesByIdSelector = state => state.cityWork.typesById;
 const exploreDataCacheSelector = state => state.cityWork.exploreDataCache;
 const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
+const actionAveragesSelector = state => state.cityWork.actionAverages;
+const callsAverageSelector = state => state.cityWork.callsAverage;
 
-export const getWorkOrders = createSelector(
-  actionsByDaySelector,
-  actionsByDay => {
-    let metrics = {
-      created: { figure: null, delta: null },
-      closed: { figure: null, delta: null }
+export const getWorkOrderCounts = createSelector(
+  [actionsByDaySelector, actionAveragesSelector],
+  (actionsByDay, actionAverages) => {
+    let counts = {
+      created: { figure: null, average: null },
+      closed: { figure: null, average: null }
     };
-
     const yesterday = actionsByDay[formatTimestamp(startOfYesterday())];
-
-    const twoDaysAgo =
-      actionsByDay[formatTimestamp(subDays(startOfYesterday(), 1))];
-
-    if (yesterday && twoDaysAgo) {
-      const createdYesterday = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
-      const closedYesterday = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
-      const createdTwoDaysAgo = twoDaysAgo[WORK_ORDERS_CREATED_CATEGORY].length;
-      const closedTwoDaysAgo = twoDaysAgo[WORK_ORDERS_CLOSED_CATEGORY].length;
-
-      metrics = {
-        created: {
-          figure: createdYesterday,
-          delta: createdYesterday - createdTwoDaysAgo
-        },
-        closed: {
-          figure: closedYesterday,
-          delta: closedYesterday - closedTwoDaysAgo
-        }
-      };
+    if (yesterday && yesterday[WORK_ORDERS_CREATED_CATEGORY].length) {
+      counts.created.figure = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
+      counts.closed.figure = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
     }
-    return metrics;
+    if (actionAverages && actionAverages['Created']) {
+      counts.created.average = Number(actionAverages['Created'].daily_average);
+      counts.closed.average = Number(actionAverages['Closed'].daily_average);
+    }
+    return counts;
   }
 );
 
-export const get311Calls = createSelector(ticketsSelector, tickets => {
-  let metrics = {
-    calls: {
-      figure: null,
-      delta: null
-    }
-  };
-
-  if (tickets.length) {
-    const callsYesterday = tickets.filter(
-      ticket =>
-        ticket.origin === 'Call Center' &&
-        isAfter(parseISO(ticket.last_modified), startOfYesterday())
-    ).length;
-
-    const callsTwoDaysAgo = tickets.filter(ticket => {
-      const ticketDate = parseISO(ticket.last_modified);
-      return (
-        ticket.origin === 'Call Center' &&
-        isBefore(ticketDate, startOfYesterday()) &&
-        isAfter(ticketDate, subDays(startOfYesterday(), 1))
-      );
-    }).length;
-
-    metrics.calls = {
-      figure: callsYesterday,
-      delta: callsYesterday - callsTwoDaysAgo
+export const get311CallCounts = createSelector(
+  [ticketsSelector, callsAverageSelector],
+  (tickets, callsAverage) => {
+    let counts = {
+      calls: { figure: null, average: null }
     };
+
+    if (tickets.length) {
+      const callsYesterday = tickets.filter(
+        ticket =>
+          ticket.origin === 'Call Center' &&
+          isAfter(parseISO(ticket.last_modified), startOfYesterday())
+      );
+      counts.calls.figure = callsYesterday.length;
+    }
+
+    if (callsAverage) {
+      counts.calls.average = callsAverage;
+    }
+    return counts;
   }
-  return metrics;
-});
+);
 
 export const getKeyMetrics = createSelector(
-  [getWorkOrders, get311Calls],
+  [getWorkOrderCounts, get311CallCounts],
   (workOrders, calls) => ({ ...workOrders, ...calls })
 );
 
-// TODO: fix these hardcoded type ids
 export const getWorkOrderChartData = createSelector(
   actionsByDaySelector,
   actionsByDay => {
@@ -109,8 +86,9 @@ export const getWorkOrderChartData = createSelector(
     return {
       data: dates.map(date => ({
         Date: format(new Date(date), 'MMM d'),
-        'Tickets Opened': actionsByDay[date][9].length,
-        'Tickets Closed': actionsByDay[date][6].length
+        'Tickets Opened':
+          actionsByDay[date][WORK_ORDERS_CREATED_CATEGORY].length,
+        'Tickets Closed': actionsByDay[date][WORK_ORDERS_CLOSED_CATEGORY].length
       })),
       columns: ['Date', 'Tickets Opened', 'Tickets Closed']
     };
@@ -204,10 +182,7 @@ export const getInternalTreemapData = createSelector(
     data = Object.keys(byDept).map(key => {
       return {
         name: key,
-        value: byDept[key].reduce(
-          (memo, category) => memo + category.thisWeekCount,
-          0
-        )
+        value: byDept[key].reduce((memo, category) => memo + category.count, 0)
       };
     });
 

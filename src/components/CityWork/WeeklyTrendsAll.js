@@ -1,8 +1,19 @@
+import React from 'react';
 import { connect } from 'react-redux';
 
-import { WeeklyTrends } from 'components/DataBlock';
+import WeeklyTrends from 'components/WeeklyTrends';
 import { getBaseCategory } from 'data/BaseCategories';
 import { getAllWeeklyTrends } from 'data/cityWork/selectors';
+
+const WeeklyTrendsAll = ({ metrics }) => (
+  <WeeklyTrends metrics={metrics}>
+    <h3>Trends This Week</h3>
+    <p>
+      These categories showed the greatest increase in new tickets opened this
+      week, compared to the weekly average.
+    </p>
+  </WeeklyTrends>
+);
 
 export default connect(state => ({
   metrics: getAllWeeklyTrends(state).map(category => {
@@ -12,7 +23,5 @@ export default connect(state => ({
       img: ancestor.icon,
       alt: ancestor.name
     };
-  }),
-  description: `The following categories saw the greatest increase
-  in work performed this week, compared to the previous week.`
-}))(WeeklyTrends);
+  })
+}))(WeeklyTrendsAll);
