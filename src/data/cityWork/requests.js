@@ -7,7 +7,7 @@ export const getTickets = async ({ startDate, endDate }) => {
   const dateRange = constructDateRangeQuery({
     startDate,
     endDate,
-    dateField: 'last_modified'
+    dateField: 'created_on'
   });
 
   return await instance.get(formatURL(SOCRATA_DATASETS.Somerville_Services), {

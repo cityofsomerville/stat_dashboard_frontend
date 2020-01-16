@@ -36,7 +36,7 @@ export const Metric = ({ figure, average, children }) => {
   return (
     <li className="mb-2">
       {/* TODO: skeleton state */}
-      <Icon img={img} alt={trend} />
+      <Icon img={img} alt="" />
       <div className="d-inline-block align-middle" style={{ lineHeight: 1.2 }}>
         <strong>{figure}</strong> {children}
         <br />
@@ -49,7 +49,10 @@ export const Metric = ({ figure, average, children }) => {
 Metric.propTypes = {
   figure: PropTypes.number,
   average: PropTypes.number,
-  children: PropTypes.node
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 const KeyMetrics = ({ children }) => (
