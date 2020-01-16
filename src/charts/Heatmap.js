@@ -37,6 +37,7 @@ const Heatmap = ({ data }) => (
     <tbody>
       {Object.keys(data.dataset).map(dept => (
         <HeatmapRow
+          key={dept}
           name={dept}
           data={data.dataset[dept]}
           range={data.valueRange}

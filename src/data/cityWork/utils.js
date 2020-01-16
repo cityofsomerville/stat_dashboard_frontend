@@ -3,7 +3,6 @@ import { groupBy } from 'data/utils';
 export const getWeeklyTrends = (types, tickets, averages) => {
   let weeklyTrends = [];
   const ticketsByType = groupBy(tickets, 'type');
-  console.log(types);
 
   weeklyTrends = Object.keys(ticketsByType)
     .map(typeId => {

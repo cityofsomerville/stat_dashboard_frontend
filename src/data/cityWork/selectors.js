@@ -5,7 +5,6 @@ import startOfYesterday from 'date-fns/startOfYesterday';
 import endOfYesterday from 'date-fns/endOfYesterday';
 import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
-import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
@@ -16,7 +15,7 @@ import {
   getStackedAreaChartData,
   getDateRange
 } from 'data/utils';
-import { BaseCategories, isServiceRequest } from 'data/BaseCategories';
+import { isServiceRequest } from 'data/BaseCategories';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;

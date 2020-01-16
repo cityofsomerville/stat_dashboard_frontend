@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from 'components/Icon';
-
 export const SectionHeading = ({ children }) => (
   <div className="row p-3">{children}</div>
 );

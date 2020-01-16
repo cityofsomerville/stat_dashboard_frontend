@@ -57,7 +57,7 @@ Metric.propTypes = {
 
 const KeyMetrics = ({ children }) => (
   <div className="col-md-4 p-3 mb-3 mb-md-0 bg-dark text-white">
-    <h3 class="h4">Yesterday</h3>
+    <h3 className="h4">Yesterday</h3>
     <ul className="list-unstyled">{children}</ul>
   </div>
 );
