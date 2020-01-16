@@ -43,8 +43,8 @@ export const getWorkOrderCounts = createSelector(
       counts.closed.figure = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
     }
     if (actionAverages && actionAverages['Created']) {
-      counts.created.average = actionAverages['Created'].daily_average;
-      counts.closed.average = actionAverages['Closed'].daily_average;
+      counts.created.average = Number(actionAverages['Created'].daily_average);
+      counts.closed.average = Number(actionAverages['Closed'].daily_average);
     }
     return counts;
   }
@@ -78,7 +78,6 @@ export const getKeyMetrics = createSelector(
   (workOrders, calls) => ({ ...workOrders, ...calls })
 );
 
-// TODO: fix these hardcoded type ids
 export const getWorkOrderChartData = createSelector(
   actionsByDaySelector,
   actionsByDay => {
@@ -88,8 +87,9 @@ export const getWorkOrderChartData = createSelector(
     return {
       data: dates.map(date => ({
         Date: format(new Date(date), 'MMM d'),
-        'Tickets Opened': actionsByDay[date][9].length,
-        'Tickets Closed': actionsByDay[date][6].length
+        'Tickets Opened':
+          actionsByDay[date][WORK_ORDERS_CREATED_CATEGORY].length,
+        'Tickets Closed': actionsByDay[date][WORK_ORDERS_CLOSED_CATEGORY].length
       })),
       columns: ['Date', 'Tickets Opened', 'Tickets Closed']
     };
