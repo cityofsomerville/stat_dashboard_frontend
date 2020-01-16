@@ -3,38 +3,13 @@ import PropTypes from 'prop-types';
 
 import Icon from 'components/Icon';
 
-export const KeyMetrics = ({ metrics, summary }) => (
-  <div className="row p-3">
-    <div className="col-md-4 p-3 mb-3 mb-md-0 bg-dark text-white">
-      <h3>Yesterday</h3>
-      <ul className="list-unstyled">
-        {metrics.map((metric, i) => (
-          <li key={i}>
-            {/* TODO: skeleton state */}
-            <Icon img={metric.img} alt={metric.alt} />
-            <strong>{metric.figure}</strong> {metric.label} ({metric.delta})
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div className="col-md-8">
-      <p>{summary}</p>
-    </div>
-  </div>
+export const SectionHeading = ({ children }) => (
+  <div className="row p-3">{children}</div>
 );
 
-KeyMetrics.propTypes = {
-  metrics: PropTypes.arrayOf(
-    PropTypes.shape({
-      figure: PropTypes.number,
-      label: PropTypes.string,
-      delta: PropTypes.number,
-      icon: PropTypes.object,
-      alt: PropTypes.string
-    })
-  ).isRequired,
-  summary: PropTypes.string
-};
+export const SectionDescription = ({ children }) => (
+  <div className="col-md-8">{children}</div>
+);
 
 export const WeeklyTrends = ({ metrics, description }) => (
   <div className="col-lg mx-1 p-3 bg-light">

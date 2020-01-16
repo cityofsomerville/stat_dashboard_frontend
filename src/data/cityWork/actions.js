@@ -138,7 +138,7 @@ export const fetchWeeklyAveragePerType = () => {
 
 export const fetchAverages = () => {
   return dispatch => {
-    dispatch(fetchDailyAveragePerAction);
-    dispatch(fetchWeeklyAveragePerType);
+    dispatch(fetchDailyAveragePerAction());
+    dispatch(fetchWeeklyAveragePerType());
   };
 };

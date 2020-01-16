@@ -4,9 +4,8 @@ import subDays from 'date-fns/subDays';
 import startOfToday from 'date-fns/startOfToday';
 
 import DataBlock, {
-  BlockContent,
-  DataRow,
-  DataCol
+  SectionHeading,
+  SectionDescription
 } from 'components/DataBlock';
 
 import CityWorkKeyMetrics from 'components/CityWork/CityWorkKeyMetrics';
@@ -39,7 +38,17 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets, fetchAverages }) => {
   return (
     <DataBlock>
       <h2>City Work</h2>
-      <CityWorkKeyMetrics />
+      <SectionHeading>
+        <CityWorkKeyMetrics />
+        <SectionDescription>
+          <p>
+            This section provides detailed information about the tasks,
+            requests, and improvements handled each day by various city
+            departments. Much of this work begins as constituent 311 reports
+            submitted online, through the app, or over the phone.
+          </p>
+        </SectionDescription>
+      </SectionHeading>
       <Tabs
         uuid="citywork"
         labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}

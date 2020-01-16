@@ -27,38 +27,25 @@ const typesByIdSelector = state => state.cityWork.typesById;
 const exploreDataCacheSelector = state => state.cityWork.exploreDataCache;
 const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
+const actionAveragesSelector = state => state.cityWork.actionAverages;
 
-export const getWorkOrders = createSelector(
-  actionsByDaySelector,
-  actionsByDay => {
-    let metrics = {
-      created: { figure: null, delta: null },
-      closed: { figure: null, delta: null }
+export const getWorkOrderCounts = createSelector(
+  [actionsByDaySelector, actionAveragesSelector],
+  (actionsByDay, actionAverages) => {
+    let counts = {
+      created: { figure: null, average: null },
+      closed: { figure: null, average: null }
     };
-
     const yesterday = actionsByDay[formatTimestamp(startOfYesterday())];
-
-    const twoDaysAgo =
-      actionsByDay[formatTimestamp(subDays(startOfYesterday(), 1))];
-
-    if (yesterday && twoDaysAgo) {
-      const createdYesterday = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
-      const closedYesterday = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
-      const createdTwoDaysAgo = twoDaysAgo[WORK_ORDERS_CREATED_CATEGORY].length;
-      const closedTwoDaysAgo = twoDaysAgo[WORK_ORDERS_CLOSED_CATEGORY].length;
-
-      metrics = {
-        created: {
-          figure: createdYesterday,
-          delta: createdYesterday - createdTwoDaysAgo
-        },
-        closed: {
-          figure: closedYesterday,
-          delta: closedYesterday - closedTwoDaysAgo
-        }
-      };
+    if (yesterday) {
+      counts.created.figure = yesterday[WORK_ORDERS_CREATED_CATEGORY].length;
+      counts.closed.figure = yesterday[WORK_ORDERS_CLOSED_CATEGORY].length;
     }
-    return metrics;
+    if (actionAverages && actionAverages['Created']) {
+      counts.created.average = actionAverages['Created'].daily_average;
+      counts.closed.average = actionAverages['Closed'].daily_average;
+    }
+    return counts;
   }
 );
 
@@ -94,10 +81,10 @@ export const get311Calls = createSelector(ticketsSelector, tickets => {
   return metrics;
 });
 
-export const getKeyMetrics = createSelector(
-  [getWorkOrders, get311Calls],
-  (workOrders, calls) => ({ ...workOrders, ...calls })
-);
+// export const getKeyMetrics = createSelector(
+//   [getWorkOrders, get311Calls],
+//   (workOrders, calls) => ({ ...workOrders, ...calls })
+// );
 
 // TODO: fix these hardcoded type ids
 export const getWorkOrderChartData = createSelector(
