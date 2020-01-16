@@ -10,12 +10,13 @@ export const Metric = ({ figure, average, children }) => {
   let img;
   let trend;
   let modifier;
+  const step = 3; // difference of under 3 shouldn't count as "significant"
   const minorThreshold = 0.05; // 5% of average
   const majorThreshold = 0.2; // 20% of average
 
   if (figure && average) {
     const difference = average - figure;
-    if (Math.abs(difference) > majorThreshold * average) {
+    if (Math.abs(difference) > Math.max(majorThreshold * average, step)) {
       modifier = 'significantly';
     } else {
       modifier = 'slightly';
