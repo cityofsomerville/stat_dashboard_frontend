@@ -29,7 +29,7 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets, fetchAverages }) => {
       endDate: today
     });
     fetchTypesTickets({
-      startDate: subDays(today, 14),
+      startDate: subDays(today, 7),
       endDate: today
     });
     fetchAverages();

@@ -62,6 +62,13 @@ export const fetchTypesTickets = ({ startDate, endDate }) => {
             type: types.TICKETS_SUCCESS,
             payload: tickets.data
           });
+        })(),
+        (async () => {
+          const averages = await getWeeklyAveragePerType();
+          return dispatch({
+            type: types.TYPE_AVERAGE_SUCCESS,
+            payload: averages.data
+          });
         })()
         // once both have been stored, calculate weekly trends
       ]).then(() => {
@@ -70,7 +77,8 @@ export const fetchTypesTickets = ({ startDate, endDate }) => {
           type: types.TYPES_TICKETS_LOADED,
           payload: getWeeklyTrends(
             state.cityWork.typesById,
-            state.cityWork.tickets
+            state.cityWork.tickets,
+            state.cityWork.typeAverages
           )
         });
       });
@@ -103,7 +111,7 @@ export const fetchCityWorkExploreData = key => {
   };
 };
 
-export const fetchDailyAveragePerAction = () => {
+const fetchDailyAveragePerAction = () => {
   return async dispatch => {
     try {
       const response = await getDailyAveragePerAction();
@@ -121,25 +129,25 @@ export const fetchDailyAveragePerAction = () => {
   };
 };
 
-export const fetchWeeklyAveragePerType = () => {
-  return async dispatch => {
-    try {
-      const response = await getWeeklyAveragePerType();
-      dispatch({
-        type: types.TYPE_AVERAGE_SUCCESS,
-        payload: response.data
-      });
-    } catch (err) {
-      console.log(err);
-      dispatch({
-        type: types.TYPE_AVERAGE_ERROR,
-        payload: err
-      });
-    }
-  };
-};
+// const fetchWeeklyAveragePerType = () => {
+//   return async dispatch => {
+//     try {
+//       const response = await getWeeklyAveragePerType();
+//       dispatch({
+//         type: types.TYPE_AVERAGE_SUCCESS,
+//         payload: response.data
+//       });
+//     } catch (err) {
+//       console.log(err);
+//       dispatch({
+//         type: types.TYPE_AVERAGE_ERROR,
+//         payload: err
+//       });
+//     }
+//   };
+// };
 
-export const fetchCallsAverage = () => {
+const fetchCallsAverage = () => {
   return async dispatch => {
     try {
       const response = await getCallsAverage();
@@ -160,7 +168,7 @@ export const fetchCallsAverage = () => {
 export const fetchAverages = () => {
   return dispatch => {
     dispatch(fetchDailyAveragePerAction());
-    dispatch(fetchWeeklyAveragePerType());
+    // dispatch(fetchWeeklyAveragePerType());
     dispatch(fetchCallsAverage());
   };
 };

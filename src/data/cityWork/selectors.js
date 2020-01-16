@@ -183,10 +183,7 @@ export const getInternalTreemapData = createSelector(
     data = Object.keys(byDept).map(key => {
       return {
         name: key,
-        value: byDept[key].reduce(
-          (memo, category) => memo + category.thisWeekCount,
-          0
-        )
+        value: byDept[key].reduce((memo, category) => memo + category.count, 0)
       };
     });
 
