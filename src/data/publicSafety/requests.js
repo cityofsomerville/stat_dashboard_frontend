@@ -13,6 +13,11 @@ const dayRange = {
   endDate: parseISO('2019-10-07T23:59:59.999')
 };
 
+const yearRange = {
+  startDate: parseISO('2018-10-07T00:00:00.000'),
+  endDate: parseISO('2019-10-07T23:59:59.999')
+};
+
 export const getQOLCount = async () => {
   const dateRange = constructDateRangeQuery({
     ...dayRange,
@@ -23,6 +28,22 @@ export const getQOLCount = async () => {
     {
       params: {
         $select: 'count(*) as count',
+        $where: `${dateRange}`
+      }
+    }
+  );
+};
+
+export const getQOLAverage = async () => {
+  const dateRange = constructDateRangeQuery({
+    ...yearRange,
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_QualityOfLife),
+    {
+      params: {
+        $select: '(count(*)/365) as daily_average',
         $where: `${dateRange}`
       }
     }
@@ -64,6 +85,22 @@ export const getCICount = async () => {
   );
 };
 
+export const getCIAverage = async () => {
+  const dateRange = constructDateRangeQuery({
+    ...yearRange,
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_CriminalIncidents),
+    {
+      params: {
+        $select: '(count(*)/365) as daily_average',
+        $where: `${dateRange}`
+      }
+    }
+  );
+};
+
 export const getCIExploreData = async params => {
   const properties = JSON.parse(params);
   const dateRange = constructDateRangeQuery({
@@ -99,6 +136,22 @@ export const getTECount = async () => {
   );
 };
 
+export const getTEAverage = async () => {
+  const dateRange = constructDateRangeQuery({
+    ...yearRange,
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_TrafficEnforcement),
+    {
+      params: {
+        $select: '(count(*)/365) as daily_average',
+        $where: `${dateRange}`
+      }
+    }
+  );
+};
+
 export const getTEExploreData = async params => {
   const properties = JSON.parse(params);
   const dateRange = constructDateRangeQuery({
@@ -128,6 +181,22 @@ export const getMVCCount = async () => {
     {
       params: {
         $select: 'count(*) as count',
+        $where: `${dateRange}`
+      }
+    }
+  );
+};
+
+export const getMVCAverage = async () => {
+  const dateRange = constructDateRangeQuery({
+    ...yearRange,
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_MotorVehicleCitations),
+    {
+      params: {
+        $select: '(count(*)/365) as daily_average',
         $where: `${dateRange}`
       }
     }

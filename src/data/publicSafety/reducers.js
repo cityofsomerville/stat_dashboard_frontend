@@ -51,18 +51,32 @@ const dailyTotals = (state = initialState.dailyTotals, action) => {
   }
 };
 
-// const typeAverages = (state = initialState.typeAverages, action) => {
-//   switch (action.type) {
-//     case types.PERMITS_TYPE_AVERAGES_SUCCESS:
-//       return Object.assign({}, state, indexBy(action.payload, 'type'));
-//     default:
-//       return state;
-//   }
-// };
+const typeAverages = (state = initialState.typeAverages, action) => {
+  switch (action.type) {
+    case types.QOL_AVERAGE_SUCCESS:
+      return Object.assign({}, state, {
+        qol: Number(action.payload[0].daily_average)
+      });
+    case types.CI_AVERAGE_SUCCESS:
+      return Object.assign({}, state, {
+        ci: Number(action.payload[0].daily_average)
+      });
+    case types.MVC_AVERAGE_SUCCESS:
+      return Object.assign({}, state, {
+        mvc: Number(action.payload[0].daily_average)
+      });
+    case types.TE_AVERAGE_SUCCESS:
+      return Object.assign({}, state, {
+        te: Number(action.payload[0].daily_average)
+      });
+    default:
+      return state;
+  }
+};
 
 export default combineReducers({
   exploreDataParams,
   exploreDataCache,
-  dailyTotals
-  // typeAverages
+  dailyTotals,
+  typeAverages
 });

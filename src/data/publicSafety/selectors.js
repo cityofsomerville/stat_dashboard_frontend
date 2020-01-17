@@ -5,12 +5,13 @@ import format from 'date-fns/format';
 import { getStackedAreaChartData, groupBy } from 'data/utils';
 
 const dailyTotalsSelector = state => state.publicSafety.dailyTotals;
+const typeAveragesSelector = state => state.publicSafety.typeAverages;
 const exploreDataCacheSelector = state => state.publicSafety.exploreDataCache;
 const exploreDataParamsSelector = state => state.publicSafety.exploreDataParams;
 
 export const getPublicSafetyKeyMetrics = createSelector(
-  dailyTotalsSelector,
-  dailyTotals => {
+  [dailyTotalsSelector, typeAveragesSelector],
+  (dailyTotals, typeAverages) => {
     let metrics = {
       qol: { figure: null, average: null },
       ci: { figure: null, average: null },
@@ -19,6 +20,9 @@ export const getPublicSafetyKeyMetrics = createSelector(
     };
     Object.keys(dailyTotals).forEach(key => {
       metrics[key].figure = dailyTotals[key];
+    });
+    Object.keys(typeAverages).forEach(key => {
+      metrics[key].average = typeAverages[key];
     });
     return metrics;
   }
