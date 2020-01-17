@@ -10,23 +10,23 @@ const initialState = {
   typeAverages: {}
 };
 
-// const exploreDataParams = (state = initialState.exploreDataParams, action) => {
-//   switch (action.type) {
-//     case types.PERMITS_EXPLORE_DATA_SUCCESS:
-//       return action.key;
-//     default:
-//       return state;
-//   }
-// };
+const exploreDataParams = (state = initialState.exploreDataParams, action) => {
+  switch (action.type) {
+    case types.QOL_EXPLORE_DATA_SUCCESS:
+      return action.key;
+    default:
+      return state;
+  }
+};
 
-// const exploreDataCache = (state = initialState.exploreDataCache, action) => {
-//   switch (action.type) {
-//     case types.PERMITS_EXPLORE_DATA_SUCCESS:
-//       return [...action.payload];
-//     default:
-//       return state;
-//   }
-// };
+const exploreDataCache = (state = initialState.exploreDataCache, action) => {
+  switch (action.type) {
+    case types.QOL_EXPLORE_DATA_SUCCESS:
+      return [...action.payload];
+    default:
+      return state;
+  }
+};
 
 const dailyTotals = (state = initialState.dailyTotals, action) => {
   switch (action.type) {
@@ -61,8 +61,8 @@ const dailyTotals = (state = initialState.dailyTotals, action) => {
 // };
 
 export default combineReducers({
-  // exploreDataParams,
-  // exploreDataCache,
+  exploreDataParams,
+  exploreDataCache,
   dailyTotals
   // typeAverages
 });

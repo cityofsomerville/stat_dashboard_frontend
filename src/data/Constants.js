@@ -37,5 +37,9 @@ export const DATE_PRESETS = {
   'Custom...': {
     startDate: format(subDays(startOfToday(), 7), SOCRATA_TIMESTAMP),
     endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
+  },
+  '7 days (last available data)': {
+    startDate: '2019-10-01T00:00:00.000',
+    endDate: '2019-10-07T23:59:59.999'
   }
 };

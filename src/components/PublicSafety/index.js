@@ -6,19 +6,19 @@ import DataBlock, {
   SectionDescription
 } from 'components/DataBlock';
 import ExploreData from 'components/ExploreData';
-import PermitsKeyMetrics from 'components/PublicSafety/PublicSafetyKeyMetrics';
-// import { fetchPermitsExploreData } from 'data/permits/actions';
+import PublicSafetyKeyMetrics from 'components/PublicSafety/PublicSafetyKeyMetrics';
+import { fetchPublicSafetyExploreData } from 'data/publicSafety/actions';
+import {
+  getCategoryNames,
+  getChartData,
+  getMapData
+} from 'data/publicSafety/selectors';
 
 const categoryPresets = {
-  'All Permit Types': [
-    'Commercial Building',
-    'Residential Building',
-    'Sale of Property',
-    'Service Renewal',
-    'Tree Removal'
-  ],
-  Commercial: ['Commercial Building'],
-  Residential: ['Residential Building']
+  'Quality of Life': [1, 2, 3],
+  'Criminal Incidents': [1, 2, 3],
+  'Motor Vehicle Citations': [1, 2, 3],
+  'Traffic Enforcement': [1, 2, 3]
 };
 
 const PublicSafety = ({
@@ -29,13 +29,13 @@ const PublicSafety = ({
   chartData,
   params,
   mapData,
-  fetchPermitsExploreData,
+  fetchData,
   updatePermitsParams
 }) => (
   <DataBlock>
     <h2>Public Safety</h2>
     <SectionHeading>
-      <PermitsKeyMetrics />
+      <PublicSafetyKeyMetrics />
       <SectionDescription>
         <p>
           This section explores data on building permits of various types that
@@ -43,23 +43,28 @@ const PublicSafety = ({
         </p>
       </SectionDescription>
     </SectionHeading>
-    {/*<ExploreData
-      namespace="permits_licenses"
-      selectedDatePreset="7 days"
-      selectedCategoryPreset="All Permit Types"
+    <ExploreData
+      namespace="public_safety"
+      selectedDatePreset="7 days (last available data)"
+      selectedCategoryPreset="Quality of Life"
       selectedCategoryNames={selectedCategoryNames}
       categoryPresets={categoryPresets}
       chartData={chartData}
       params={params}
       mapData={mapData}
-      fetchData={fetchPermitsExploreData}
-    />*/}
+      fetchData={fetchData}
+    />
   </DataBlock>
 );
 
-export default connect(state => ({
-  // selectedCategoryNames: getCategoryNames(state),
-  // chartData: getChartData(state),
-  // params: state.permits.exploreDataParams,
-  // mapData: getMapData(state)
-}))(PublicSafety);
+export default connect(
+  state => ({
+    selectedCategoryNames: getCategoryNames(state),
+    chartData: getChartData(state),
+    params: state.publicSafety.exploreDataParams,
+    mapData: getMapData(state)
+  }),
+  {
+    fetchData: fetchPublicSafetyExploreData
+  }
+)(PublicSafety);

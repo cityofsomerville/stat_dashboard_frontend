@@ -29,6 +29,25 @@ export const getQOLCount = async () => {
   );
 };
 
+export const getQOLExploreData = async params => {
+  const properties = JSON.parse(params);
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(properties.dateRange.startDate),
+    endDate: parseISO(properties.dateRange.endDate),
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_QualityOfLife),
+    {
+      params: {
+        $select: 'id,latitude,longitude,date,inctype as type',
+        $where: `${dateRange}`,
+        $limit: 10000
+      }
+    }
+  );
+};
+
 export const getCICount = async () => {
   const dateRange = constructDateRangeQuery({
     ...dayRange,

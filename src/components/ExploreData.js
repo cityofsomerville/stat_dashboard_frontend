@@ -46,7 +46,8 @@ class ExploreData extends React.Component {
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
       params = JSON.stringify({
         categories: selectedCategories.sort(),
-        dateRange: selectedDateRange
+        dateRange: selectedDateRange,
+        preset: this.state.selectedCategoryPreset
       });
     }
     return params;

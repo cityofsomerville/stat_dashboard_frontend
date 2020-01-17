@@ -12,7 +12,7 @@ const IndexPage = () => (
     <SEO title="Home" />
     <CityWork />
     <PublicSafety />
-    <Permits />
+    {/*<Permits />*/}
     {/*<CityWebsite />*/}
   </Layout>
 );
