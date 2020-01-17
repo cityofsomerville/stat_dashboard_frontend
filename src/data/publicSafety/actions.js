@@ -3,7 +3,10 @@ import {
   getCICount,
   getMVCCount,
   getTECount,
-  getQOLExploreData
+  getQOLExploreData,
+  getCIExploreData,
+  getTEExploreData,
+  getMVCExploreData
 } from 'data/publicSafety/requests';
 
 export const types = [
@@ -12,10 +15,7 @@ export const types = [
   'CI_COUNT_SUCCESS',
   'TE_COUNT_SUCCESS',
   'MVC_COUNT_SUCCESS',
-  'QOL_EXPLORE_DATA_SUCCESS',
-  'CI_EXPLORE_DATA_SUCCESS',
-  'TE_EXPLORE_DATA_SUCCESS',
-  'MVC_EXPLORE_DATA_SUCCESS'
+  'EXPLORE_DATA_SUCCESS'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 const makeRequest = ({ requestFn, args, success, error, extraParams }) => {
@@ -50,46 +50,47 @@ export const fetchKeyMetrics = () => {
         error: types.REQUEST_ERROR
       })
     );
-    // dispatch(makeRequest({
-    //   requestFn: getCICount,
-    //   success: types.CI_COUNT_SUCCESS,
-    //   error: types.REQUEST_ERROR
-    // }));
-    // dispatch(makeRequest({
-    //   requestFn: getMVCCount,
-    //   success: types.MVC_COUNT_SUCCESS,
-    //   error: types.REQUEST_ERROR
-    // }));
-    // dispatch(makeRequest({
-    //   requestFn: getTECount,
-    //   success: types.TE_COUNT_SUCCESS,
-    //   error: types.REQUEST_ERROR
-    // }));
+    dispatch(
+      makeRequest({
+        requestFn: getCICount,
+        success: types.CI_COUNT_SUCCESS,
+        error: types.REQUEST_ERROR
+      })
+    );
+    dispatch(
+      makeRequest({
+        requestFn: getMVCCount,
+        success: types.MVC_COUNT_SUCCESS,
+        error: types.REQUEST_ERROR
+      })
+    );
+    dispatch(
+      makeRequest({
+        requestFn: getTECount,
+        success: types.TE_COUNT_SUCCESS,
+        error: types.REQUEST_ERROR
+      })
+    );
   };
 };
 
 export const fetchPublicSafetyExploreData = params => {
   return dispatch => {
     const { preset } = JSON.parse(params);
-    switch (preset) {
-      case 'Quality of Life':
-        dispatch(
-          makeRequest({
-            requestFn: getQOLExploreData,
-            args: params,
-            extraParams: { key: params },
-            success: types.QOL_EXPLORE_DATA_SUCCESS,
-            error: types.REQUEST_ERROR
-          })
-        );
-        break;
-      // case 'Criminal Incidents':
-
-      // case 'Motor Vehicle Citations':
-
-      // case 'Traffic Enforcement':
-
-      default:
-    }
+    const requestFns = {
+      'Quality of Life': getQOLExploreData,
+      'Criminal Incidents': getCIExploreData,
+      'Traffic Enforcement': getTEExploreData,
+      'Motor Vehicle Citations': getMVCExploreData
+    };
+    dispatch(
+      makeRequest({
+        requestFn: requestFns[preset],
+        args: params,
+        extraParams: { key: params },
+        success: types.EXPLORE_DATA_SUCCESS,
+        error: types.REQUEST_ERROR
+      })
+    );
   };
 };

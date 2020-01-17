@@ -64,6 +64,25 @@ export const getCICount = async () => {
   );
 };
 
+export const getCIExploreData = async params => {
+  const properties = JSON.parse(params);
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(properties.dateRange.startDate),
+    endDate: parseISO(properties.dateRange.endDate),
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_CriminalIncidents),
+    {
+      params: {
+        $select: 'id,latitude,longitude,date,offense as type',
+        $where: `${dateRange}`,
+        $limit: 10000
+      }
+    }
+  );
+};
+
 export const getTECount = async () => {
   const dateRange = constructDateRangeQuery({
     ...dayRange,
@@ -80,6 +99,25 @@ export const getTECount = async () => {
   );
 };
 
+export const getTEExploreData = async params => {
+  const properties = JSON.parse(params);
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(properties.dateRange.startDate),
+    endDate: parseISO(properties.dateRange.endDate),
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_TrafficEnforcement),
+    {
+      params: {
+        $select: 'id,latitude,longitude,date,inctype as type',
+        $where: `${dateRange}`,
+        $limit: 10000
+      }
+    }
+  );
+};
+
 export const getMVCCount = async () => {
   const dateRange = constructDateRangeQuery({
     ...dayRange,
@@ -91,6 +129,25 @@ export const getMVCCount = async () => {
       params: {
         $select: 'count(*) as count',
         $where: `${dateRange}`
+      }
+    }
+  );
+};
+
+export const getMVCExploreData = async params => {
+  const properties = JSON.parse(params);
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(properties.dateRange.startDate),
+    endDate: parseISO(properties.dateRange.endDate),
+    dateField: 'date'
+  });
+  return await instance.get(
+    formatURL(SOCRATA_DATASETS.Somerville_MotorVehicleCitations),
+    {
+      params: {
+        $select: 'id,latitude,longitude,date,chgdesc as type',
+        $where: `${dateRange}`,
+        $limit: 10000
       }
     }
   );
