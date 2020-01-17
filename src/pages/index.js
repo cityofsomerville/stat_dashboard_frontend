@@ -9,7 +9,7 @@ import CityWebsite from 'components/CityWebsite';
 
 const IndexPage = () => (
   <Layout>
-    <SEO title="Home" />
+    <SEO title="Home" lang="en" />
     <CityWork />
     <PublicSafety />
     <Permits />

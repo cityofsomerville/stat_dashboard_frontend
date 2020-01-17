@@ -105,7 +105,7 @@ export const getMapData = createSelector(
         latitude: ticket.latitude,
         longitude: ticket.longitude,
         title: typesById[ticket.type] ? typesById[ticket.type].name : '',
-        date: format(parseISO(ticket.last_modified), 'yyyy-MM-dd'),
+        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
         type: typesById[ticket.type]
       }));
     }

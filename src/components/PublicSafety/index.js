@@ -37,10 +37,7 @@ const PublicSafety = ({
     <SectionHeading>
       <PublicSafetyKeyMetrics />
       <SectionDescription>
-        <p>
-          This section explores data on building permits of various types that
-          have been recently issued.
-        </p>
+        <p>Public Safety incident data is explored below.</p>
       </SectionDescription>
     </SectionHeading>
     <ExploreData
