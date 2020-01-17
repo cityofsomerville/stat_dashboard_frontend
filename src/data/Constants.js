@@ -7,7 +7,12 @@ export const SOCRATA_DATASETS = {
   Somerville_Services: '4pyi-uqq6',
   Somerville_Services_Activities: 'f7b7-bfkg',
   Somerville_Services_Types: 'ikh2-c6hz',
-  Somerville_Permits: 'vxgw-vmky'
+  Somerville_Permits: 'vxgw-vmky',
+  Somerville_QualityOfLife: '62z4-avqc',
+  Somerville_CriminalIncidents: '9wbi-ck3z',
+  Somerville_TrafficEnforcement: '8r94-vs2v',
+  Somerville_MotorVehicleCitations: 'cmth-mghs',
+  Somerville_Analytics: '754v-8e35'
 };
 
 export const SOCRATA_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSS";

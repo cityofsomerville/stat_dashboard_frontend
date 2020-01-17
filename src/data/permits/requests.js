@@ -1,5 +1,3 @@
-import axios from 'axios';
-import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 import startOfYesterday from 'date-fns/startOfYesterday';
 import endOfYesterday from 'date-fns/endOfYesterday';
