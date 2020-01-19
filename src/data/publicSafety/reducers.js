@@ -12,7 +12,7 @@ const initialState = {
 
 const exploreDataParams = (state = initialState.exploreDataParams, action) => {
   switch (action.type) {
-    case types.EXPLORE_DATA_SUCCESS:
+    case types.EXPLORE_PUBLIC_SAFETY_DATA_SUCCESS:
       return action.key;
     default:
       return state;
@@ -21,7 +21,7 @@ const exploreDataParams = (state = initialState.exploreDataParams, action) => {
 
 const exploreDataCache = (state = initialState.exploreDataCache, action) => {
   switch (action.type) {
-    case types.EXPLORE_DATA_SUCCESS:
+    case types.EXPLORE_PUBLIC_SAFETY_DATA_SUCCESS:
       return [...action.payload];
     default:
       return state;

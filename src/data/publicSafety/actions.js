@@ -23,7 +23,7 @@ export const types = [
   'CI_AVERAGE_SUCCESS',
   'TE_AVERAGE_SUCCESS',
   'MVC_AVERAGE_SUCCESS',
-  'EXPLORE_DATA_SUCCESS'
+  'EXPLORE_PUBLIC_SAFETY_DATA_SUCCESS'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 const makeRequest = ({ requestFn, args, success, extraParams }) => {
@@ -104,7 +104,7 @@ export const fetchPublicSafetyExploreData = params => {
         requestFn: requestFns[preset],
         args: params,
         extraParams: { key: params },
-        success: types.EXPLORE_DATA_SUCCESS
+        success: types.EXPLORE_PUBLIC_SAFETY_DATA_SUCCESS
       })
     );
   };

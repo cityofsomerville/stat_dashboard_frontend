@@ -239,3 +239,25 @@ export const getInProgressHeatmapData = createSelector(
     };
   }
 );
+
+export const getCategoryHierarchy = createSelector(
+  typesByIdSelector,
+  typesById => {
+    let hierarchy = {};
+    const index = 'ancestor_name';
+
+    if (typesById) {
+      hierarchy = Object.keys(typesById).reduce((memo, key) => {
+        // this excludes a list of categories with undefined ancestor
+        if (typesById[key][index]) {
+          if (!memo[typesById[key][index]]) {
+            memo[typesById[key][index]] = [];
+          }
+          memo[typesById[key][index]].push(typesById[key].id);
+        }
+        return memo;
+      }, {});
+    }
+    return hierarchy;
+  }
+);
