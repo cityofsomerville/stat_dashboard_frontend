@@ -38,8 +38,8 @@ export const DATE_PRESETS = {
     startDate: format(subDays(startOfToday(), 7), SOCRATA_TIMESTAMP),
     endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
   },
-  // FIXME post demo!
-  '7 days (last available data)': {
+  // FIXME once public safety data is working
+  'Last available public safety data': {
     startDate: '2019-10-01T00:00:00.000',
     endDate: '2019-10-07T23:59:59.999'
   }

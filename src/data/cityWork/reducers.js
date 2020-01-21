@@ -23,8 +23,8 @@ const createActionsByDay = () => {
 
 const initialState = {
   actionsByDay: createActionsByDay(),
-  typesById: {}, // types, error
-  tickets: [], // tickets, error. possibly just store all tickets here
+  typesById: {},
+  tickets: [],
   actionAverages: {},
   typeAverages: {},
   callsAverage: null,

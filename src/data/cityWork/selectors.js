@@ -154,7 +154,7 @@ export const getCategoryNames = createSelector(getParams, params => {
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
-  weeklyTrends => weeklyTrends.slice(0, 3)
+  weeklyTrends => weeklyTrends.slice(0, 5)
 );
 
 export const getInternalWeeklyTrends = createSelector(
@@ -164,7 +164,7 @@ export const getInternalWeeklyTrends = createSelector(
     if (weeklyTrends) {
       selection = weeklyTrends
         .filter(trend => isServiceRequest(trend.type))
-        .slice(0, 3);
+        .slice(0, 5);
     }
     return selection;
   }

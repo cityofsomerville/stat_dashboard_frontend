@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import { types } from 'data/publicSafety/actions';
-import { indexBy } from 'data/utils';
 
 const initialState = {
   exploreDataCache: [],
