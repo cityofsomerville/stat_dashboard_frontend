@@ -17,6 +17,20 @@ export const CHART_COLORS = [
   '#64aa8a'
 ];
 
+export const CHART_COLORS_2 = [
+  { background: '#002b83', color: 'white' },
+  { background: '#3b9bcd', color: 'white' },
+  { background: '#b13133', color: 'white' },
+  { background: '#c68740', color: 'white' },
+  { background: '#347a5a', color: 'white' },
+
+  { background: '#305bb8', color: 'black' },
+  { background: '#6bbbfd', color: 'black' },
+  { background: '#e16163', color: 'black' },
+  { background: '#f6b770', color: 'black' },
+  { background: '#64aa8a', color: 'black' }
+];
+
 export const HEATMAP_COLORS = [
   { background: '#eff3ff', color: 'black' },
   { background: '#bdd7e7', color: 'black' },

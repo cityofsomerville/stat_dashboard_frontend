@@ -16,6 +16,7 @@ import {
   getDateRange
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
+import { CHART_COLORS_2 } from 'charts/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -95,24 +96,6 @@ export const getWorkOrderChartData = createSelector(
   }
 );
 
-export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
-  (exploreDataCache, exploreDataKey, typesById) => {
-    let selection = [];
-    if (exploreDataCache && exploreDataKey) {
-      selection = exploreDataCache.map(ticket => ({
-        id: ticket.id,
-        latitude: ticket.latitude,
-        longitude: ticket.longitude,
-        title: typesById[ticket.type] ? typesById[ticket.type].name : '',
-        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
-        type: typesById[ticket.type]
-      }));
-    }
-    return selection;
-  }
-);
-
 const getTicketsWithCategories = createSelector(
   [exploreDataCacheSelector, typesByIdSelector],
   (exploreDataCache, typesById) => {
@@ -151,6 +134,41 @@ export const getChartData = createSelector(
 export const getCategoryNames = createSelector(getParams, params => {
   return params.categories;
 });
+
+export const getCategoriesWithColors = createSelector(
+  [getParams, typesByIdSelector],
+  (params, typesById) => {
+    return Object.keys(typesById).reduce(
+      (memo, typeId, index) => ({
+        ...memo,
+        [typeId]: {
+          ...typesById[typeId],
+          color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+        }
+      }),
+      {}
+    );
+  }
+);
+
+export const getMapData = createSelector(
+  [exploreDataCacheSelector, exploreDataKeySelector, getCategoriesWithColors],
+  (exploreDataCache, exploreDataKey, typesById) => {
+    let selection = [];
+    if (exploreDataCache && exploreDataKey) {
+      selection = exploreDataCache.map(ticket => ({
+        id: ticket.id,
+        latitude: ticket.latitude,
+        longitude: ticket.longitude,
+        title: typesById[ticket.type] ? typesById[ticket.type].name : '',
+        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
+        type: typesById[ticket.type],
+        color: typesById[ticket.type].color
+      }));
+    }
+    return selection;
+  }
+);
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
