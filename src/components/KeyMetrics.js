@@ -14,7 +14,7 @@ export const Metric = ({ figure, average, children }) => {
   const minorThreshold = 0.05; // 5% of average
   const majorThreshold = 0.2; // 20% of average
 
-  if (figure && average) {
+  if (figure !== null && average !== null) {
     const difference = average - figure;
     if (Math.abs(difference) > Math.max(majorThreshold * average, step)) {
       modifier = 'significantly';

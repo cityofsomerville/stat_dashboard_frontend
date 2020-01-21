@@ -128,7 +128,7 @@ export default class GroupedBarChart extends Chart {
       .attr('x', d => x1(d.key))
       .attr('y', d => y(d.value))
       .attr('width', x1.bandwidth())
-      .attr('height', d => y(0) - y(d.value));
+      .attr('height', d => Math.abs(y(0) - y(d.value)));
 
     self.legend.attr(
       'transform',

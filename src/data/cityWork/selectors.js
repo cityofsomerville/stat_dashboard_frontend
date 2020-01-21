@@ -105,7 +105,7 @@ export const getMapData = createSelector(
         latitude: ticket.latitude,
         longitude: ticket.longitude,
         title: typesById[ticket.type] ? typesById[ticket.type].name : '',
-        date: format(parseISO(ticket.last_modified), 'yyyy-MM-dd'),
+        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
         type: typesById[ticket.type]
       }));
     }
@@ -154,7 +154,7 @@ export const getCategoryNames = createSelector(getParams, params => {
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
-  weeklyTrends => weeklyTrends.slice(0, 3)
+  weeklyTrends => weeklyTrends.slice(0, 5)
 );
 
 export const getInternalWeeklyTrends = createSelector(
@@ -164,7 +164,7 @@ export const getInternalWeeklyTrends = createSelector(
     if (weeklyTrends) {
       selection = weeklyTrends
         .filter(trend => isServiceRequest(trend.type))
-        .slice(0, 3);
+        .slice(0, 5);
     }
     return selection;
   }
@@ -237,5 +237,27 @@ export const getInProgressHeatmapData = createSelector(
       valueRange: [0, maxValue],
       dateRange: range.map(d => parseISO(d))
     };
+  }
+);
+
+export const getCategoryHierarchy = createSelector(
+  typesByIdSelector,
+  typesById => {
+    let hierarchy = {};
+    const index = 'ancestor_name';
+
+    if (typesById) {
+      hierarchy = Object.keys(typesById).reduce((memo, key) => {
+        // this excludes a list of categories with undefined ancestor
+        if (typesById[key][index]) {
+          if (!memo[typesById[key][index]]) {
+            memo[typesById[key][index]] = [];
+          }
+          memo[typesById[key][index]].push(typesById[key].id);
+        }
+        return memo;
+      }, {});
+    }
+    return hierarchy;
   }
 );

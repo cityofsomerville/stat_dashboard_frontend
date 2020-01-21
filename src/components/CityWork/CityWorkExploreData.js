@@ -5,12 +5,14 @@ import {
   getMapData,
   getChartData,
   getCategoryNames,
-  getAllWeeklyTrends
+  getAllWeeklyTrends,
+  getCategoryHierarchy
 } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
 export default connect(
   state => {
+    const hierarchy = getCategoryHierarchy(state);
     return {
       namespace: 'citywork',
       selectedCategoryPreset: 'Weekly Trends',
@@ -23,7 +25,8 @@ export default connect(
           273, // graffiti
           504, // rats
           301 // potholes
-        ]
+        ],
+        ...hierarchy
         // other presets can be added here if desired! follow the format:
         // 'Preset Name': [ /* ids of categories */ ]
 

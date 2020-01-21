@@ -46,7 +46,8 @@ class ExploreData extends React.Component {
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
       params = JSON.stringify({
         categories: selectedCategories.sort(),
-        dateRange: selectedDateRange
+        dateRange: selectedDateRange,
+        preset: this.state.selectedCategoryPreset
       });
     }
     return params;
@@ -79,10 +80,10 @@ class ExploreData extends React.Component {
           approximate location of each ticket.
         </p>
         <form>
-          <label htmlFor="category">Category</label>
+          <label htmlFor={`${this.props.namespace}_category`}>Category</label>
           {/* TODO: aria-describedby explanation of this field */}
           <select
-            id="category"
+            id={`${this.props.namespace}_category`}
             value={this.state.selectedCategoryPreset}
             onChange={e =>
               this.setState({ selectedCategoryPreset: e.target.value })
@@ -94,9 +95,11 @@ class ExploreData extends React.Component {
               </option>
             ))}
           </select>
-          <label htmlFor="date_range">Date Range</label>
+          <label htmlFor={`${this.props.namespace}_date_range`}>
+            Date Range
+          </label>
           <select
-            id="date_range"
+            id={`${this.props.namespace}_date_range`}
             value={this.state.selectedDatePreset}
             onChange={e =>
               this.setState({ selectedDatePreset: e.target.value })
