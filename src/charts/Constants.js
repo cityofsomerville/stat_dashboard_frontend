@@ -17,18 +17,31 @@ export const CHART_COLORS = [
   '#64aa8a'
 ];
 
-export const CHART_COLORS_2 = [
-  { background: '#002b83', color: 'white' },
-  { background: '#3b9bcd', color: 'white' },
-  { background: '#b13133', color: 'white' },
-  { background: '#c68740', color: 'white' },
-  { background: '#347a5a', color: 'white' },
+// export const CHART_COLORS_2 = [
+//   { background: '#002b83', color: 'white' },
+//   { background: '#3b9bcd', color: 'white' },
+//   { background: '#b13133', color: 'white' },
+//   { background: '#c68740', color: 'white' },
+//   { background: '#347a5a', color: 'white' },
 
-  { background: '#305bb8', color: 'black' },
-  { background: '#6bbbfd', color: 'black' },
-  { background: '#e16163', color: 'black' },
-  { background: '#f6b770', color: 'black' },
-  { background: '#64aa8a', color: 'black' }
+//   { background: '#305bb8', color: 'black' },
+//   { background: '#6bbbfd', color: 'black' },
+//   { background: '#e16163', color: 'black' },
+//   { background: '#f6b770', color: 'black' },
+//   { background: '#64aa8a', color: 'black' }
+// ];
+
+export const CHART_COLORS_2 = [
+  { background: '#1f77b4', color: 'white' },
+  { background: '#ff7f0e', color: 'white' },
+  { background: '#2ca02c', color: 'white' },
+  { background: '#d62728', color: 'white' },
+  { background: '#9467bd', color: 'white' },
+  { background: '#8c564b', color: 'white' },
+  { background: '#e377c2', color: 'white' },
+  { background: '#7f7f7f', color: 'white' },
+  { background: '#bcbd22', color: 'black' },
+  { background: '#17becf', color: 'black' }
 ];
 
 export const HEATMAP_COLORS = [

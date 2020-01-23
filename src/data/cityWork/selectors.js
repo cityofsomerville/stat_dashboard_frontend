@@ -96,19 +96,9 @@ export const getWorkOrderChartData = createSelector(
   }
 );
 
-const getTicketsWithCategories = createSelector(
-  [exploreDataCacheSelector, typesByIdSelector],
-  (exploreDataCache, typesById) => {
-    let tickets = [];
-    if (exploreDataCache && typesById) {
-      tickets = exploreDataCache.map(ticket => ({
-        ...ticket,
-        type: typesById[ticket.type] ? typesById[ticket.type].name : 'unknown'
-      }));
-    }
-    return tickets;
-  }
-);
+/**
+ * DATA EXPLORER SELECTORS
+ **/
 
 const getParams = createSelector(
   [exploreDataKeySelector, typesByIdSelector],
@@ -126,6 +116,21 @@ const getParams = createSelector(
   }
 );
 
+const getTicketsWithCategories = createSelector(
+  [exploreDataCacheSelector, typesByIdSelector],
+  (exploreDataCache, typesById) => {
+    let tickets = [];
+    if (exploreDataCache && typesById) {
+      tickets = exploreDataCache.map(ticket => ({
+        ...ticket,
+        typeId: ticket.type,
+        type: typesById[ticket.type] ? typesById[ticket.type].name : 'unknown'
+      }));
+    }
+    return tickets;
+  }
+);
+
 export const getChartData = createSelector(
   [getTicketsWithCategories, getParams],
   (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
@@ -135,14 +140,17 @@ export const getCategoryNames = createSelector(getParams, params => {
   return params.categories;
 });
 
-export const getCategoriesWithColors = createSelector(
-  [getParams, typesByIdSelector],
-  (params, typesById) => {
-    return Object.keys(typesById).reduce(
+export const getLegendTypes = createSelector(
+  [getParams, getTicketsWithCategories, typesByIdSelector],
+  (params, tickets, typesById) => {
+    const currentSelectionTypes = groupBy(tickets, 'typeId');
+
+    return Object.keys(currentSelectionTypes).reduce(
       (memo, typeId, index) => ({
         ...memo,
         [typeId]: {
           ...typesById[typeId],
+          count: currentSelectionTypes[typeId].length,
           color: CHART_COLORS_2[index % CHART_COLORS_2.length]
         }
       }),
@@ -152,21 +160,17 @@ export const getCategoriesWithColors = createSelector(
 );
 
 export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector, getCategoriesWithColors],
-  (exploreDataCache, exploreDataKey, typesById) => {
-    let selection = [];
-    if (exploreDataCache && exploreDataKey) {
-      selection = exploreDataCache.map(ticket => ({
-        id: ticket.id,
-        latitude: ticket.latitude,
-        longitude: ticket.longitude,
-        title: typesById[ticket.type] ? typesById[ticket.type].name : '',
-        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
-        type: typesById[ticket.type],
-        color: typesById[ticket.type].color
-      }));
-    }
-    return selection;
+  [getTicketsWithCategories, exploreDataKeySelector, getLegendTypes],
+  (ticketsWithCategories, exploreDataKey, legendTypes) => {
+    return ticketsWithCategories.map(ticket => ({
+      id: ticket.id,
+      latitude: ticket.latitude,
+      longitude: ticket.longitude,
+      title: legendTypes[ticket.typeId] ? legendTypes[ticket.typeId].name : '',
+      date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
+      type: legendTypes[ticket.typeId],
+      color: legendTypes[ticket.typeId].color
+    }));
   }
 );
 
