@@ -136,8 +136,9 @@ class ExploreData extends React.Component {
             {this.props.legendData
               ? this.props.legendData.map(category => (
                   <li
-                    className="d-flex align-items-center mb-2"
+                    className="d-flex align-items-center mb-2 pr-1"
                     style={{ width: '10rem' }}
+                    key={category.name}
                   >
                     <div
                       className="d-inline-block mr-2"

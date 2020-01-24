@@ -13,6 +13,7 @@ import {
   groupBy,
   formatTimestamp,
   getStackedAreaChartData,
+  legendData,
   getDateRange
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
@@ -116,34 +117,14 @@ const getParams = createSelector(
   }
 );
 
-const getTicketsWithCategories = createSelector(
-  [exploreDataCacheSelector, typesByIdSelector],
-  (exploreDataCache, typesById) => {
-    let tickets = [];
-    if (exploreDataCache && typesById) {
-      tickets = exploreDataCache.map(ticket => ({
-        ...ticket,
-        typeId: ticket.type,
-        type: typesById[ticket.type] ? typesById[ticket.type].name : 'unknown'
-      }));
-    }
-    return tickets;
-  }
-);
-
-export const getChartData = createSelector(
-  [getTicketsWithCategories, getParams],
-  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
-);
-
 export const getCategoryNames = createSelector(getParams, params => {
   return params.categories;
 });
 
 const getLegendTypes = createSelector(
-  [getParams, getTicketsWithCategories, typesByIdSelector],
+  [getParams, exploreDataCacheSelector, typesByIdSelector],
   (params, tickets, typesById) => {
-    const currentSelectionTypes = groupBy(tickets, 'typeId');
+    const currentSelectionTypes = groupBy(tickets, 'type');
 
     return Object.keys(currentSelectionTypes).reduce(
       (memo, typeId, index) => ({
@@ -159,11 +140,29 @@ const getLegendTypes = createSelector(
   }
 );
 
-export const getLegendData = createSelector(getLegendTypes, types => {
-  return Object.keys(types)
-    .map(id => types[id])
-    .sort((a, b) => b.count - a.count);
-});
+const getTicketsWithCategories = createSelector(
+  [exploreDataCacheSelector, getLegendTypes],
+  (exploreDataCache, legendTypes) => {
+    let tickets = [];
+    if (exploreDataCache && legendTypes) {
+      tickets = exploreDataCache.map(ticket => ({
+        ...ticket,
+        typeId: ticket.type,
+        type: legendTypes[ticket.type]
+          ? legendTypes[ticket.type].name
+          : 'unknown'
+      }));
+    }
+    return tickets;
+  }
+);
+
+export const getChartData = createSelector(
+  [getTicketsWithCategories, getParams],
+  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
+);
+
+export const getLegendData = createSelector(getLegendTypes, legendData);
 
 export const getMapData = createSelector(
   [getTicketsWithCategories, exploreDataKeySelector, getLegendTypes],
@@ -182,7 +181,7 @@ export const getMapData = createSelector(
 
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
-  weeklyTrends => weeklyTrends.slice(0, 5)
+  weeklyTrends => weeklyTrends.slice(0, 4)
 );
 
 export const getInternalWeeklyTrends = createSelector(
@@ -192,7 +191,7 @@ export const getInternalWeeklyTrends = createSelector(
     if (weeklyTrends) {
       selection = weeklyTrends
         .filter(trend => isServiceRequest(trend.type))
-        .slice(0, 5);
+        .slice(0, 4);
     }
     return selection;
   }

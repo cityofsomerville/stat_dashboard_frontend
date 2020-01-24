@@ -38,25 +38,14 @@ export const getDateRange = ({ startDate, endDate }) => {
   return set;
 };
 
-export const dateRangeBuckets = ({ startDate, endDate }) => {
-  const set = {};
-  const start = startOfDay(startDate);
-  const end = startOfDay(endDate);
-  const size = differenceInDays(end, start);
-
-  for (let i = size; i >= 0; i--) {
-    set[formatTimestamp(subDays(end, i))] = null;
-  }
-  return set;
-};
-
 export const getStackedAreaChartData = (data, params, dateField) => {
   let chartData = { data: [], columns: [] };
   if (data && params) {
     const { categories, dateRange } = params;
-    let dataByDay = dateRangeBuckets(dateRange);
+    let dataByDay = {};
+    const range = getDateRange(dateRange);
 
-    Object.keys(dataByDay).forEach(key => {
+    range.forEach(key => {
       dataByDay[key] = categories.reduce(
         (memo, category) => ({
           ...memo,
@@ -66,19 +55,20 @@ export const getStackedAreaChartData = (data, params, dateField) => {
       );
     });
 
-    const orderedDates = Object.keys(dataByDay).sort((a, b) => {
-      return differenceInDays(parseISO(a), parseISO(b));
-    });
-
     data.forEach(ticket => {
       const dateKey = formatTimestamp(startOfDay(parseISO(ticket[dateField])));
       dataByDay[dateKey][ticket.type]++;
     });
-    chartData.columns = orderedDates;
-    chartData.data = orderedDates.map(day => ({
+    chartData.columns = range;
+    chartData.data = range.map(day => ({
       ...dataByDay[day],
       date: parseISO(day)
     }));
   }
   return chartData;
 };
+
+export const legendData = types =>
+  Object.keys(types)
+    .map(id => types[id])
+    .sort((a, b) => b.count - a.count);

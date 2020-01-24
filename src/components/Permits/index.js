@@ -11,7 +11,8 @@ import { fetchPermitsExploreData } from 'data/permits/actions';
 import {
   getMapData,
   getChartData,
-  getCategoryNames
+  getCategoryNames,
+  getLegendData
 } from 'data/permits/selectors';
 
 const categoryPresets = {
@@ -35,7 +36,8 @@ const Permits = ({
   params,
   mapData,
   fetchPermitsExploreData,
-  updatePermitsParams
+  updatePermitsParams,
+  legendData
 }) => (
   <DataBlock>
     <h2>Building Permits</h2>
@@ -58,6 +60,7 @@ const Permits = ({
       params={params}
       mapData={mapData}
       fetchData={fetchPermitsExploreData}
+      legendData={legendData}
     />
   </DataBlock>
 );
@@ -67,7 +70,8 @@ export default connect(
     selectedCategoryNames: getCategoryNames(state),
     chartData: getChartData(state),
     params: state.permits.exploreDataParams,
-    mapData: getMapData(state)
+    mapData: getMapData(state),
+    legendData: getLegendData(state)
   }),
   {
     fetchPermitsExploreData
