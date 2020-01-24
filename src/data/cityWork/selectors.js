@@ -140,7 +140,7 @@ export const getCategoryNames = createSelector(getParams, params => {
   return params.categories;
 });
 
-export const getLegendTypes = createSelector(
+const getLegendTypes = createSelector(
   [getParams, getTicketsWithCategories, typesByIdSelector],
   (params, tickets, typesById) => {
     const currentSelectionTypes = groupBy(tickets, 'typeId');
@@ -158,6 +158,12 @@ export const getLegendTypes = createSelector(
     );
   }
 );
+
+export const getLegendData = createSelector(getLegendTypes, types => {
+  return Object.keys(types)
+    .map(id => types[id])
+    .sort((a, b) => b.count - a.count);
+});
 
 export const getMapData = createSelector(
   [getTicketsWithCategories, exploreDataKeySelector, getLegendTypes],
@@ -191,6 +197,8 @@ export const getInternalWeeklyTrends = createSelector(
     return selection;
   }
 );
+
+// TODO: audit selectors, see if any can be simplified/combined
 
 export const getInternalTreemapData = createSelector(
   weeklyTrendsSelector,
