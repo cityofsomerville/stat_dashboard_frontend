@@ -2,7 +2,12 @@ import { createSelector } from 'reselect';
 import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 
-import { getStackedAreaChartData, groupBy } from 'data/utils';
+import {
+  getStackedAreaChartData,
+  selectionTypes,
+  legendData,
+  groupBy
+} from 'data/utils';
 
 const dailyTotalsSelector = state => state.publicSafety.dailyTotals;
 const typeAveragesSelector = state => state.publicSafety.typeAverages;
@@ -51,6 +56,13 @@ export const getCategoryNames = createSelector(
   }
 );
 
+const getSelectionTypes = createSelector(
+  [exploreDataCacheSelector, getCategoryNames],
+  selectionTypes
+);
+
+export const getLegendData = createSelector(getSelectionTypes, legendData);
+
 export const getChartData = createSelector(
   [exploreDataCacheSelector, getParams, getCategoryNames],
   (permits, params, categoryNames) =>
@@ -62,8 +74,8 @@ export const getChartData = createSelector(
 );
 
 export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataParamsSelector],
-  (exploreDataCache, exploreDataParams) => {
+  [exploreDataCacheSelector, exploreDataParamsSelector, getSelectionTypes],
+  (exploreDataCache, exploreDataParams, selectionTypes) => {
     let selection = [];
     if (exploreDataCache && exploreDataParams) {
       selection = exploreDataCache.map(incident => ({
@@ -72,7 +84,8 @@ export const getMapData = createSelector(
         longitude: incident.longitude,
         title: incident.type,
         date: format(parseISO(incident.date), 'yyyy-MM-dd'),
-        type: incident.type
+        type: incident.type,
+        color: selectionTypes[incident.type].color
       }));
       selection = selection.filter(
         incident => incident.latitude && incident.longitude

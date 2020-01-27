@@ -5,6 +5,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import subDays from 'date-fns/subDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
+import { CHART_COLORS_2 } from 'charts/Constants';
 
 export const formatTimestamp = date => format(date, SOCRATA_TIMESTAMP);
 
@@ -66,6 +67,24 @@ export const getStackedAreaChartData = (data, params, dateField) => {
     }));
   }
   return chartData;
+};
+
+export const selectionTypes = (tickets, types) => {
+  const currentSelectionTypes = groupBy(tickets, 'type');
+
+  return Object.keys(currentSelectionTypes).reduce(
+    (memo, type, index) => ({
+      ...memo,
+      [type]: {
+        name: type,
+        count: currentSelectionTypes[type]
+          ? currentSelectionTypes[type].length
+          : 0,
+        color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+      }
+    }),
+    {}
+  );
 };
 
 export const legendData = types =>

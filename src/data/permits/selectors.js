@@ -2,7 +2,12 @@ import { createSelector } from 'reselect';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 
-import { getStackedAreaChartData, legendData, groupBy } from 'data/utils';
+import {
+  getStackedAreaChartData,
+  selectionTypes,
+  legendData,
+  groupBy
+} from 'data/utils';
 import { CHART_COLORS_2 } from 'charts/Constants';
 
 const dailyTotalsSelector = state => state.permits.dailyTotals;
@@ -59,23 +64,7 @@ export const getCategoryNames = createSelector(getParams, params => {
 
 const getSelectionTypes = createSelector(
   [exploreDataCacheSelector, getCategoryNames],
-  (tickets, types) => {
-    const currentSelectionTypes = groupBy(tickets, 'type');
-
-    return Object.keys(currentSelectionTypes).reduce(
-      (memo, type, index) => ({
-        ...memo,
-        [type]: {
-          name: type,
-          count: currentSelectionTypes[type]
-            ? currentSelectionTypes[type].length
-            : 0,
-          color: CHART_COLORS_2[index % CHART_COLORS_2.length]
-        }
-      }),
-      {}
-    );
-  }
+  selectionTypes
 );
 
 export const getLegendData = createSelector(getSelectionTypes, legendData);

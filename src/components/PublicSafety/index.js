@@ -11,7 +11,8 @@ import { fetchPublicSafetyExploreData } from 'data/publicSafety/actions';
 import {
   getCategoryNames,
   getChartData,
-  getMapData
+  getMapData,
+  getLegendData
 } from 'data/publicSafety/selectors';
 
 const categoryPresets = {
@@ -30,7 +31,8 @@ const PublicSafety = ({
   params,
   mapData,
   fetchData,
-  updatePermitsParams
+  updatePermitsParams,
+  legendData
 }) => (
   <DataBlock>
     <h2>Public Safety</h2>
@@ -50,6 +52,7 @@ const PublicSafety = ({
       params={params}
       mapData={mapData}
       fetchData={fetchData}
+      legendData={legendData}
     />
   </DataBlock>
 );
@@ -59,7 +62,8 @@ export default connect(
     selectedCategoryNames: getCategoryNames(state),
     chartData: getChartData(state),
     params: state.publicSafety.exploreDataParams,
-    mapData: getMapData(state)
+    mapData: getMapData(state),
+    legendData: getLegendData(state)
   }),
   {
     fetchData: fetchPublicSafetyExploreData
