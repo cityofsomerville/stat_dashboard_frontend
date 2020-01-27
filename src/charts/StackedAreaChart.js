@@ -1,69 +1,24 @@
 import * as d3 from 'd3';
 
+import Chart from 'charts/Chart';
 import { CHART_COLORS } from 'charts/Constants';
 
-const debounce = (func, delay) => {
-  let inDebounce;
-  return function() {
-    const context = this;
-    const args = arguments;
-    clearTimeout(inDebounce);
-    inDebounce = setTimeout(() => func.apply(context, args), delay);
-  };
-};
-
-export default class StackedAreaChart {
-  constructor({ data, columns, targetId }) {
-    this.data = data;
-    this.columns = columns;
+export default class StackedAreaChart extends Chart {
+  constructor(args) {
+    super({
+      ...args,
+      legend: true,
+      margin: { top: 0, right: 20, bottom: 20, left: 30 }
+    });
+    this.columns = args.columns;
     this.groupKey = 'date';
-
-    this.targetId = targetId;
-    this.targetElement = document.getElementById(targetId);
-
-    this.containerWidth = 800;
-    this.width = 800;
-    this.height = 500;
-    this.ratio = 2 / 3;
-    this.margin = { top: 0, right: 20, bottom: 20, left: 30 };
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS);
     this.init();
   }
 
-  resize() {
-    const containerWidth = this.targetElement.offsetWidth;
-
-    if (containerWidth !== this.containerWidth) {
-      this.width = containerWidth - this.margin.left - this.margin.right;
-      this.height =
-        containerWidth * this.ratio - this.margin.top - this.margin.bottom;
-
-      this.renderChart();
-    }
-  }
-
-  onResize() {
-    const fn = event => {
-      this.resize();
-    };
-    debounce(fn.bind(this), 1000)();
-  }
-
-  cleanChart() {
-    window.removeEventListener('resize', this.onResize.bind(this));
-    this.targetElement.innerHTML = '';
-  }
-
   init() {
     const self = this;
-    self.cleanChart();
-    window.addEventListener('resize', this.onResize.bind(this));
-
-    self.chart = d3
-      .select(`#${self.targetId}`)
-      .append('svg:svg')
-      .attr('class', 'chart');
 
     self.main = self.chart
       .append('g')
