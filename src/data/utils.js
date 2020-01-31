@@ -39,7 +39,7 @@ export const getDateRange = ({ startDate, endDate }) => {
   return set;
 };
 
-export const getStackedAreaChartData = (data, params, dateField) => {
+export const getStackedAreaChartData = (data, params, types, dateField) => {
   let chartData = { data: [], columns: [] };
   if (data && params) {
     const { categories, dateRange } = params;
@@ -47,7 +47,7 @@ export const getStackedAreaChartData = (data, params, dateField) => {
     const range = getDateRange(dateRange);
 
     range.forEach(key => {
-      dataByDay[key] = categories.reduce(
+      dataByDay[key] = Object.keys(types).reduce(
         (memo, category) => ({
           ...memo,
           [category]: 0
@@ -65,6 +65,7 @@ export const getStackedAreaChartData = (data, params, dateField) => {
       ...dataByDay[day],
       date: parseISO(day)
     }));
+    chartData.types = types;
   }
   return chartData;
 };

@@ -157,9 +157,23 @@ const getTicketsWithCategories = createSelector(
   }
 );
 
+const getTypesForChart = createSelector(
+  [getLegendTypes, typesByIdSelector],
+  (legendTypes, typesById) => {
+    return Object.keys(legendTypes).reduce((memo, typeId, index) => {
+      const type = legendTypes[typeId];
+      return {
+        ...memo,
+        [type.name]: type
+      };
+    }, {});
+  }
+);
+
 export const getChartData = createSelector(
-  [getTicketsWithCategories, getParams],
-  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
+  [getTicketsWithCategories, getParams, getTypesForChart],
+  (tickets, params, types) =>
+    getStackedAreaChartData(tickets, params, types, 'created_on')
 );
 
 export const getLegendData = createSelector(getLegendTypes, legendData);

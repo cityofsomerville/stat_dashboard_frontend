@@ -10,9 +10,10 @@ export default class StackedBarChart extends Chart {
       legend: true,
       margin: { top: 0, right: 20, bottom: 20, left: 30 }
     });
-    this.columns = args.columns;
+    this.columns = args.data.columns;
+    this.data = args.data.data;
+    this.types = args.data.types;
 
-    this.color = d3.scaleOrdinal().range(CHART_COLORS);
     this.init();
   }
 
@@ -33,6 +34,14 @@ export default class StackedBarChart extends Chart {
     }
   }
 
+  color(key) {
+    let color = 'black';
+    if (this.types[key]) {
+      color = this.types[key].color.background;
+    }
+    return color;
+  }
+
   renderChart() {
     const self = this;
 
@@ -49,16 +58,6 @@ export default class StackedBarChart extends Chart {
 
     const series = stack(self.data);
 
-    // set up the x scale
-    const xScale = d3
-      .scaleTime()
-      .domain([
-        new Date(self.columns[0]),
-        new Date(self.columns[self.columns.length - 1])
-      ])
-      // .domain(self.columns.map(col => new Date(col)))
-      .range([0, self.width]);
-
     // set up the y scale
     const yScale = d3
       .scaleLinear()
@@ -67,9 +66,6 @@ export default class StackedBarChart extends Chart {
         d3.max(series, series => d3.max(series, d => d[1]))
       ])
       .range([self.height - self.margin.bottom - self.margin.top, 0]);
-
-    // color scale
-    const cScale = d3.scaleOrdinal().range(CHART_COLORS);
 
     const x = d3
       .scaleBand()
@@ -81,7 +77,7 @@ export default class StackedBarChart extends Chart {
     const xAxis = d3
       .axisBottom(x)
       .ticks(7)
-      .tickFormat(d3.timeFormat('%Y-%m-%d'));
+      .tickFormat(d => d3.timeFormat('%b %d')(d3.isoParse(d)));
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(yScale);

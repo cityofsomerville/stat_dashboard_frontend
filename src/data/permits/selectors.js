@@ -70,8 +70,9 @@ const getSelectionTypes = createSelector(
 export const getLegendData = createSelector(getSelectionTypes, legendData);
 
 export const getChartData = createSelector(
-  [exploreDataCacheSelector, getParams],
-  (permits, params) => getStackedAreaChartData(permits, params, 'issue_date')
+  [exploreDataCacheSelector, getParams, getSelectionTypes],
+  (permits, params, types) =>
+    getStackedAreaChartData(permits, params, types, 'issue_date')
 );
 
 export const getMapData = createSelector(

@@ -64,11 +64,12 @@ const getSelectionTypes = createSelector(
 export const getLegendData = createSelector(getSelectionTypes, legendData);
 
 export const getChartData = createSelector(
-  [exploreDataCacheSelector, getParams, getCategoryNames],
-  (permits, params, categoryNames) =>
+  [exploreDataCacheSelector, getParams, getCategoryNames, getSelectionTypes],
+  (permits, params, categoryNames, types) =>
     getStackedAreaChartData(
       permits,
       { ...params, categories: categoryNames },
+      types,
       'date'
     )
 );

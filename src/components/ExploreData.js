@@ -116,8 +116,7 @@ class ExploreData extends React.Component {
         <DataRow>
           <DataCol>
             <ChartContainer
-              data={this.props.chartData.data}
-              columns={this.props.chartData.columns}
+              data={this.props.chartData}
               chartClass={StackedBarChart}
               name={`explore-data-${this.props.namespace}`}
               cachebust={this.props.params}
