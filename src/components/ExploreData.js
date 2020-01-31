@@ -5,7 +5,7 @@ import listify from 'listify';
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import { DATE_PRESETS } from 'data/Constants';
 import ChartContainer from 'charts/ChartContainer';
-import StackedAreaChart from 'charts/StackedAreaChart';
+import StackedBarChart from 'charts/StackedBarChart';
 
 const LazyMap = ({ markers }) => {
   if (typeof window === 'undefined') return <span>loading...</span>;
@@ -118,7 +118,7 @@ class ExploreData extends React.Component {
             <ChartContainer
               data={this.props.chartData.data}
               columns={this.props.chartData.columns}
-              chartClass={StackedAreaChart}
+              chartClass={StackedBarChart}
               name={`explore-data-${this.props.namespace}`}
               cachebust={this.props.params}
             />
