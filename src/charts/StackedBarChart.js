@@ -42,6 +42,20 @@ export default class StackedBarChart extends Chart {
     return color;
   }
 
+  formatDate(date) {
+    return d3.timeFormat('%b %d')(d3.isoParse(date));
+  }
+
+  getTooltip(d) {
+    const rows = [
+      `<b>Date</b>: ${this.formatDate(d.date)}`,
+      ...d.data.map(category => {
+        return `<b>${category.key}:</b> ${category.data.data[category.key]}`;
+      })
+    ].join('<br/>');
+    return rows;
+  }
+
   renderChart() {
     const self = this;
 
@@ -77,7 +91,7 @@ export default class StackedBarChart extends Chart {
     const xAxis = d3
       .axisBottom(x)
       .ticks(7)
-      .tickFormat(d => d3.timeFormat('%b %d')(d3.isoParse(d)));
+      .tickFormat(d => self.formatDate(d));
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(yScale);
@@ -110,7 +124,7 @@ export default class StackedBarChart extends Chart {
       .data(sortedStackedSeries)
       .join('g')
       .on('mouseover', d => {
-        self.tooltip.html(`Date: ${d.date}`).style('opacity', 1);
+        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
       })
       .on('mousemove', d =>
         self.tooltip
