@@ -47,13 +47,19 @@ export default class StackedBarChart extends Chart {
   }
 
   getTooltip(d) {
-    const rows = [
-      `<b>Date</b>: ${this.formatDate(d.date)}`,
-      ...d.data.map(category => {
-        return `<b>${category.key}:</b> ${category.data.data[category.key]}`;
-      })
-    ].join('<br/>');
-    return rows;
+    return d.data
+      .reduce(
+        (memo, type) => {
+          let rows = memo;
+          const count = type.data.data[type.key];
+          if (count) {
+            rows = [...memo, `<b>${type.key}:</b> ${count}`];
+          }
+          return rows;
+        },
+        [`<b>Date</b>: ${this.formatDate(d.date)}`]
+      )
+      .join('<br/>');
   }
 
   renderChart() {
