@@ -2,7 +2,13 @@ import { createSelector } from 'reselect';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 
-import { getStackedAreaChartData } from 'data/utils';
+import {
+  getStackedAreaChartData,
+  selectionTypes,
+  legendData,
+  groupBy
+} from 'data/utils';
+import { CHART_COLORS_2 } from 'charts/Constants';
 
 const dailyTotalsSelector = state => state.permits.dailyTotals;
 const typeAveragesSelector = state => state.permits.typeAverages;
@@ -52,14 +58,26 @@ const getParams = createSelector(
   }
 );
 
+export const getCategoryNames = createSelector(getParams, params => {
+  return params.categories;
+});
+
+const getSelectionTypes = createSelector(
+  [exploreDataCacheSelector, getCategoryNames],
+  selectionTypes
+);
+
+export const getLegendData = createSelector(getSelectionTypes, legendData);
+
 export const getChartData = createSelector(
-  [exploreDataCacheSelector, getParams],
-  (permits, params) => getStackedAreaChartData(permits, params, 'issue_date')
+  [exploreDataCacheSelector, getParams, getSelectionTypes],
+  (permits, params, types) =>
+    getStackedAreaChartData(permits, params, types, 'issue_date')
 );
 
 export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataParamsSelector],
-  (exploreDataCache, exploreDataParams) => {
+  [exploreDataCacheSelector, exploreDataParamsSelector, getSelectionTypes],
+  (exploreDataCache, exploreDataParams, selectionTypes) => {
     let selection = [];
     if (exploreDataCache && exploreDataParams) {
       selection = exploreDataCache.map(permit => ({
@@ -69,13 +87,10 @@ export const getMapData = createSelector(
         title: permit.id,
         amount: permit.amount,
         date: format(parseISO(permit.issue_date), 'yyyy-MM-dd'),
-        type: permit.type
+        type: permit.type,
+        color: selectionTypes[permit.type].color
       }));
     }
     return selection;
   }
 );
-
-export const getCategoryNames = createSelector(getParams, params => {
-  return params.categories;
-});

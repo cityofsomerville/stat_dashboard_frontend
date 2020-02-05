@@ -6,7 +6,8 @@ import {
   getChartData,
   getCategoryNames,
   getAllWeeklyTrends,
-  getCategoryHierarchy
+  getCategoryHierarchy,
+  getLegendData
 } from 'data/cityWork/selectors';
 import ExploreData from 'components/ExploreData';
 
@@ -37,7 +38,8 @@ export default connect(
       mapData: getMapData(state),
       chartData: getChartData(state),
       typesById: state.cityWork.typesById,
-      selectedCategoryNames: getCategoryNames(state)
+      selectedCategoryNames: getCategoryNames(state),
+      legendData: getLegendData(state)
     };
   },
   {

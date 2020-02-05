@@ -11,7 +11,6 @@ export default class ChartContainer extends React.Component {
     if (this.props.data && this.props.data.length) {
       this.chart = new this.props.chartClass({
         data: this.props.data,
-        columns: this.props.columns,
         targetId: `chart-container-${this.props.name}`
       });
     }
@@ -25,7 +24,6 @@ export default class ChartContainer extends React.Component {
     if (this.props.cachebust !== prevProps.cachebust) {
       this.chart = new this.props.chartClass({
         data: this.props.data,
-        columns: this.props.columns,
         targetId: `chart-container-${this.props.name}`
       });
     }

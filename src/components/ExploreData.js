@@ -5,7 +5,7 @@ import listify from 'listify';
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import { DATE_PRESETS } from 'data/Constants';
 import ChartContainer from 'charts/ChartContainer';
-import StackedAreaChart from 'charts/StackedAreaChart';
+import StackedBarChart from 'charts/StackedBarChart';
 
 const LazyMap = ({ markers }) => {
   if (typeof window === 'undefined') return <span>loading...</span>;
@@ -116,9 +116,8 @@ class ExploreData extends React.Component {
         <DataRow>
           <DataCol>
             <ChartContainer
-              data={this.props.chartData.data}
-              columns={this.props.chartData.columns}
-              chartClass={StackedAreaChart}
+              data={this.props.chartData}
+              chartClass={StackedBarChart}
               name={`explore-data-${this.props.namespace}`}
               cachebust={this.props.params}
             />
@@ -127,6 +126,36 @@ class ExploreData extends React.Component {
             <LazyMap markers={this.props.mapData} />
           </DataCol>
         </DataRow>
+        <div
+          className="border bg-light mt-2 py-2 px-3"
+          style={{ fontSize: '0.7rem' }}
+        >
+          <span className="d-block h5 mb-2">Legend</span>
+          <ul className="list-unstyled mb-0 d-flex flex-wrap align-items-center">
+            {this.props.legendData
+              ? this.props.legendData.map(category => (
+                  <li
+                    className="d-flex align-items-center mb-2 pr-1"
+                    style={{ width: '10rem' }}
+                    key={category.name}
+                  >
+                    <div
+                      className="d-inline-block mr-2"
+                      style={{
+                        width: '1.8rem',
+                        minWidth: '1.8rem',
+                        height: '1.8rem',
+                        background: category.color.background
+                      }}
+                    ></div>
+                    <span className="flex-shrink-1 text-break">
+                      {category.name}
+                    </span>
+                  </li>
+                ))
+              : null}
+          </ul>
+        </div>
       </BlockContent>
     );
   }
@@ -146,7 +175,8 @@ ExploreData.propTypes = {
   params: PropTypes.string,
   mapData: PropTypes.array.isRequired,
 
-  fetchData: PropTypes.func.isRequired
+  fetchData: PropTypes.func.isRequired,
+  legendData: PropTypes.shape()
 };
 
 export default ExploreData;

@@ -13,9 +13,11 @@ import {
   groupBy,
   formatTimestamp,
   getStackedAreaChartData,
+  legendData,
   getDateRange
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
+import { CHART_COLORS_2 } from 'charts/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -95,37 +97,9 @@ export const getWorkOrderChartData = createSelector(
   }
 );
 
-export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataKeySelector, typesByIdSelector],
-  (exploreDataCache, exploreDataKey, typesById) => {
-    let selection = [];
-    if (exploreDataCache && exploreDataKey) {
-      selection = exploreDataCache.map(ticket => ({
-        id: ticket.id,
-        latitude: ticket.latitude,
-        longitude: ticket.longitude,
-        title: typesById[ticket.type] ? typesById[ticket.type].name : '',
-        date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
-        type: typesById[ticket.type]
-      }));
-    }
-    return selection;
-  }
-);
-
-const getTicketsWithCategories = createSelector(
-  [exploreDataCacheSelector, typesByIdSelector],
-  (exploreDataCache, typesById) => {
-    let tickets = [];
-    if (exploreDataCache && typesById) {
-      tickets = exploreDataCache.map(ticket => ({
-        ...ticket,
-        type: typesById[ticket.type] ? typesById[ticket.type].name : 'unknown'
-      }));
-    }
-    return tickets;
-  }
-);
+/**
+ * DATA EXPLORER SELECTORS
+ **/
 
 const getParams = createSelector(
   [exploreDataKeySelector, typesByIdSelector],
@@ -143,18 +117,85 @@ const getParams = createSelector(
   }
 );
 
-export const getChartData = createSelector(
-  [getTicketsWithCategories, getParams],
-  (tickets, params) => getStackedAreaChartData(tickets, params, 'created_on')
-);
-
 export const getCategoryNames = createSelector(getParams, params => {
   return params.categories;
 });
 
+const getLegendTypes = createSelector(
+  [getParams, exploreDataCacheSelector, typesByIdSelector],
+  (params, tickets, typesById) => {
+    const currentSelectionTypes = groupBy(tickets, 'type');
+
+    return Object.keys(currentSelectionTypes).reduce(
+      (memo, typeId, index) => ({
+        ...memo,
+        [typeId]: {
+          ...typesById[typeId],
+          count: currentSelectionTypes[typeId].length,
+          color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+        }
+      }),
+      {}
+    );
+  }
+);
+
+const getTicketsWithCategories = createSelector(
+  [exploreDataCacheSelector, getLegendTypes],
+  (exploreDataCache, legendTypes) => {
+    let tickets = [];
+    if (exploreDataCache && legendTypes) {
+      tickets = exploreDataCache.map(ticket => ({
+        ...ticket,
+        typeId: ticket.type,
+        type: legendTypes[ticket.type]
+          ? legendTypes[ticket.type].name
+          : 'unknown'
+      }));
+    }
+    return tickets;
+  }
+);
+
+const getTypesForChart = createSelector(
+  [getLegendTypes, typesByIdSelector],
+  (legendTypes, typesById) => {
+    return Object.keys(legendTypes).reduce((memo, typeId, index) => {
+      const type = legendTypes[typeId];
+      return {
+        ...memo,
+        [type.name]: type
+      };
+    }, {});
+  }
+);
+
+export const getChartData = createSelector(
+  [getTicketsWithCategories, getParams, getTypesForChart],
+  (tickets, params, types) =>
+    getStackedAreaChartData(tickets, params, types, 'created_on')
+);
+
+export const getLegendData = createSelector(getLegendTypes, legendData);
+
+export const getMapData = createSelector(
+  [getTicketsWithCategories, exploreDataKeySelector, getLegendTypes],
+  (ticketsWithCategories, exploreDataKey, legendTypes) => {
+    return ticketsWithCategories.map(ticket => ({
+      id: ticket.id,
+      latitude: ticket.latitude,
+      longitude: ticket.longitude,
+      title: legendTypes[ticket.typeId] ? legendTypes[ticket.typeId].name : '',
+      date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
+      type: legendTypes[ticket.typeId],
+      color: legendTypes[ticket.typeId].color
+    }));
+  }
+);
+
 export const getAllWeeklyTrends = createSelector(
   weeklyTrendsSelector,
-  weeklyTrends => weeklyTrends.slice(0, 5)
+  weeklyTrends => weeklyTrends.slice(0, 4)
 );
 
 export const getInternalWeeklyTrends = createSelector(
@@ -164,11 +205,13 @@ export const getInternalWeeklyTrends = createSelector(
     if (weeklyTrends) {
       selection = weeklyTrends
         .filter(trend => isServiceRequest(trend.type))
-        .slice(0, 5);
+        .slice(0, 4);
     }
     return selection;
   }
 );
+
+// TODO: audit selectors, see if any can be simplified/combined
 
 export const getInternalTreemapData = createSelector(
   weeklyTrendsSelector,

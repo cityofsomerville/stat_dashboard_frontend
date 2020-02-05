@@ -17,6 +17,29 @@ export const CHART_COLORS = [
   '#64aa8a'
 ];
 
+export const CHART_COLORS_2 = [
+  // d3.schemeCategory10
+  { background: '#1f77b4', color: 'white' },
+  { background: '#ff7f0e', color: 'white' },
+  { background: '#2ca02c', color: 'white' },
+  { background: '#d62728', color: 'white' },
+  { background: '#9467bd', color: 'white' },
+  { background: '#8c564b', color: 'white' },
+  { background: '#e377c2', color: 'white' },
+  { background: '#7f7f7f', color: 'white' },
+  { background: '#bcbd22', color: 'black' },
+  { background: '#17becf', color: 'black' },
+  // d3.schemeDark2
+  { background: '#1b9e77', color: 'white' },
+  { background: '#d95f02', color: 'white' },
+  { background: '#7570b3', color: 'white' },
+  { background: '#e7298a', color: 'white' },
+  { background: '#66a61e', color: 'white' },
+  { background: '#e6ab02', color: 'black' },
+  { background: '#a6761d', color: 'white' },
+  { background: '#666666', color: 'white' }
+];
+
 export const HEATMAP_COLORS = [
   { background: '#eff3ff', color: 'black' },
   { background: '#bdd7e7', color: 'black' },

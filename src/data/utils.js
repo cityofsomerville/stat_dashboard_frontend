@@ -5,6 +5,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import subDays from 'date-fns/subDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
+import { CHART_COLORS_2 } from 'charts/Constants';
 
 export const formatTimestamp = date => format(date, SOCRATA_TIMESTAMP);
 
@@ -38,26 +39,15 @@ export const getDateRange = ({ startDate, endDate }) => {
   return set;
 };
 
-export const dateRangeBuckets = ({ startDate, endDate }) => {
-  const set = {};
-  const start = startOfDay(startDate);
-  const end = startOfDay(endDate);
-  const size = differenceInDays(end, start);
-
-  for (let i = size; i >= 0; i--) {
-    set[formatTimestamp(subDays(end, i))] = null;
-  }
-  return set;
-};
-
-export const getStackedAreaChartData = (data, params, dateField) => {
+export const getStackedAreaChartData = (data, params, types, dateField) => {
   let chartData = { data: [], columns: [] };
   if (data && params) {
     const { categories, dateRange } = params;
-    let dataByDay = dateRangeBuckets(dateRange);
+    let dataByDay = {};
+    const range = getDateRange(dateRange);
 
-    Object.keys(dataByDay).forEach(key => {
-      dataByDay[key] = categories.reduce(
+    range.forEach(key => {
+      dataByDay[key] = Object.keys(types).reduce(
         (memo, category) => ({
           ...memo,
           [category]: 0
@@ -66,19 +56,39 @@ export const getStackedAreaChartData = (data, params, dateField) => {
       );
     });
 
-    const orderedDates = Object.keys(dataByDay).sort((a, b) => {
-      return differenceInDays(parseISO(a), parseISO(b));
-    });
-
     data.forEach(ticket => {
       const dateKey = formatTimestamp(startOfDay(parseISO(ticket[dateField])));
       dataByDay[dateKey][ticket.type]++;
     });
-    chartData.columns = orderedDates;
-    chartData.data = orderedDates.map(day => ({
+    chartData.columns = range;
+    chartData.data = range.map(day => ({
       ...dataByDay[day],
       date: parseISO(day)
     }));
+    chartData.types = types;
   }
   return chartData;
 };
+
+export const selectionTypes = (tickets, types) => {
+  const currentSelectionTypes = groupBy(tickets, 'type');
+
+  return Object.keys(currentSelectionTypes).reduce(
+    (memo, type, index) => ({
+      ...memo,
+      [type]: {
+        name: type,
+        count: currentSelectionTypes[type]
+          ? currentSelectionTypes[type].length
+          : 0,
+        color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+      }
+    }),
+    {}
+  );
+};
+
+export const legendData = types =>
+  Object.keys(types)
+    .map(id => types[id])
+    .sort((a, b) => b.count - a.count);
