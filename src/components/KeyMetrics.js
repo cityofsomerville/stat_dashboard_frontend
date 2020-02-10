@@ -35,7 +35,7 @@ export const Metric = ({ figure, average, children }) => {
   }
 
   return (
-    <li className="mb-2">
+    <li className="mb-2 d-flex">
       {/* TODO: skeleton state */}
       <Icon img={img} alt="" />
       <div className="d-inline-block align-middle" style={{ lineHeight: 1.2 }}>

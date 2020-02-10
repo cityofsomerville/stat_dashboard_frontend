@@ -79,38 +79,44 @@ class ExploreData extends React.Component {
           shows the volume of tickets of each type, while the map shows the
           approximate location of each ticket.
         </p>
-        <form>
-          <label htmlFor={`${this.props.namespace}_category`}>Category</label>
-          {/* TODO: aria-describedby explanation of this field */}
-          <select
-            id={`${this.props.namespace}_category`}
-            value={this.state.selectedCategoryPreset}
-            onChange={e =>
-              this.setState({ selectedCategoryPreset: e.target.value })
-            }
-          >
-            {Object.keys(this.props.categoryPresets).map(preset => (
-              <option key={preset} value={preset}>
-                {preset}
-              </option>
-            ))}
-          </select>
-          <label htmlFor={`${this.props.namespace}_date_range`}>
-            Date Range
-          </label>
-          <select
-            id={`${this.props.namespace}_date_range`}
-            value={this.state.selectedDatePreset}
-            onChange={e =>
-              this.setState({ selectedDatePreset: e.target.value })
-            }
-          >
-            {Object.keys(DATE_PRESETS).map(preset => (
-              <option key={preset} value={preset}>
-                {preset}
-              </option>
-            ))}
-          </select>
+        <form className="form-row mb-2">
+          <fieldset className="col-auto mb-sm-2">
+            <label htmlFor={`${this.props.namespace}_category`}>Category</label>
+            {/* TODO: aria-describedby explanation of this field */}
+            <select
+              className="form-control"
+              id={`${this.props.namespace}_category`}
+              value={this.state.selectedCategoryPreset}
+              onChange={e =>
+                this.setState({ selectedCategoryPreset: e.target.value })
+              }
+            >
+              {Object.keys(this.props.categoryPresets).map(preset => (
+                <option key={preset} value={preset}>
+                  {preset}
+                </option>
+              ))}
+            </select>
+          </fieldset>
+          <fieldset className="col-auto">
+            <label htmlFor={`${this.props.namespace}_date_range`}>
+              Date Range
+            </label>
+            <select
+              className="form-control"
+              id={`${this.props.namespace}_date_range`}
+              value={this.state.selectedDatePreset}
+              onChange={e =>
+                this.setState({ selectedDatePreset: e.target.value })
+              }
+            >
+              {Object.keys(DATE_PRESETS).map(preset => (
+                <option key={preset} value={preset}>
+                  {preset}
+                </option>
+              ))}
+            </select>
+          </fieldset>
         </form>
 
         <DataRow>

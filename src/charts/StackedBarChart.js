@@ -30,8 +30,54 @@ export default class StackedBarChart extends Chart {
     self.yAxis = self.chart.append('g');
 
     if (self.data.length) {
+      self.initData();
       self.resize();
     }
+  }
+
+  initData() {
+    const self = this;
+    const keys = Object.keys(self.data[0]).filter(key => key !== 'date');
+
+    const stack = d3
+      .stack()
+      .keys(keys)
+      .order(d3.stackOrderDescending); // so that the largest grouping is stacked below the others
+
+    self.series = stack(self.data);
+
+    self.sortedStackedSeries = self.columns.map((day, index) => {
+      return {
+        data: self.series.map(type => ({
+          data: type[index],
+          key: type.key
+        })),
+        date: day
+      };
+    });
+
+    self.dataContainer = self.chart
+      .append('g')
+      .attr('transform', d => `translate(${self.margin.left + 1},0)`)
+      .selectAll('g')
+      .data(self.sortedStackedSeries)
+      .join('g')
+      .on('mouseover', d => {
+        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
+      })
+      .on('mousemove', d =>
+        self.tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+      )
+      .on('mouseout', d => self.tooltip.style('opacity', 0));
+
+    self.bars = self.dataContainer
+      .selectAll('rect')
+      .data(d => d.data)
+      .join('rect')
+      .attr('fill', d => self.color(d.key))
+      .attr('x', 0);
   }
 
   color(key) {
@@ -69,21 +115,12 @@ export default class StackedBarChart extends Chart {
       .attr('width', self.width + self.margin.right + self.margin.left)
       .attr('height', self.height + self.margin.top + self.margin.bottom);
 
-    const keys = Object.keys(self.data[0]).filter(key => key !== 'date');
-
-    const stack = d3
-      .stack()
-      .keys(keys)
-      .order(d3.stackOrderDescending); // so that the largest grouping is stacked below the others
-
-    const series = stack(self.data);
-
     // set up the y scale
     const yScale = d3
       .scaleLinear()
       .domain([
-        d3.min(series, series => d3.min(series, d => d[0])),
-        d3.max(series, series => d3.max(series, d => d[1]))
+        d3.min(self.series, series => d3.min(series, d => d[0])),
+        d3.max(self.series, series => d3.max(series, d => d[1]))
       ])
       .range([self.height - self.margin.bottom - self.margin.top, 0]);
 
@@ -113,39 +150,9 @@ export default class StackedBarChart extends Chart {
       .attr('transform', `translate(${self.margin.left},${self.margin.top})`)
       .call(yAxis);
 
-    const sortedStackedSeries = self.columns.map((day, index) => {
-      return {
-        data: series.map(type => ({
-          data: type[index],
-          key: type.key
-        })),
-        date: day
-      };
-    });
+    self.dataContainer.attr('transform', d => `translate(${x(d.date)},0)`);
 
-    self.dataContainer = self.chart
-      .append('g')
-      .attr('transform', d => `translate(${self.margin.left + 1},0)`)
-      .selectAll('g')
-      .data(sortedStackedSeries)
-      .join('g')
-      .on('mouseover', d => {
-        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
-      })
-      .on('mousemove', d =>
-        self.tooltip
-          .style('top', d3.event.pageY - 10 + 'px')
-          .style('left', d3.event.pageX + 10 + 'px')
-      )
-      .on('mouseout', d => self.tooltip.style('opacity', 0))
-      .attr('transform', d => `translate(${x(d.date)},0)`);
-
-    self.bars = self.dataContainer
-      .selectAll('rect')
-      .data(d => d.data)
-      .join('rect')
-      .attr('fill', d => self.color(d.key))
-      .attr('x', 0)
+    self.bars
       .attr('y', d => yScale(d.data[1]))
       .attr('width', x.bandwidth())
       .attr('height', d => Math.abs(yScale(d.data[1]) - yScale(d.data[0])));

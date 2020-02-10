@@ -30,7 +30,12 @@ export default class ChartContainer extends React.Component {
   }
 
   render() {
-    return <div id={`chart-container-${this.props.name}`} />;
+    return (
+      <div
+        className="bg-light border p-2"
+        id={`chart-container-${this.props.name}`}
+      />
+    );
   }
 }
 
