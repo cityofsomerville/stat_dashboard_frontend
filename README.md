@@ -25,4 +25,4 @@ npm install
 npm run start
 ```
 
-5. View your local copy of the site at http://localhost:8000
+5. View your local copy of the site at http://localhost:8000.
