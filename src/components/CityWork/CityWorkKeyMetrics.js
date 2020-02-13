@@ -13,7 +13,7 @@ const CityWorkKeyMetrics = ({ created, closed, calls }) => (
       work orders closed
     </Metric>
     <Metric figure={calls.figure} average={calls.average}>
-      311 calls
+      311 reports
     </Metric>
   </KeyMetrics>
 );

@@ -8,6 +8,7 @@ import {
   legendData,
   groupBy
 } from 'data/utils';
+import CategoryNames from 'data/CategoryNames';
 
 const dailyTotalsSelector = state => state.publicSafety.dailyTotals;
 const typeAveragesSelector = state => state.publicSafety.typeAverages;
@@ -49,22 +50,31 @@ const getParams = createSelector(
   }
 );
 
-export const getCategoryNames = createSelector(
+const getCategoryCorrectedData = createSelector(
   exploreDataCacheSelector,
+  exploreDataCache =>
+    exploreDataCache.map(incident => ({
+      ...incident,
+      type: CategoryNames[incident.type] || incident.type
+    }))
+);
+
+export const getCategoryNames = createSelector(
+  getCategoryCorrectedData,
   exploreDataCache => {
     return Object.keys(groupBy(exploreDataCache, 'type'));
   }
 );
 
 const getSelectionTypes = createSelector(
-  [exploreDataCacheSelector, getCategoryNames],
+  [getCategoryCorrectedData, getCategoryNames],
   selectionTypes
 );
 
 export const getLegendData = createSelector(getSelectionTypes, legendData);
 
 export const getChartData = createSelector(
-  [exploreDataCacheSelector, getParams, getCategoryNames, getSelectionTypes],
+  [getCategoryCorrectedData, getParams, getCategoryNames, getSelectionTypes],
   (permits, params, categoryNames, types) =>
     getStackedAreaChartData(
       permits,
@@ -75,7 +85,7 @@ export const getChartData = createSelector(
 );
 
 export const getMapData = createSelector(
-  [exploreDataCacheSelector, exploreDataParamsSelector, getSelectionTypes],
+  [getCategoryCorrectedData, exploreDataParamsSelector, getSelectionTypes],
   (exploreDataCache, exploreDataParams, selectionTypes) => {
     let selection = [];
     if (exploreDataCache && exploreDataParams) {

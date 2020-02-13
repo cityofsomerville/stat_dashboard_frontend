@@ -25,4 +25,8 @@ npm install
 npm run start
 ```
 
-5. View your local copy of the site at http://localhost:8000
+5. View your local copy of the site at http://localhost:8000.
+
+## Edit
+
+- To change category display names (such as for public safety), modify the file [CategoryNames.js](https://github.com/cityofsomerville/stat_dashboard_frontend/edit/master/src/data/CategoryNames.js).
