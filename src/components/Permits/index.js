@@ -24,7 +24,10 @@ const categoryPresets = {
     'Tree Removal'
   ],
   Commercial: ['Commercial Building'],
-  Residential: ['Residential Building']
+  Residential: ['Residential Building'],
+  'Sale of Property': ['Sale of Property'],
+  'Service Renewal': ['Service Renewal'],
+  'Tree Removal': ['Tree Removal']
 };
 
 const Permits = ({
