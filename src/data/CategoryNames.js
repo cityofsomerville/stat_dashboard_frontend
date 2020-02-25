@@ -23,16 +23,16 @@
 // prettier-ignore
 const CategoryNames = {
   // Quality of Life
-  "ANIMALS": "Animals",
-  "DRUGS": "Drugs",
-  "DRUNK": "Drunk",
+  "ANIMALS": "Animal control",
+  "DRUGS": "Suspected drug use",
+  "DRUNK": "Drunk/disorderly",
   "GROUPS": "Groups",
   "HYPO-FND": "Hypo found",
   "MV VANDL": "Motor vehicle vandalism",
   "NOISE": "Noise",
-  "NOISE/FW": "Noise/FW",
+  "NOISE/FW": "Noise/fireworks",
   "ROAD RAGE": "Road rage",
-  "UNWANTED": "Unwanted",
+  "UNWANTED": "Unwanted person",
 
   // Criminal Incidents
   "BURGLARY/BREAKING AND ENTERING": "Burglary/breaking and entering",
@@ -53,7 +53,7 @@ const CategoryNames = {
 
   // Traffic enforcement
   "MV STOP": "Motor vehicle stop",
-  "TRAFCOMP": "Traffic comp",
+  "TRAFCOMP": "Traffic complaint",
   "TRESPTOW": "Trespassing/towing",
   "PARKVIOL": "Parking violation",
   "BOOTLIST": "Boot list",
