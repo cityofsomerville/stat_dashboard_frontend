@@ -88,7 +88,7 @@ export const getMapData = createSelector(
         displayData: {
           Date: format(parseISO(permit.issue_date), 'yyyy-MM-dd'),
           Type: permit.type,
-          Amount: permit.amount,
+          Amount: `$${permit.amount}`,
           Work: permit.work
         }
       }));
