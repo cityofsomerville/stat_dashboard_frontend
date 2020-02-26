@@ -33,6 +33,7 @@ const CategoryNames = {
   "NOISE/FW": "Noise/fireworks",
   "ROAD RAGE": "Road rage",
   "UNWANTED": "Unwanted person",
+  "GRAFITI": "Graffiti",
 
   // Criminal Incidents
   "BURGLARY/BREAKING AND ENTERING": "Burglary/breaking and entering",

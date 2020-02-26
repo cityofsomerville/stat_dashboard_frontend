@@ -1,11 +1,19 @@
 import React, { lazy, Suspense } from 'react';
+import cn from 'classnames';
 import PropTypes from 'prop-types';
 import listify from 'listify';
+import parseISO from 'date-fns/parseISO';
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import 'react-widgets/dist/css/react-widgets.css';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 
 import { BlockContent, DataRow, DataCol } from 'components/DataBlock';
 import { DATE_PRESETS } from 'data/Constants';
+import { formatTimestamp } from 'data/utils';
 import ChartContainer from 'charts/ChartContainer';
 import StackedBarChart from 'charts/StackedBarChart';
+
+dateFnsLocalizer();
 
 const LazyMap = ({ markers }) => {
   if (typeof window === 'undefined') return <span>loading...</span>;
@@ -17,6 +25,17 @@ const LazyMap = ({ markers }) => {
   );
 };
 
+const CustomDatePicker = ({ name, label, onChange, value }) => (
+  <label
+    className="small mr-1"
+    style={{ width: '8rem' }}
+    htmlFor={`${name}_input`}
+  >
+    {label}
+    <DateTimePicker time={false} id={name} value={value} onChange={onChange} />
+  </label>
+);
+
 class ExploreData extends React.Component {
   constructor(props) {
     super(props);
@@ -25,8 +44,9 @@ class ExploreData extends React.Component {
       selectedCategoryPreset: props.selectedCategoryPreset,
       selectedCategories: null,
       selectedDatePreset: props.selectedDatePreset,
-      selectedDateRange: null
+      selectedDateRange: DATE_PRESETS[props.selectedDatePreset]
     };
+    this.fetchIfNecessary = this.fetchIfNecessary.bind(this);
   }
 
   getParams() {
@@ -39,9 +59,7 @@ class ExploreData extends React.Component {
       ];
     }
 
-    if (this.state.selectedDatePreset !== 'Custom...') {
-      selectedDateRange = DATE_PRESETS[this.state.selectedDatePreset];
-    }
+    selectedDateRange = this.state.selectedDateRange;
 
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
       params = JSON.stringify({
@@ -53,6 +71,15 @@ class ExploreData extends React.Component {
     return params;
   }
 
+  setCustomDate(value, name) {
+    this.setState({
+      selectedDateRange: {
+        ...this.state.selectedDateRange,
+        [name]: formatTimestamp(value)
+      }
+    });
+  }
+
   fetchIfNecessary() {
     const params = this.getParams();
     if (params && this.props.params !== params) {
@@ -61,7 +88,12 @@ class ExploreData extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchIfNecessary();
+    if (
+      prevProps.selectedCategoryPreset !== this.props.selectedCategoryPreset ||
+      prevProps.selectedDatePreset !== this.props.selectedDatePreset
+    ) {
+      this.fetchIfNecessary();
+    }
   }
 
   componentDidMount() {
@@ -80,7 +112,7 @@ class ExploreData extends React.Component {
           approximate location of each ticket.
         </p>
         <form className="form-row mb-2">
-          <fieldset className="col-auto mb-sm-2">
+          <fieldset className="col-auto mb-sm-2 mr-sm-4">
             <label htmlFor={`${this.props.namespace}_category`}>Category</label>
             {/* TODO: aria-describedby explanation of this field */}
             <select
@@ -116,6 +148,31 @@ class ExploreData extends React.Component {
                 </option>
               ))}
             </select>
+            <div
+              className={cn('mt-1', {
+                'd-none': this.state.selectedDatePreset !== 'Custom...'
+              })}
+            >
+              <CustomDatePicker
+                name={`${this.props.namespace}_startDate`}
+                label="Start Date"
+                value={parseISO(this.state.selectedDateRange.startDate)}
+                onChange={value => this.setCustomDate(value, 'startDate')}
+              />
+              <CustomDatePicker
+                name={`${this.props.namespace}_endDate`}
+                label="End Date"
+                value={parseISO(this.state.selectedDateRange.endDate)}
+                onChange={value => this.setCustomDate(value, 'endDate')}
+              />
+              <button
+                className="btn btn-primary small"
+                type="button"
+                onClick={this.fetchIfNecessary}
+              >
+                Go
+              </button>
+            </div>
           </fieldset>
         </form>
 
