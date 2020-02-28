@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import listify from 'listify';
+import endOfYesterday from 'date-fns/endOfYesterday';
 import parseISO from 'date-fns/parseISO';
 import dateFnsLocalizer from 'react-widgets-date-fns';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -25,14 +26,21 @@ const LazyMap = ({ markers }) => {
   );
 };
 
-const CustomDatePicker = ({ name, label, onChange, value }) => (
+const CustomDatePicker = ({ name, label, onChange, value, min, max }) => (
   <label
     className="small mr-1"
     style={{ width: '8rem' }}
     htmlFor={`${name}_input`}
   >
     {label}
-    <DateTimePicker time={false} id={name} value={value} onChange={onChange} />
+    <DateTimePicker
+      time={false}
+      id={name}
+      value={value}
+      onChange={onChange}
+      min={min}
+      max={max}
+    />
   </label>
 );
 
@@ -46,6 +54,9 @@ class ExploreData extends React.Component {
       selectedDatePreset: props.selectedDatePreset,
       selectedDateRange: DATE_PRESETS[props.selectedDatePreset]
     };
+
+    this.endDate = endOfYesterday();
+
     this.fetchIfNecessary = this.fetchIfNecessary.bind(this);
   }
 
@@ -157,12 +168,15 @@ class ExploreData extends React.Component {
                 name={`${this.props.namespace}_startDate`}
                 label="Start Date"
                 value={parseISO(this.state.selectedDateRange.startDate)}
+                max={parseISO(this.state.selectedDateRange.endDate)}
                 onChange={value => this.setCustomDate(value, 'startDate')}
               />
               <CustomDatePicker
                 name={`${this.props.namespace}_endDate`}
                 label="End Date"
                 value={parseISO(this.state.selectedDateRange.endDate)}
+                min={parseISO(this.state.selectedDateRange.startDate)}
+                max={this.endDate}
                 onChange={value => this.setCustomDate(value, 'endDate')}
               />
               <button
