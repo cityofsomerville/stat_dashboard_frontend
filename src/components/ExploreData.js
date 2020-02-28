@@ -98,10 +98,10 @@ class ExploreData extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
-      prevProps.selectedCategoryPreset !== this.props.selectedCategoryPreset ||
-      prevProps.selectedDatePreset !== this.props.selectedDatePreset
+      prevState.selectedCategoryPreset !== this.state.selectedCategoryPreset ||
+      prevState.selectedDatePreset !== this.state.selectedDatePreset
     ) {
       this.fetchIfNecessary();
     }
