@@ -87,21 +87,19 @@ export const getChartData = createSelector(
 export const getMapData = createSelector(
   [getCategoryCorrectedData, exploreDataParamsSelector, getSelectionTypes],
   (exploreDataCache, exploreDataParams, selectionTypes) => {
-    let selection = [];
-    if (exploreDataCache && exploreDataParams) {
-      selection = exploreDataCache.map(incident => ({
-        id: incident.id,
-        latitude: incident.latitude,
-        longitude: incident.longitude,
-        title: incident.type,
-        date: format(parseISO(incident.date), 'yyyy-MM-dd'),
-        type: incident.type,
-        color: selectionTypes[incident.type].color
-      }));
-      selection = selection.filter(
-        incident => incident.latitude && incident.longitude
-      );
-    }
+    let selection = exploreDataCache.map(incident => ({
+      id: incident.id,
+      latitude: incident.latitude,
+      longitude: incident.longitude,
+      color: selectionTypes[incident.type].color,
+      displayData: {
+        Date: format(parseISO(incident.date), 'yyyy-MM-dd'),
+        Type: incident.type
+      }
+    }));
+    selection = selection.filter(
+      incident => incident.latitude && incident.longitude
+    );
     return selection;
   }
 );

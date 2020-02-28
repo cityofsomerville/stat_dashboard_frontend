@@ -188,7 +188,13 @@ export const getMapData = createSelector(
       title: legendTypes[ticket.typeId] ? legendTypes[ticket.typeId].name : '',
       date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
       type: legendTypes[ticket.typeId],
-      color: legendTypes[ticket.typeId].color
+      color: legendTypes[ticket.typeId].color,
+      displayData: {
+        Date: format(parseISO(ticket.created_on), 'yyyy-MM-dd'),
+        Type: legendTypes[ticket.typeId] ? legendTypes[ticket.typeId].name : '',
+        Status: ticket.status,
+        Department: ticket.dept
+      }
     }));
   }
 );

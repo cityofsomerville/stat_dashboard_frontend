@@ -84,11 +84,13 @@ export const getMapData = createSelector(
         id: permit.id,
         latitude: permit.latitude,
         longitude: permit.longitude,
-        title: permit.id,
-        amount: permit.amount,
-        date: format(parseISO(permit.issue_date), 'yyyy-MM-dd'),
-        type: permit.type,
-        color: selectionTypes[permit.type].color
+        color: selectionTypes[permit.type].color,
+        displayData: {
+          Date: format(parseISO(permit.issue_date), 'yyyy-MM-dd'),
+          Type: permit.type,
+          Amount: `$${permit.amount}`,
+          Work: permit.work
+        }
       }));
     }
     return selection;

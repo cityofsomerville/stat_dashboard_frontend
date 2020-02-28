@@ -57,7 +57,7 @@ export default class Chart {
     const fn = event => {
       this.resize();
     };
-    debounce(fn.bind(this), 1000)();
+    debounce(fn.bind(this), 100)();
   }
 
   cleanChart() {
