@@ -70,7 +70,11 @@ class ExploreData extends React.Component {
       ];
     }
 
-    selectedDateRange = this.state.selectedDateRange;
+    if (this.state.selectedDatePreset === 'Custom...') {
+      selectedDateRange = this.state.selectedDateRange;
+    } else {
+      selectedDateRange = DATE_PRESETS[this.state.selectedDatePreset];
+    }
 
     if (selectedCategories && selectedCategories.length && selectedDateRange) {
       params = JSON.stringify({
