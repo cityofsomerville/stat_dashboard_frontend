@@ -44,7 +44,7 @@ const PublicSafety = ({
     </SectionHeading>
     <ExploreData
       namespace="public_safety"
-      selectedDatePreset="Last available public safety data"
+      selectedDatePreset="7 days"
       selectedCategoryPreset="Quality of Life"
       selectedCategoryNames={selectedCategoryNames}
       categoryPresets={categoryPresets}
