@@ -39,6 +39,7 @@ export default class Chart {
       .select('body')
       .append('div')
       .attr('class', 'tooltip rounded border p-1 bg-light')
+      .style('max-width', '12rem')
       .attr('id', `tooltip-${targetId}`);
   }
 

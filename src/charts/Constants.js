@@ -2,7 +2,7 @@
   These colors were lifted from the Somerville City Seal, with a
   slight adjustment to the gold.
 */
-export const CHART_COLORS = [
+export const CHART_COLORS_2 = [
   // the first 5 colors are contrast-safe with white
   '#002b83',
   '#3b9bcd',
@@ -17,7 +17,7 @@ export const CHART_COLORS = [
   '#64aa8a'
 ];
 
-export const CHART_COLORS_2 = [
+export const CHART_COLORS = [
   // d3.schemeCategory10
   { background: '#1f77b4', color: 'white' },
   { background: '#ff7f0e', color: 'white' },

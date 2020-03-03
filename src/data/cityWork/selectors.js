@@ -17,7 +17,7 @@ import {
   getDateRange
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
-import { CHART_COLORS_2 } from 'charts/Constants';
+import { CHART_COLORS } from 'charts/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -132,7 +132,7 @@ const getLegendTypes = createSelector(
         [typeId]: {
           ...typesById[typeId],
           count: currentSelectionTypes[typeId].length,
-          color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+          color: CHART_COLORS[index % CHART_COLORS.length]
         }
       }),
       {}

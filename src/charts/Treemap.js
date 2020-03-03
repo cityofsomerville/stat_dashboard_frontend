@@ -29,7 +29,8 @@ export default class Treemap {
     this.ratio = 2 / 3;
     this.margin = { top: 0, right: 0, bottom: 0, left: 0 };
 
-    this.color = d3.scaleOrdinal().range(CHART_COLORS);
+    this.color = d3.scaleOrdinal().range(CHART_COLORS.map(c => c.background));
+    this.textColor = d3.scaleOrdinal().range(CHART_COLORS.map(c => c.color));
 
     this.init();
   }
@@ -133,6 +134,7 @@ export default class Treemap {
 
     leaf
       .append('text')
+      .attr('fill', d => self.textColor(d.data.name))
       .attr('font-size', 10)
       .attr('x', 3)
       .attr('y', 12)
@@ -140,6 +142,7 @@ export default class Treemap {
 
     leaf
       .append('text')
+      .attr('fill', d => self.textColor(d.data.name))
       .attr('font-size', 10)
       .attr('x', 3)
       .attr('y', 22)

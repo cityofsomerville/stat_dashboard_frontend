@@ -6,7 +6,7 @@ import {
   legendData,
   groupBy
 } from 'data/utils';
-import { CHART_COLORS_2 } from 'charts/Constants';
+import { CHART_COLORS } from 'charts/Constants';
 
 const dailyTotalsSelector = state => state.cityWebsite.dailyTotals;
 const websiteAveragesSelector = state => state.cityWebsite.websiteAverages;
@@ -34,3 +34,11 @@ export const getCityWebsiteKeyMetrics = createSelector(
     };
   }
 );
+
+export const getChartData = createSelector(dailyTotalsSelector, dailyTotals => {
+  return {
+    data: dailyTotals.map(d => ({ ...d, pageviews: Number(d.pageviews) })),
+    label: 'title',
+    figure: 'pageviews'
+  };
+});

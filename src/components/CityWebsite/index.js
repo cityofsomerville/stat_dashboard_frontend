@@ -4,13 +4,19 @@ import { connect } from 'react-redux';
 import DataBlock, {
   SectionHeading,
   SectionDescription,
-  DataRow
+  DataRow,
+  DataCol
 } from 'components/DataBlock';
 import { fetchWebsiteData } from 'data/cityWebsite/actions';
-import { getCityWebsiteKeyMetrics } from 'data/cityWebsite/selectors';
+import {
+  getCityWebsiteKeyMetrics,
+  getChartData
+} from 'data/cityWebsite/selectors';
 import WebsiteKeyMetrics from 'components/CityWebsite/WebsiteKeyMetrics';
+import BarChart from 'charts/BarChart';
+import ChartContainer from 'charts/ChartContainer';
 
-const CityWebsite = ({ fetchWebsiteData, keyMetrics }) => {
+const CityWebsite = ({ fetchWebsiteData, keyMetrics, chartData }) => {
   useEffect(() => {
     fetchWebsiteData();
   }, [fetchWebsiteData]);
@@ -28,13 +34,24 @@ const CityWebsite = ({ fetchWebsiteData, keyMetrics }) => {
           </p>
         </SectionDescription>
       </SectionHeading>
+      <DataRow>
+        <DataCol>
+          <ChartContainer
+            data={chartData}
+            chartClass={BarChart}
+            name="cityWebsite"
+            cachebust={chartData}
+          />
+        </DataCol>
+      </DataRow>
     </DataBlock>
   );
 };
 
 export default connect(
   state => ({
-    keyMetrics: getCityWebsiteKeyMetrics(state)
+    keyMetrics: getCityWebsiteKeyMetrics(state),
+    chartData: getChartData(state)
   }),
   {
     fetchWebsiteData

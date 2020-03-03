@@ -44,3 +44,5 @@ export const DATE_PRESETS = {
     endDate: '2020-02-13T23:59:59.999'
   }
 };
+
+export const BASE_URL = 'https://somervillema.gov';
