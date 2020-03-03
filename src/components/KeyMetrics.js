@@ -11,8 +11,8 @@ export const Metric = ({ figure, average, children, icon }) => {
   let trend;
   let modifier;
   const step = 3; // difference of under 3 shouldn't count as "significant"
-  const minorThreshold = 0.05; // 5% of average
-  const majorThreshold = 0.2; // 20% of average
+  const minorThreshold = 0.1; // 10% of average
+  const majorThreshold = 0.25; // 25% of average
 
   if (figure !== null && average !== null) {
     const difference = average - figure;
@@ -41,7 +41,7 @@ export const Metric = ({ figure, average, children, icon }) => {
   return (
     <li className="mb-2 d-flex">
       {/* TODO: skeleton state */}
-      <Icon img={img} alt="" />
+      <Icon img={img} alt="" size="2" />
       <div className="d-inline-block align-middle" style={{ lineHeight: 1.2 }}>
         <strong>{figure}</strong> {children}
         <br />
