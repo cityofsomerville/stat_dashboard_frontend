@@ -37,11 +37,6 @@ export const DATE_PRESETS = {
   'Custom...': {
     startDate: format(subDays(startOfToday(), 7), SOCRATA_TIMESTAMP),
     endDate: format(endOfYesterday(), SOCRATA_TIMESTAMP)
-  },
-  // FIXME once public safety data is working
-  'Last available public safety data': {
-    startDate: '2020-02-06T00:00:00.000',
-    endDate: '2020-02-13T23:59:59.999'
   }
 };
 

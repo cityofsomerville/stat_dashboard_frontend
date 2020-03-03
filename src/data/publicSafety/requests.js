@@ -1,17 +1,18 @@
 import parseISO from 'date-fns/parseISO';
+import startOfYesterday from 'date-fns/startOfYesterday';
+import endOfYesterday from 'date-fns/endOfYesterday';
 
 import { SOCRATA_DATASETS, DATE_PRESETS } from 'data/Constants';
 import { instance, formatURL, constructDateRangeQuery } from 'data/api';
 
-// FIXME once public safety data is working (use DATE_PRESETS instead)
 const dayRange = {
-  startDate: parseISO('2019-10-07T00:00:00.000'),
-  endDate: parseISO('2019-10-07T23:59:59.999')
+  startDate: startOfYesterday(),
+  endDate: endOfYesterday()
 };
 
 const yearRange = {
-  startDate: parseISO('2018-10-07T00:00:00.000'),
-  endDate: parseISO('2019-10-07T23:59:59.999')
+  startDate: parseISO(DATE_PRESETS['1 year'].startDate),
+  endDate: parseISO(DATE_PRESETS['1 year'].endDate)
 };
 
 export const getQOLCount = async () => {
