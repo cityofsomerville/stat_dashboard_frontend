@@ -7,6 +7,7 @@ const Icon = ({ img, alt }) => {
       style={{
         width: '2.5rem',
         height: '2.5rem',
+        minWidth: '2.5rem',
         background: '#c6d9f1'
       }}
     >

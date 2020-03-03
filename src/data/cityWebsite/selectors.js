@@ -15,18 +15,19 @@ export const getCityWebsiteKeyMetrics = createSelector(
   [dailyTotalsSelector, websiteAveragesSelector],
   (dailyTotals, websiteAverages) => {
     const topPages = dailyTotals.slice(0, 5).map(d => d.title);
-    // if (websiteAverages) {
-    //   console.log(websiteAverages);
-    //   let annualAverage = Object.keys(websiteAverages).map(cat => websiteAverages[cat].avg_pageviews).reduce((memo, n) => (memo + Number(n)), 0);
-    //   annualAverage = annualAverage / 365;
-    //   console.log(annualAverage);
-    // }
+    let annualAverage = null;
+    if (websiteAverages) {
+      annualAverage =
+        websiteAverages.reduce((memo, d) => memo + Number(d.sum_pageviews), 0) /
+        websiteAverages.length;
+    }
     return {
       pageviews: {
         figure: dailyTotals.reduce(
           (memo, page) => memo + Number(page.pageviews),
           0
-        )
+        ),
+        average: annualAverage
       },
       topPage: {
         title: topPages.length ? topPages.join(', ') : null

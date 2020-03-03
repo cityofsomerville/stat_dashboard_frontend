@@ -6,7 +6,7 @@ import trend_up from 'images/trend_up.svg';
 import trend_down from 'images/trend_down.svg';
 import trend_same from 'images/trend_same.svg';
 
-export const Metric = ({ figure, average, children }) => {
+export const Metric = ({ figure, average, children, icon }) => {
   let img;
   let trend;
   let modifier;
@@ -32,6 +32,10 @@ export const Metric = ({ figure, average, children }) => {
       img = trend_same;
       trend = 'about average';
     }
+  }
+
+  if (icon) {
+    img = icon;
   }
 
   return (

@@ -5,7 +5,7 @@ import { indexBy } from 'data/utils';
 
 const initialState = {
   dailyTotals: [],
-  websiteAverages: {}
+  websiteAverages: []
 };
 
 const dailyTotals = (state = initialState.dailyTotals, action) => {
@@ -20,7 +20,7 @@ const dailyTotals = (state = initialState.dailyTotals, action) => {
 const websiteAverages = (state = initialState.websiteAverages, action) => {
   switch (action.type) {
     case types.WEBSITE_AVERAGE_SUCCESS:
-      return Object.assign({}, state, indexBy(action.payload, 'url'));
+      return action.payload;
     default:
       return state;
   }
