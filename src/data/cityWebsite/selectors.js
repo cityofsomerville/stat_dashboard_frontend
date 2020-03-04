@@ -1,13 +1,5 @@
 import { createSelector } from 'reselect';
 
-import {
-  getStackedAreaChartData,
-  selectionTypes,
-  legendData,
-  groupBy
-} from 'data/utils';
-import { CHART_COLORS } from 'charts/Constants';
-
 const dailyTotalsSelector = state => state.cityWebsite.dailyTotals;
 const websiteAveragesSelector = state => state.cityWebsite.websiteAverages;
 

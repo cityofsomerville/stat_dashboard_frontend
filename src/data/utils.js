@@ -42,7 +42,7 @@ export const getDateRange = ({ startDate, endDate }) => {
 export const getStackedAreaChartData = (data, params, types, dateField) => {
   let chartData = { data: [], columns: [] };
   if (data && params) {
-    const { categories, dateRange } = params;
+    const { dateRange } = params;
     let dataByDay = {};
     const range = getDateRange(dateRange);
 

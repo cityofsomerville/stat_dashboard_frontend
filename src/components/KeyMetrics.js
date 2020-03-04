@@ -52,7 +52,7 @@ export const Metric = ({ figure, average, children, icon }) => {
 };
 
 Metric.propTypes = {
-  figure: PropTypes.number,
+  figure: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   average: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

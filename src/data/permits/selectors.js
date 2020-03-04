@@ -5,8 +5,7 @@ import parseISO from 'date-fns/parseISO';
 import {
   getStackedAreaChartData,
   selectionTypes,
-  legendData,
-  groupBy
+  legendData
 } from 'data/utils';
 
 const dailyTotalsSelector = state => state.permits.dailyTotals;

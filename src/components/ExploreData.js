@@ -257,7 +257,7 @@ ExploreData.propTypes = {
   mapData: PropTypes.array.isRequired,
 
   fetchData: PropTypes.func.isRequired,
-  legendData: PropTypes.shape()
+  legendData: PropTypes.array
 };
 
 export default ExploreData;

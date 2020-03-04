@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import { types } from 'data/cityWebsite/actions';
-import { indexBy } from 'data/utils';
 
 const initialState = {
   dailyTotals: [],

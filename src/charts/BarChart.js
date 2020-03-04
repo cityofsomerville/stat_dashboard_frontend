@@ -8,7 +8,7 @@ export default class BarChart extends Chart {
   constructor(args) {
     super({
       ...args,
-      margin: { top: 0, right: 20, bottom: 40, left: 40 },
+      margin: { top: 0, right: 20, bottom: 40, left: 50 },
       ratio: 1 / 3
     });
     this.figure = args.data.figure;
@@ -89,16 +89,13 @@ export default class BarChart extends Chart {
       .paddingInner(0.1);
 
     // bottom axis generator
-    const xAxis = d3
-      .axisBottom(x)
-      // .ticks(7)
-      .tickFormat(d => {
-        let label = d;
-        if (label.length > 20) {
-          label = label.slice(0, 20) + '...';
-        }
-        return label;
-      });
+    const xAxis = d3.axisBottom(x).tickFormat(d => {
+      let label = d;
+      if (label.length > 20) {
+        label = label.slice(0, 20) + '...';
+      }
+      return label;
+    });
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(y);
@@ -119,10 +116,7 @@ export default class BarChart extends Chart {
       .attr('transform', `translate(${self.margin.left},${self.margin.top})`)
       .call(yAxis);
 
-    // self.dataContainer.attr('transform', d => `translate(${x(d[self.label])},0)`);
-
     self.bars
-      // .attr('y', d => y(d[self.figure]))
       .attr('y', d => y(d[self.figure]))
       .attr('x', d => x(d[self.label]))
       .attr('width', x.bandwidth())

@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 
 import Chart from 'charts/Chart';
-import { CHART_COLORS } from 'charts/Constants';
 
 export default class StackedBarChart extends Chart {
   constructor(args) {
