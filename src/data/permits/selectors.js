@@ -5,10 +5,8 @@ import parseISO from 'date-fns/parseISO';
 import {
   getStackedAreaChartData,
   selectionTypes,
-  legendData,
-  groupBy
+  legendData
 } from 'data/utils';
-import { CHART_COLORS_2 } from 'charts/Constants';
 
 const dailyTotalsSelector = state => state.permits.dailyTotals;
 const typeAveragesSelector = state => state.permits.typeAverages;

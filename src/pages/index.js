@@ -13,7 +13,7 @@ const IndexPage = () => (
     <CityWork />
     <PublicSafety />
     <Permits />
-    {/*<CityWebsite />*/}
+    <CityWebsite />
   </Layout>
 );
 

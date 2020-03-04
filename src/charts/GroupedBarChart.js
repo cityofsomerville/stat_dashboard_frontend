@@ -13,7 +13,7 @@ export default class GroupedBarChart extends Chart {
     this.keys = args.columns.slice(1);
     this.groupKey = args.columns[0];
 
-    this.color = d3.scaleOrdinal().range(CHART_COLORS);
+    this.color = d3.scaleOrdinal().range(CHART_COLORS.map(c => c.background));
 
     this.init();
   }

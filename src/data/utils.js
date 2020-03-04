@@ -5,7 +5,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import subDays from 'date-fns/subDays';
 
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
-import { CHART_COLORS_2 } from 'charts/Constants';
+import { CHART_COLORS } from 'charts/Constants';
 
 export const formatTimestamp = date => format(date, SOCRATA_TIMESTAMP);
 
@@ -42,7 +42,7 @@ export const getDateRange = ({ startDate, endDate }) => {
 export const getStackedAreaChartData = (data, params, types, dateField) => {
   let chartData = { data: [], columns: [] };
   if (data && params) {
-    const { categories, dateRange } = params;
+    const { dateRange } = params;
     let dataByDay = {};
     const range = getDateRange(dateRange);
 
@@ -81,7 +81,7 @@ export const selectionTypes = (tickets, types) => {
         count: currentSelectionTypes[type]
           ? currentSelectionTypes[type].length
           : 0,
-        color: CHART_COLORS_2[index % CHART_COLORS_2.length]
+        color: CHART_COLORS[index % CHART_COLORS.length]
       }
     }),
     {}

@@ -6,13 +6,13 @@ import trend_up from 'images/trend_up.svg';
 import trend_down from 'images/trend_down.svg';
 import trend_same from 'images/trend_same.svg';
 
-export const Metric = ({ figure, average, children }) => {
+export const Metric = ({ figure, average, children, icon }) => {
   let img;
   let trend;
   let modifier;
   const step = 3; // difference of under 3 shouldn't count as "significant"
-  const minorThreshold = 0.05; // 5% of average
-  const majorThreshold = 0.2; // 20% of average
+  const minorThreshold = 0.1; // 10% of average
+  const majorThreshold = 0.25; // 25% of average
 
   if (figure !== null && average !== null) {
     const difference = average - figure;
@@ -34,10 +34,14 @@ export const Metric = ({ figure, average, children }) => {
     }
   }
 
+  if (icon) {
+    img = icon;
+  }
+
   return (
     <li className="mb-2 d-flex">
       {/* TODO: skeleton state */}
-      <Icon img={img} alt="" />
+      <Icon img={img} alt="" size="2" />
       <div className="d-inline-block align-middle" style={{ lineHeight: 1.2 }}>
         <strong>{figure}</strong> {children}
         <br />
@@ -48,7 +52,7 @@ export const Metric = ({ figure, average, children }) => {
 };
 
 Metric.propTypes = {
-  figure: PropTypes.number,
+  figure: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   average: PropTypes.number,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

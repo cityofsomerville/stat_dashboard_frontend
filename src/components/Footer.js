@@ -4,7 +4,7 @@ const Footer = () => (
   <footer className="bg-light border-top py-4 text-center">
     <div className="container">
       <p>
-        Somerville Systems : Daniel Hadley, Emily Monea, & Skye Stewart |{' '}
+        Somerville Systems |{' '}
         <a
           href="https://github.com/cityofsomerville/stat_dashboard_frontend"
           rel="noopener noreferrer"
@@ -12,8 +12,6 @@ const Footer = () => (
         >
           Code
         </a>
-        <br />
-        Posted %FIXME% by %FIXME%
         <br />
         <a href="mailto:mmastrobuoni@somervillema.gov">Contact us</a> with
         questions, requests, and suggestions.

@@ -40,7 +40,7 @@ export default class ChartContainer extends React.Component {
 }
 
 ChartContainer.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.oneOfType([PropTypes.array, PropTypes.shape()]),
   columns: PropTypes.array,
   name: PropTypes.string.isRequired,
   chartClass: PropTypes.func.isRequired,
