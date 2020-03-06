@@ -3,25 +3,26 @@ import { Map, CircleMarker, Popup, TileLayer } from 'react-leaflet';
 
 const position = [42.3925, -71.10548];
 
-const MapMarker = ({ lat, lng, color, displayData }) => (
-  <CircleMarker
-    radius={6}
-    center={{ lat, lng }}
-    color={color ? color.background : null}
-    fillOpacity={0.5}
-    weight={1}
-  >
-    <Popup>
-      {displayData
-        ? Object.keys(displayData).map(key => (
-            <div key={key}>
-              <strong>{key}: </strong> {displayData[key]}
-            </div>
-          ))
-        : null}
-    </Popup>
-  </CircleMarker>
-);
+const MapMarker = ({ lat, lng, color, displayData }) =>
+  lat && lng ? (
+    <CircleMarker
+      radius={6}
+      center={{ lat, lng }}
+      color={color ? color.background : null}
+      fillOpacity={0.5}
+      weight={1}
+    >
+      <Popup>
+        {displayData
+          ? Object.keys(displayData).map(key => (
+              <div key={key}>
+                <strong>{key}: </strong> {displayData[key]}
+              </div>
+            ))
+          : null}
+      </Popup>
+    </CircleMarker>
+  ) : null;
 
 const ExploreDataMap = ({ markers }) => (
   <>
