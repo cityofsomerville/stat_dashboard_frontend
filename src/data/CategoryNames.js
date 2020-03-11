@@ -51,6 +51,12 @@ const CategoryNames = {
   "SAFETY STANDARDS, MV NOT MEETING RMV c90 S7A": "Motor vehicle not meeting RMV safety standards",
   "STOP/YIELD, FAIL TO c89 S9": "Failure to stop/yield",
   "UNSAFE OPERATION OF MV c90 S13": "Unsafe operation of motor vehicle",
+  "ELECTRONIC MESSAGE, OPERATOR SEND/READ C90 S13B": "Texting while driving",
+  "SPEEDING IN VIOLATION SPECIAL REGULATION c90 S18": "Speeding in violation of special regulation",
+  "OPERATION OF MOTOR VEHICLE, IMPROPER c90 S16": "Improper operation of motor vehicle",
+  "BICYCLE VIOLATION c85 S11B": "Bicycle violation",
+  "YIELD AT INTERSECTION, FAIL c89 S8": "Failure to yield at intersection",
+  "LIGHTS VIOLATION, MV c90 S7": "Lights violation",
 
   // Traffic enforcement
   "MV STOP": "Motor vehicle stop",
@@ -58,6 +64,7 @@ const CategoryNames = {
   "TRESPTOW": "Trespassing/towing",
   "PARKVIOL": "Parking violation",
   "BOOTLIST": "Boot list",
+  "BIKE STOP": "Bike stop"
 };
 
 export default CategoryNames;
