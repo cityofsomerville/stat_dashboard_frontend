@@ -28,10 +28,11 @@ const initialState = {
   actionAverages: {},
   typeAverages: {},
   callsAverage: null,
-
   weeklyTrends: [],
   exploreDataCache: [],
-  exploreDataKey: null
+  exploreDataKey: null,
+  backlogCreated: {},
+  backlogClosed: {}
 };
 
 const actionsByDay = (state = initialState.actionsByDay, action) => {
@@ -140,6 +141,26 @@ const callsAverage = (state = initialState.callsAverage, action) => {
   }
 };
 
+const backlogCreated = (state = initialState.backlogCreated, action) => {
+  switch (action.type) {
+    case types.BACKLOG_CREATED_SUCCESS:
+      // return action.payload;
+      return Object.assign({}, state, indexBy(action.payload, 'day'));
+    default:
+      return state;
+  }
+};
+
+const backlogClosed = (state = initialState.backlogClosed, action) => {
+  switch (action.type) {
+    case types.BACKLOG_CLOSED_SUCCESS:
+      // return action.payload;
+      return Object.assign({}, state, indexBy(action.payload, 'day'));
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   actionsByDay,
   tickets,
@@ -149,5 +170,7 @@ export default combineReducers({
   exploreDataCache,
   actionAverages,
   typeAverages,
-  callsAverage
+  callsAverage,
+  backlogCreated,
+  backlogClosed
 });

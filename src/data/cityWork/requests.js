@@ -113,3 +113,39 @@ export const getCallsAverage = async () => {
     }
   });
 };
+
+// https://data.somervillema.gov/resource/4pyi-uqq6.json?$select=date_trunc_ymd(created_on) as day, count(*)&$group=day&$limit=10000&$where=(created_on >= '2019-03-12T00:00:00.000') or (status == "Open" or status == "In Progress")&$order=day
+export const getBacklogCreated = async () => {
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(DATE_PRESETS['1 year'].startDate),
+    endDate: parseISO(DATE_PRESETS['1 year'].endDate),
+    dateField: 'created_on'
+  });
+  return await instance.get(formatURL(SOCRATA_DATASETS.Somerville_Services), {
+    params: {
+      $select: 'date_trunc_ymd(created_on) as day, count(*)',
+      $where: `${dateRange} or (status == "Open" or status == "In Progress")`,
+      $group: 'day',
+      $order: 'day',
+      $limit: 10000
+    }
+  });
+};
+
+// https://data.somervillema.gov/resource/4pyi-uqq6.json?$select=date_trunc_ymd(last_modified) as day, count(*)&$group=day&$limit=10000&$where=(last_modified >= '2019-03-12T00:00:00.000') and (status == "Closed")&$order=day
+export const getBacklogClosed = async () => {
+  const dateRange = constructDateRangeQuery({
+    startDate: parseISO(DATE_PRESETS['1 year'].startDate),
+    endDate: parseISO(DATE_PRESETS['1 year'].endDate),
+    dateField: 'last_modified'
+  });
+  return await instance.get(formatURL(SOCRATA_DATASETS.Somerville_Services), {
+    params: {
+      $select: 'date_trunc_ymd(last_modified) as day, count(*)',
+      $where: `${dateRange} and (status == "Closed")`,
+      $group: 'day',
+      $order: 'day',
+      $limit: 10000
+    }
+  });
+};

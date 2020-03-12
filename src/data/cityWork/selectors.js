@@ -5,6 +5,7 @@ import startOfYesterday from 'date-fns/startOfYesterday';
 import endOfYesterday from 'date-fns/endOfYesterday';
 import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
+import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
@@ -18,6 +19,7 @@ import {
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
 import { CHART_COLORS } from 'charts/Constants';
+import { DATE_PRESETS } from 'data/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -30,6 +32,8 @@ const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
 const actionAveragesSelector = state => state.cityWork.actionAverages;
 const callsAverageSelector = state => state.cityWork.callsAverage;
+const backlogCreatedSelector = state => state.cityWork.backlogCreated;
+const backlogClosedSelector = state => state.cityWork.backlogClosed;
 
 export const getWorkOrderCounts = createSelector(
   [actionsByDaySelector, actionAveragesSelector],
@@ -308,5 +312,47 @@ export const getCategoryHierarchy = createSelector(
       }, {});
     }
     return hierarchy;
+  }
+);
+
+export const getBacklogData = createSelector(
+  [backlogCreatedSelector, backlogClosedSelector],
+  (created, closed) => {
+    const startDate = parseISO(DATE_PRESETS['1 year'].startDate);
+    let totals = getDateRange({
+      startDate,
+      endDate: parseISO(DATE_PRESETS['1 year'].endDate)
+    }).map(day => ({
+      date: day,
+      count: 0
+    }));
+    let count = 0;
+
+    if (Object.keys(created).length && Object.keys(closed).length) {
+      const olderTicketIndices = Object.keys(created).filter(key =>
+        isBefore(parseISO(key), startDate)
+      );
+      count = olderTicketIndices.reduce(
+        (memo, index) => memo + Number(created[index].count),
+        0
+      );
+
+      totals = totals.map(day => {
+        const createdCount = created[day.date]
+          ? Number(created[day.date].count)
+          : 0;
+        const closedCount = closed[day.date]
+          ? Number(closed[day.date].count)
+          : 0;
+        count = count + createdCount - closedCount;
+        return {
+          count,
+          date: day.date
+        };
+      });
+      console.log(totals);
+    }
+
+    return totals;
   }
 );

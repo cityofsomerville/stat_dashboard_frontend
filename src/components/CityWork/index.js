@@ -13,7 +13,7 @@ import Tabs from 'components/Tabs';
 import CityWorkExploreData from 'components/CityWork/CityWorkExploreData';
 import Summary from 'components/CityWork/Summary';
 import InternalWork from 'components/CityWork/InternalWork';
-import InProgress from 'components/CityWork/InProgress';
+import Backlog from 'components/CityWork/Backlog';
 
 import {
   fetchActionsByDay,
@@ -51,12 +51,12 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets, fetchAverages }) => {
       </SectionHeading>
       <Tabs
         uuid="citywork"
-        labels={['Summary', 'Explore Data', 'Internal Work', 'In Progress']}
+        labels={['Summary', 'Explore Data', 'Internal Work', 'Backlog']}
       >
         <Summary />
         <CityWorkExploreData />
         <InternalWork />
-        <InProgress />
+        <Backlog />
       </Tabs>
     </DataBlock>
   );
