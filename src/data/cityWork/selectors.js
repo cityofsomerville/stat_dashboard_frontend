@@ -319,10 +319,11 @@ export const getBacklogData = createSelector(
   [backlogCreatedSelector, backlogClosedSelector],
   (created, closed) => {
     const startDate = parseISO(DATE_PRESETS['1 year'].startDate);
-    let totals = getDateRange({
+    const columns = getDateRange({
       startDate,
       endDate: parseISO(DATE_PRESETS['1 year'].endDate)
-    }).map(day => ({
+    });
+    let totals = columns.map(day => ({
       date: day,
       count: 0
     }));
@@ -347,12 +348,20 @@ export const getBacklogData = createSelector(
         count = count + createdCount - closedCount;
         return {
           count,
-          date: day.date
+          date: parseISO(day.date)
         };
       });
-      console.log(totals);
     }
 
-    return totals;
+    return {
+      columns,
+      types: {
+        count: {
+          count: 0,
+          color: { background: '#8c564b', color: 'white' }
+        }
+      },
+      data: totals
+    };
   }
 );

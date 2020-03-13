@@ -14,9 +14,11 @@ const InternalWork = ({ fetchBacklogData, backlogData }) => {
 
   return (
     <BlockContent>
-      <p>City backlog!</p>
+      <p>
+        This chart shows the city's backlog of open work orders per day over the
+        past 365 days.
+      </p>
       <DataRow>
-        {/*
         <DataCol>
           <ChartContainer
             chartClass={StackedAreaChart}
@@ -25,7 +27,6 @@ const InternalWork = ({ fetchBacklogData, backlogData }) => {
             cachebust={backlogData}
           />
         </DataCol>
-      */}
       </DataRow>
     </BlockContent>
   );

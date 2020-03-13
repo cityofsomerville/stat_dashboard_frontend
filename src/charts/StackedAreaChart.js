@@ -8,9 +8,12 @@ export default class StackedAreaChart extends Chart {
     super({
       ...args,
       legend: true,
-      margin: { top: 0, right: 20, bottom: 20, left: 30 }
+      margin: { top: 0, right: 20, bottom: 20, left: 40 },
+      ratio: 1 / 3
     });
-    this.columns = args.columns;
+    this.columns = args.data.columns;
+    this.data = args.data.data;
+    this.types = args.data.types;
     this.groupKey = 'date';
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS);
@@ -74,13 +77,12 @@ export default class StackedAreaChart extends Chart {
     // bottom axis generator
     const xAxis = d3
       .axisBottom(xScale)
-      .ticks(7)
-      .tickFormat(d3.timeFormat('%Y-%m-%d'));
+      // .ticks(7)
+      .tickFormat(d3.timeFormat('%b %Y'));
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(yScale);
 
-    // winging it from here down:
     self.xAxis
       .attr(
         'transform',
