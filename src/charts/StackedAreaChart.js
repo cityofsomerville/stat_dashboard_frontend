@@ -16,7 +16,6 @@ export default class StackedAreaChart extends Chart {
     this.types = args.data.types;
     this.groupKey = 'date';
 
-    this.color = d3.scaleOrdinal().range(CHART_COLORS);
     this.init();
   }
 
@@ -35,6 +34,14 @@ export default class StackedAreaChart extends Chart {
     if (self.data.length) {
       self.resize();
     }
+  }
+
+  color(key) {
+    let color = 'black';
+    if (this.types[key]) {
+      color = this.types[key].color.background;
+    }
+    return color;
   }
 
   renderChart() {
@@ -71,14 +78,8 @@ export default class StackedAreaChart extends Chart {
       ])
       .range([self.height - self.margin.bottom - self.margin.top, 0]);
 
-    // color scale
-    const cScale = d3.scaleOrdinal().range(CHART_COLORS);
-
     // bottom axis generator
-    const xAxis = d3
-      .axisBottom(xScale)
-      // .ticks(7)
-      .tickFormat(d3.timeFormat('%b %Y'));
+    const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %Y'));
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(yScale);
@@ -106,7 +107,7 @@ export default class StackedAreaChart extends Chart {
       .enter()
       .append('path')
       .attr('class', 'area')
-      .attr('fill', d => cScale(d.key))
+      .attr('fill', d => self.color(d.key))
       .attr('d', d => area(d));
   }
 }
