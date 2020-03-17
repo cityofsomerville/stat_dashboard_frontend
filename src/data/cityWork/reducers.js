@@ -5,7 +5,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import { types } from 'data/cityWork/actions';
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
-import { indexBy } from 'data/utils';
+import { indexBy, groupBy } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -144,8 +144,7 @@ const callsAverage = (state = initialState.callsAverage, action) => {
 const backlogCreated = (state = initialState.backlogCreated, action) => {
   switch (action.type) {
     case types.BACKLOG_CREATED_SUCCESS:
-      // return action.payload;
-      return Object.assign({}, state, indexBy(action.payload, 'day'));
+      return Object.assign({}, state, groupBy(action.payload, 'dept'));
     default:
       return state;
   }
@@ -154,8 +153,7 @@ const backlogCreated = (state = initialState.backlogCreated, action) => {
 const backlogClosed = (state = initialState.backlogClosed, action) => {
   switch (action.type) {
     case types.BACKLOG_CLOSED_SUCCESS:
-      // return action.payload;
-      return Object.assign({}, state, indexBy(action.payload, 'day'));
+      return Object.assign({}, state, groupBy(action.payload, 'dept'));
     default:
       return state;
   }

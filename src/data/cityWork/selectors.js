@@ -12,6 +12,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 
 import {
   groupBy,
+  indexBy,
   formatTimestamp,
   getStackedAreaChartData,
   legendData,
@@ -317,50 +318,67 @@ export const getCategoryHierarchy = createSelector(
 
 export const getBacklogData = createSelector(
   [backlogCreatedSelector, backlogClosedSelector],
-  (created, closed) => {
+  (createdTickets, closedTickets) => {
     const startDate = parseISO(DATE_PRESETS['1 year'].startDate);
     const columns = getDateRange({
       startDate,
       endDate: parseISO(DATE_PRESETS['1 year'].endDate)
     });
     let totals = columns.map(day => ({
-      date: day,
-      count: 0
+      date: parseISO(day),
+      dateStamp: day
     }));
-    let count = 0;
+    let totalsPerType = {};
 
-    if (Object.keys(created).length && Object.keys(closed).length) {
-      const olderTicketIndices = Object.keys(created).filter(key =>
-        isBefore(parseISO(key), startDate)
-      );
-      count = olderTicketIndices.reduce(
-        (memo, index) => memo + Number(created[index].count),
-        0
-      );
+    if (
+      Object.keys(createdTickets).length &&
+      Object.keys(closedTickets).length
+    ) {
+      Object.keys(createdTickets).forEach((dept, index) => {
+        const created = indexBy(createdTickets[dept], 'day');
+        const closed = indexBy(closedTickets[dept], 'day');
+        let count = 0;
 
-      totals = totals.map(day => {
-        const createdCount = created[day.date]
-          ? Number(created[day.date].count)
-          : 0;
-        const closedCount = closed[day.date]
-          ? Number(closed[day.date].count)
-          : 0;
-        count = count + createdCount - closedCount;
-        return {
+        const olderTicketIndices = Object.keys(created).filter(key =>
+          isBefore(parseISO(key), startDate)
+        );
+        count = olderTicketIndices.reduce(
+          (memo, index) => memo + Number(created[index].count),
+          0
+        );
+
+        totalsPerType[dept] = {
           count,
-          date: parseISO(day.date)
+          color: CHART_COLORS[index % CHART_COLORS.length]
         };
+
+        totals = totals.map(day => {
+          const createdCount =
+            created[day.dateStamp] && created[day.dateStamp].count
+              ? Number(created[day.dateStamp].count)
+              : 0;
+          const closedCount =
+            closed[day.dateStamp] && closed[day.dateStamp]
+              ? Number(closed[day.dateStamp].count)
+              : 0;
+
+          count = count + createdCount - closedCount;
+          if (count < 0) count = 0;
+          totalsPerType[dept].count += count;
+
+          return {
+            ...day,
+            [dept]: count
+          };
+        });
       });
     }
 
+    const legend = legendData(totalsPerType);
+
     return {
       columns,
-      types: {
-        count: {
-          count: 0,
-          color: { background: '#8c564b', color: 'white' }
-        }
-      },
+      types: totalsPerType,
       data: totals
     };
   }

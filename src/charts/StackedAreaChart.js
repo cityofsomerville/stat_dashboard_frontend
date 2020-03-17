@@ -31,6 +31,8 @@ export default class StackedAreaChart extends Chart {
 
     self.yAxis = self.chart.append('g');
 
+    self.dataContainer = self.chart.append('g');
+
     if (self.data.length) {
       self.resize();
     }
@@ -42,6 +44,25 @@ export default class StackedAreaChart extends Chart {
       color = this.types[key].color.background;
     }
     return color;
+  }
+
+  formatDate(date) {
+    return d3.timeFormat('%b %d, %Y')(d3.isoParse(date));
+  }
+
+  getTooltip(d) {
+    return Object.keys(d)
+      .filter(key => key !== 'date' && key !== 'dateStamp')
+      .sort((a, b) => d[b] - d[a])
+      .reduce(
+        (memo, key) => {
+          let rows = memo;
+          rows = [...memo, `<b>${key}:</b> ${d[key]}`];
+          return rows;
+        },
+        [`<b>Date</b>: ${this.formatDate(d.date)}`]
+      )
+      .join('<br/>');
   }
 
   renderChart() {
@@ -67,7 +88,7 @@ export default class StackedAreaChart extends Chart {
         new Date(self.columns[0]),
         new Date(self.columns[self.columns.length - 1])
       ])
-      .range([0, self.width]);
+      .range([0, self.width - self.margin.left]);
 
     // set up the y scale
     const yScale = d3
@@ -100,6 +121,30 @@ export default class StackedAreaChart extends Chart {
       .x(d => xScale(d.data.date))
       .y0(d => yScale(d[0]))
       .y1(d => yScale(d[1]));
+
+    // self.dataContainer = self.chart.append('g');
+    self.dataContainer
+      .attr('transform', d => `translate(${self.margin.left + 1},0)`)
+      .selectAll('rect')
+      .data(self.data)
+      .join('rect')
+      .attr('id', d => `bar-${d.date}`)
+      .attr('height', self.height - self.margin.bottom)
+      .attr('width', (self.width - self.margin.left) / self.data.length)
+      .attr('fill', '#555')
+      .attr('x', d => xScale(d.date))
+      .attr('opacity', 0)
+      .on('mouseover', d => {
+        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
+      })
+      .on('mousemove', d =>
+        self.tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+      )
+      .on('mouseout', d => {
+        self.tooltip.style('opacity', 0);
+      });
 
     self.main
       .selectAll('.area')
