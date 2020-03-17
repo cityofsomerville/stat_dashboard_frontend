@@ -6,6 +6,7 @@ import ChartContainer from 'charts/ChartContainer';
 import StackedAreaChart from 'charts/StackedAreaChart';
 import { fetchBacklogData } from 'data/cityWork/actions';
 import { getBacklogData } from 'data/cityWork/selectors';
+import Legend from 'components/Legend';
 
 const InternalWork = ({ fetchBacklogData, backlogData }) => {
   useEffect(() => {
@@ -26,6 +27,7 @@ const InternalWork = ({ fetchBacklogData, backlogData }) => {
             name="backlog"
             cachebust={backlogData}
           />
+          <Legend legendData={backlogData.legendData} />
         </DataCol>
       </DataRow>
     </BlockContent>

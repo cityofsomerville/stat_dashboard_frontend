@@ -349,6 +349,7 @@ export const getBacklogData = createSelector(
 
         totalsPerType[dept] = {
           count,
+          name: dept,
           color: CHART_COLORS[index % CHART_COLORS.length]
         };
 
@@ -379,6 +380,7 @@ export const getBacklogData = createSelector(
     return {
       columns,
       types: totalsPerType,
+      legendData: legend,
       data: totals
     };
   }
