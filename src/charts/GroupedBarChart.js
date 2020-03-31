@@ -55,6 +55,12 @@ export default class GroupedBarChart extends Chart {
       .selectAll('rect')
       .data(d => self.keys.map(key => ({ key, value: d[key] })))
       .join('rect')
+      .attr('aria-label', d =>
+        self.getLabel({
+          [d.key]: d.value
+        })
+      )
+      .attr('role', 'presentation')
       .attr('fill', d => self.color(d.key));
 
     self.legend = self.chart
