@@ -11,8 +11,10 @@ export default class GroupedBarChart extends Chart {
       legend: true,
       margin: { top: 10, right: 10, bottom: 20, left: 35 }
     });
-    this.keys = args.columns.slice(1);
-    this.groupKey = args.columns[0];
+    this.columns = this.data.columns;
+    this.data = this.data.data;
+    this.keys = this.columns.slice(1);
+    this.groupKey = this.columns[0];
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS.map(c => c.background));
 
@@ -23,15 +25,16 @@ export default class GroupedBarChart extends Chart {
     const self = this;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    self.xAxis = self.chart.append('g');
+    self.xAxis = self.chart.append('g').attr('aria-hidden', true);
 
-    self.yAxis = self.chart.append('g');
+    self.yAxis = self.chart.append('g').attr('aria-hidden', true);
 
     self.dataContainer = self.chart
       .append('g')
       .selectAll('g')
       .data(self.data)
       .join('g')
+      .attr('aria-label', d => d.Date)
       .on('mouseover', d => {
         self.tooltip
           .html(
