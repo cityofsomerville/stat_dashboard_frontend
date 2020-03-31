@@ -4,10 +4,20 @@ import Chart from 'charts/Chart';
 import { CHART_COLORS } from 'charts/Constants';
 import { BASE_URL } from 'data/Constants';
 
+const getRange = (data, figure) => {
+  const series = data.map(d => d[figure]);
+  return `The maximum is ${d3.max(series)}. The minimum is ${d3.min(series)}.`;
+};
+
 export default class BarChart extends Chart {
   constructor(args) {
     super({
       ...args,
+      chartType: 'Bar Chart',
+      description: `${args.description} ${getRange(
+        args.data.data,
+        args.data.figure
+      )}`,
       margin: { top: 0, right: 20, bottom: 40, left: 50 },
       ratio: 1 / 3
     });
@@ -26,9 +36,9 @@ export default class BarChart extends Chart {
       .attr('class', 'main')
       .attr('transform', `translate(${self.margin.left}, ${self.margin.top})`);
 
-    self.xAxis = self.chart.append('g');
+    self.xAxis = self.chart.append('g').attr('aria-hidden', true);
 
-    self.yAxis = self.chart.append('g');
+    self.yAxis = self.chart.append('g').attr('aria-hidden', true);
 
     if (self.data.length) {
       self.initData();
@@ -48,8 +58,10 @@ export default class BarChart extends Chart {
       .data(self.data)
       .join('rect')
       .attr('fill', d => self.color(d.key))
+      .attr('role', 'presentation')
+      .attr('aria-label', d => self.getLabel(self.getData(d)))
       .on('mouseover', d => {
-        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
+        self.tooltip.html(self.getTooltip(self.getData(d))).style('opacity', 1);
       })
       .on('mousemove', d =>
         self.tooltip
@@ -63,10 +75,12 @@ export default class BarChart extends Chart {
     return CHART_COLORS[0].background;
   }
 
-  getTooltip(d) {
-    return `<strong>Page:</strong> ${d[this.label]}<br/>
-      <strong>Views:</strong> ${d[this.figure]}<br/>
-      <strong>URL:</strong> ${BASE_URL}${d.url}`;
+  getData(d) {
+    return {
+      Page: d[this.label],
+      Views: d[this.figure],
+      URL: `${BASE_URL}${d.url}`
+    };
   }
 
   renderChart() {

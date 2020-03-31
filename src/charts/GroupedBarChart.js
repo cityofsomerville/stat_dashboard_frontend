@@ -7,6 +7,7 @@ export default class GroupedBarChart extends Chart {
   constructor(args) {
     super({
       ...args,
+      chartType: 'Grouped Bar Chart',
       legend: true,
       margin: { top: 10, right: 10, bottom: 20, left: 35 }
     });

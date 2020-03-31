@@ -7,6 +7,7 @@ export default class StackedAreaChart extends Chart {
   constructor(args) {
     super({
       ...args,
+      chartType: 'Stacked Area Chart',
       legend: true,
       margin: { top: 0, right: 20, bottom: 20, left: 40 },
       ratio: 1 / 3

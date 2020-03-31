@@ -40,6 +40,8 @@ const CityWebsite = ({ fetchWebsiteData, keyMetrics, chartData }) => {
             data={chartData}
             chartClass={BarChart}
             name="cityWebsite"
+            title="Top Pages by Number of Views"
+            description="Displaying the top 20 city website pages within the past day, sorted in descending order by number of views."
             cachebust={chartData}
           />
         </DataCol>

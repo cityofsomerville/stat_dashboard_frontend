@@ -6,6 +6,7 @@ export default class StackedBarChart extends Chart {
   constructor(args) {
     super({
       ...args,
+      chartType: 'Stacked Bar Chart',
       legend: true,
       margin: { top: 0, right: 20, bottom: 20, left: 30 }
     });
