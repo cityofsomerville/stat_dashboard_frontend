@@ -117,15 +117,17 @@ class ExploreData extends React.Component {
   }
 
   render() {
+    const description = `Currently viewing tickets opened within the past
+      ${this.state.selectedDatePreset} for preset
+      ${this.state.selectedCategoryPreset}, which contains categories
+      ${listify(this.props.selectedCategoryNames)}.`;
+
     return (
       <BlockContent>
         <p>
-          Currently viewing tickets opened within the past{' '}
-          {this.state.selectedDatePreset} for preset{' '}
-          {this.state.selectedCategoryPreset}, which contains categories{' '}
-          {listify(this.props.selectedCategoryNames)}. The stacked area chart
-          shows the volume of tickets of each type, while the map shows the
-          approximate location of each ticket.
+          {description} The stacked area chart shows the volume of tickets of
+          each type, while the map shows the approximate location of each
+          ticket.
         </p>
         <form className="form-row mb-2">
           <fieldset className="col-auto mb-sm-2 mr-sm-4">
@@ -202,6 +204,8 @@ class ExploreData extends React.Component {
               chartClass={StackedBarChart}
               name={`explore-data-${this.props.namespace}`}
               cachebust={this.props.params}
+              title={`${this.props.section} Tickets Opened This Week`}
+              description={description}
             />
           </DataCol>
           <DataCol>

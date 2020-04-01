@@ -36,10 +36,6 @@ export default class BarChart extends Chart {
       .attr('class', 'main')
       .attr('transform', `translate(${self.margin.left}, ${self.margin.top})`);
 
-    self.xAxis = self.chart.append('g').attr('aria-hidden', true);
-
-    self.yAxis = self.chart.append('g').attr('aria-hidden', true);
-
     if (self.data.length) {
       self.initData();
       self.resize();

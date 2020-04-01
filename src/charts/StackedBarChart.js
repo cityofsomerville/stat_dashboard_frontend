@@ -25,10 +25,6 @@ export default class StackedBarChart extends Chart {
       .attr('class', 'main')
       .attr('transform', `translate(${self.margin.left}, ${self.margin.top})`);
 
-    self.xAxis = self.chart.append('g');
-
-    self.yAxis = self.chart.append('g');
-
     if (self.data.length) {
       self.initData();
       self.resize();
@@ -62,6 +58,7 @@ export default class StackedBarChart extends Chart {
       .selectAll('g')
       .data(self.sortedStackedSeries)
       .join('g')
+      .attr('aria-label', d => self.formatDate(d.date))
       .on('mouseover', d => {
         self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
       })
@@ -76,6 +73,12 @@ export default class StackedBarChart extends Chart {
       .selectAll('rect')
       .data(d => d.data)
       .join('rect')
+      .attr('role', 'presentation')
+      .attr('aria-label', d =>
+        self.getLabel({
+          [d.key]: d.data.data[d.key]
+        })
+      )
       .attr('fill', d => self.color(d.key))
       .attr('x', 0);
   }

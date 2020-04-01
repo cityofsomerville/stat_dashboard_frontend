@@ -25,10 +25,6 @@ export default class GroupedBarChart extends Chart {
     const self = this;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    self.xAxis = self.chart.append('g').attr('aria-hidden', true);
-
-    self.yAxis = self.chart.append('g').attr('aria-hidden', true);
-
     self.dataContainer = self.chart
       .append('g')
       .selectAll('g')

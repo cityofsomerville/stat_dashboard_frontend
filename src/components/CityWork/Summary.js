@@ -18,6 +18,8 @@ const Summary = ({ chartData }) => (
           columns={chartData.columns}
           name="workOrderChart"
           cachebust={chartData}
+          title="Weekly Work Order Activity"
+          description="Displaying the number of work orders opened and closed each day within the past 7 days."
         />
       </DataCol>
       <WeeklyTrendsAll />

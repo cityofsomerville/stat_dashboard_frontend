@@ -61,6 +61,10 @@ export default class Chart {
       .attr('class', 'main')
       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
+    this.xAxis = this.chart.append('g').attr('aria-hidden', true);
+
+    this.yAxis = this.chart.append('g').attr('aria-hidden', true);
+
     this.tooltip = d3
       .select('body')
       .append('div')
