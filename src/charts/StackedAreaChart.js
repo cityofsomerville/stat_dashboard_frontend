@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 
 import Chart from 'charts/Chart';
-import { CHART_COLORS } from 'charts/Constants';
 
 export default class StackedAreaChart extends Chart {
   constructor(args) {
@@ -23,16 +22,8 @@ export default class StackedAreaChart extends Chart {
   init() {
     const self = this;
 
-    self.main = self.chart
-      .append('g')
-      .attr('class', 'main')
-      .attr('transform', `translate(${self.margin.left}, ${self.margin.top})`);
-
-    self.xAxis = self.chart.append('g');
-
-    self.yAxis = self.chart.append('g');
-
     self.dataContainer = self.chart.append('g');
+    self.main.attr('aria-hidden', true);
 
     if (self.data.length) {
       self.resize();
@@ -51,19 +42,17 @@ export default class StackedAreaChart extends Chart {
     return d3.timeFormat('%b %d, %Y')(d3.isoParse(date));
   }
 
-  getTooltip(d) {
+  getData(d) {
     return Object.keys(d)
       .filter(key => key !== 'date' && key !== 'dateStamp')
       .sort((a, b) => d[b] - d[a])
       .reduce(
-        (memo, key) => {
-          let rows = memo;
-          rows = [...memo, `<b>${key}:</b> ${d[key]}`];
-          return rows;
-        },
-        [`<b>Date</b>: ${this.formatDate(d.date)}`]
-      )
-      .join('<br/>');
+        (memo, key) => ({
+          ...memo,
+          [key]: d[key]
+        }),
+        { Date: this.formatDate(d.date) }
+      );
   }
 
   renderChart() {
@@ -128,6 +117,8 @@ export default class StackedAreaChart extends Chart {
       .selectAll('rect')
       .data(self.data)
       .join('rect')
+      .attr('role', 'presentation')
+      .attr('aria-label', d => self.getLabel(self.getData(d)))
       .attr('id', d => `bar-${d.date}`)
       .attr('height', self.height - self.margin.bottom)
       .attr('width', (self.width - self.margin.left) / self.data.length)
@@ -135,7 +126,7 @@ export default class StackedAreaChart extends Chart {
       .attr('x', d => xScale(d.date))
       .attr('opacity', 0)
       .on('mouseover', d => {
-        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
+        self.tooltip.html(self.getTooltip(self.getData(d))).style('opacity', 1);
       })
       .on('mousemove', d =>
         self.tooltip
