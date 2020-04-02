@@ -122,7 +122,6 @@ export default class StackedAreaChart extends Chart {
       .y0(d => yScale(d[0]))
       .y1(d => yScale(d[1]));
 
-    // self.dataContainer = self.chart.append('g');
     self.dataContainer
       .attr('transform', d => `translate(${self.margin.left + 1},0)`)
       .selectAll('rect')
