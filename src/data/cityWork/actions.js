@@ -5,26 +5,24 @@ import {
   getCityWorkExploreData,
   getDailyAveragePerAction,
   getWeeklyAveragePerType,
-  getCallsAverage
+  getCallsAverage,
+  getBacklogCreated,
+  getBacklogClosed
 } from 'data/cityWork/requests';
 import { getWeeklyTrends } from 'data/cityWork/utils';
 
 export const types = [
   'ACTIONS_BY_DAY_SUCCESS',
-  'ACTIONS_BY_DAY_ERROR',
   'TYPES_BY_ID_SUCCESS',
-  'TYPES_BY_ID_ERROR',
   'TICKETS_SUCCESS',
-  'TICKETS_ERROR',
   'TYPES_TICKETS_LOADED',
   'EXPLORE_DATA_SUCCESS',
-  'EXPLORE_DATA_ERROR',
   'ACTION_AVERAGE_SUCCESS',
-  'ACTION_AVERAGE_ERROR',
   'TYPE_AVERAGE_SUCCESS',
-  'TYPE_AVERAGE_ERROR',
   'CALLS_AVERAGE_SUCCESS',
-  'CALLS_AVERAGE_ERROR'
+  'BACKLOG_CREATED_SUCCESS',
+  'BACKLOG_CLOSED_SUCCESS',
+  'REQUEST_ERROR'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
 export const fetchActionsByDay = ({ startDate, endDate }) => {
@@ -37,7 +35,7 @@ export const fetchActionsByDay = ({ startDate, endDate }) => {
       });
     } catch (err) {
       dispatch({
-        type: types.ACTIONS_BY_DAY_ERROR,
+        type: types.REQUEST_ERROR,
         payload: err
       });
     }
@@ -85,7 +83,7 @@ export const fetchTypesTickets = ({ startDate, endDate }) => {
     } catch (err) {
       console.log(err);
       dispatch({
-        type: types.TYPES_BY_ID_ERROR,
+        type: types.REQUEST_ERROR,
         payload: err
       });
     }
@@ -104,7 +102,7 @@ export const fetchCityWorkExploreData = key => {
     } catch (err) {
       console.log(err);
       dispatch({
-        type: types.EXPLORE_DATA_ERROR,
+        type: types.REQUEST_ERROR,
         payload: err
       });
     }
@@ -122,7 +120,7 @@ const fetchDailyAveragePerAction = () => {
     } catch (err) {
       console.log(err);
       dispatch({
-        type: types.ACTION_AVERAGE_ERROR,
+        type: types.REQUEST_ERROR,
         payload: err
       });
     }
@@ -140,7 +138,7 @@ const fetchCallsAverage = () => {
     } catch (err) {
       console.log(err);
       dispatch({
-        type: types.CALLS_AVERAGE_ERROR,
+        type: types.REQUEST_ERROR,
         payload: err
       });
     }
@@ -150,7 +148,49 @@ const fetchCallsAverage = () => {
 export const fetchAverages = () => {
   return dispatch => {
     dispatch(fetchDailyAveragePerAction());
-    // dispatch(fetchWeeklyAveragePerType());
     dispatch(fetchCallsAverage());
+  };
+};
+
+const fetchBacklogCreated = () => {
+  return async dispatch => {
+    try {
+      const response = await getBacklogCreated();
+      dispatch({
+        type: types.BACKLOG_CREATED_SUCCESS,
+        payload: response.data
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.REQUEST_ERROR,
+        payload: err
+      });
+    }
+  };
+};
+
+const fetchBacklogClosed = () => {
+  return async dispatch => {
+    try {
+      const response = await getBacklogClosed();
+      dispatch({
+        type: types.BACKLOG_CLOSED_SUCCESS,
+        payload: response.data
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: types.REQUEST_ERROR,
+        payload: err
+      });
+    }
+  };
+};
+
+export const fetchBacklogData = () => {
+  return dispatch => {
+    dispatch(fetchBacklogCreated());
+    dispatch(fetchBacklogClosed());
   };
 };

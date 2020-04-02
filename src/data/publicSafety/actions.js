@@ -26,6 +26,7 @@ export const types = [
   'EXPLORE_PUBLIC_SAFETY_DATA_SUCCESS'
 ].reduce((memo, key) => ({ ...memo, [key]: key }), {});
 
+// todo: replace all async request wrapper actions with this
 const makeRequest = ({ requestFn, args, success, extraParams }) => {
   return async dispatch => {
     try {

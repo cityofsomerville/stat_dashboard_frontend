@@ -9,7 +9,7 @@ import { CHART_COLORS } from 'charts/Constants';
 
 export const formatTimestamp = date => format(date, SOCRATA_TIMESTAMP);
 
-export const indexBy = (arr, index) =>
+export const indexBy = (arr = [], index) =>
   arr.reduce(
     (memo, item) => ({
       ...memo,
@@ -18,7 +18,7 @@ export const indexBy = (arr, index) =>
     {}
   );
 
-export const groupBy = (arr, index) =>
+export const groupBy = (arr = [], index) =>
   arr.reduce((memo, item) => {
     if (!memo[item[index]]) {
       memo[item[index]] = [];

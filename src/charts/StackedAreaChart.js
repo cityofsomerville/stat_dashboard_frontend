@@ -8,12 +8,14 @@ export default class StackedAreaChart extends Chart {
     super({
       ...args,
       legend: true,
-      margin: { top: 0, right: 20, bottom: 20, left: 30 }
+      margin: { top: 0, right: 20, bottom: 20, left: 40 },
+      ratio: 1 / 3
     });
-    this.columns = args.columns;
+    this.columns = args.data.columns;
+    this.data = args.data.data;
+    this.types = args.data.types;
     this.groupKey = 'date';
 
-    this.color = d3.scaleOrdinal().range(CHART_COLORS);
     this.init();
   }
 
@@ -29,9 +31,38 @@ export default class StackedAreaChart extends Chart {
 
     self.yAxis = self.chart.append('g');
 
+    self.dataContainer = self.chart.append('g');
+
     if (self.data.length) {
       self.resize();
     }
+  }
+
+  color(key) {
+    let color = 'black';
+    if (this.types[key]) {
+      color = this.types[key].color.background;
+    }
+    return color;
+  }
+
+  formatDate(date) {
+    return d3.timeFormat('%b %d, %Y')(d3.isoParse(date));
+  }
+
+  getTooltip(d) {
+    return Object.keys(d)
+      .filter(key => key !== 'date' && key !== 'dateStamp')
+      .sort((a, b) => d[b] - d[a])
+      .reduce(
+        (memo, key) => {
+          let rows = memo;
+          rows = [...memo, `<b>${key}:</b> ${d[key]}`];
+          return rows;
+        },
+        [`<b>Date</b>: ${this.formatDate(d.date)}`]
+      )
+      .join('<br/>');
   }
 
   renderChart() {
@@ -57,7 +88,7 @@ export default class StackedAreaChart extends Chart {
         new Date(self.columns[0]),
         new Date(self.columns[self.columns.length - 1])
       ])
-      .range([0, self.width]);
+      .range([0, self.width - self.margin.left]);
 
     // set up the y scale
     const yScale = d3
@@ -68,19 +99,12 @@ export default class StackedAreaChart extends Chart {
       ])
       .range([self.height - self.margin.bottom - self.margin.top, 0]);
 
-    // color scale
-    const cScale = d3.scaleOrdinal().range(CHART_COLORS);
-
     // bottom axis generator
-    const xAxis = d3
-      .axisBottom(xScale)
-      .ticks(7)
-      .tickFormat(d3.timeFormat('%Y-%m-%d'));
+    const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat('%b %Y'));
 
     // left axis generator
     const yAxis = d3.axisLeft().scale(yScale);
 
-    // winging it from here down:
     self.xAxis
       .attr(
         'transform',
@@ -98,13 +122,36 @@ export default class StackedAreaChart extends Chart {
       .y0(d => yScale(d[0]))
       .y1(d => yScale(d[1]));
 
+    self.dataContainer
+      .attr('transform', d => `translate(${self.margin.left + 1},0)`)
+      .selectAll('rect')
+      .data(self.data)
+      .join('rect')
+      .attr('id', d => `bar-${d.date}`)
+      .attr('height', self.height - self.margin.bottom)
+      .attr('width', (self.width - self.margin.left) / self.data.length)
+      .attr('fill', '#555')
+      .attr('x', d => xScale(d.date))
+      .attr('opacity', 0)
+      .on('mouseover', d => {
+        self.tooltip.html(self.getTooltip(d)).style('opacity', 1);
+      })
+      .on('mousemove', d =>
+        self.tooltip
+          .style('top', d3.event.pageY - 10 + 'px')
+          .style('left', d3.event.pageX + 10 + 'px')
+      )
+      .on('mouseout', d => {
+        self.tooltip.style('opacity', 0);
+      });
+
     self.main
       .selectAll('.area')
       .data(series)
       .enter()
       .append('path')
       .attr('class', 'area')
-      .attr('fill', d => cScale(d.key))
+      .attr('fill', d => self.color(d.key))
       .attr('d', d => area(d));
   }
 }

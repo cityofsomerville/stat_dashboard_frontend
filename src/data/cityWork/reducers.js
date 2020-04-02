@@ -5,7 +5,7 @@ import startOfToday from 'date-fns/startOfToday';
 
 import { types } from 'data/cityWork/actions';
 import { SOCRATA_TIMESTAMP } from 'data/Constants';
-import { indexBy } from 'data/utils';
+import { indexBy, groupBy } from 'data/utils';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -28,10 +28,11 @@ const initialState = {
   actionAverages: {},
   typeAverages: {},
   callsAverage: null,
-
   weeklyTrends: [],
   exploreDataCache: [],
-  exploreDataKey: null
+  exploreDataKey: null,
+  backlogCreated: {},
+  backlogClosed: {}
 };
 
 const actionsByDay = (state = initialState.actionsByDay, action) => {
@@ -140,6 +141,24 @@ const callsAverage = (state = initialState.callsAverage, action) => {
   }
 };
 
+const backlogCreated = (state = initialState.backlogCreated, action) => {
+  switch (action.type) {
+    case types.BACKLOG_CREATED_SUCCESS:
+      return Object.assign({}, state, groupBy(action.payload, 'dept'));
+    default:
+      return state;
+  }
+};
+
+const backlogClosed = (state = initialState.backlogClosed, action) => {
+  switch (action.type) {
+    case types.BACKLOG_CLOSED_SUCCESS:
+      return Object.assign({}, state, groupBy(action.payload, 'dept'));
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   actionsByDay,
   tickets,
@@ -149,5 +168,7 @@ export default combineReducers({
   exploreDataCache,
   actionAverages,
   typeAverages,
-  callsAverage
+  callsAverage,
+  backlogCreated,
+  backlogClosed
 });

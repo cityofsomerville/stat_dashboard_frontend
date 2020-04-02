@@ -5,12 +5,14 @@ import startOfYesterday from 'date-fns/startOfYesterday';
 import endOfYesterday from 'date-fns/endOfYesterday';
 import startOfToday from 'date-fns/startOfToday';
 import subDays from 'date-fns/subDays';
+import isBefore from 'date-fns/isBefore';
 import isAfter from 'date-fns/isAfter';
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
 import {
   groupBy,
+  indexBy,
   formatTimestamp,
   getStackedAreaChartData,
   legendData,
@@ -18,6 +20,7 @@ import {
 } from 'data/utils';
 import { isServiceRequest } from 'data/BaseCategories';
 import { CHART_COLORS } from 'charts/Constants';
+import { DATE_PRESETS } from 'data/Constants';
 
 const WORK_ORDERS_CREATED_CATEGORY = 9;
 const WORK_ORDERS_CLOSED_CATEGORY = 6;
@@ -30,6 +33,8 @@ const exploreDataKeySelector = state => state.cityWork.exploreDataKey;
 const weeklyTrendsSelector = state => state.cityWork.weeklyTrends;
 const actionAveragesSelector = state => state.cityWork.actionAverages;
 const callsAverageSelector = state => state.cityWork.callsAverage;
+const backlogCreatedSelector = state => state.cityWork.backlogCreated;
+const backlogClosedSelector = state => state.cityWork.backlogClosed;
 
 export const getWorkOrderCounts = createSelector(
   [actionsByDaySelector, actionAveragesSelector],
@@ -308,5 +313,75 @@ export const getCategoryHierarchy = createSelector(
       }, {});
     }
     return hierarchy;
+  }
+);
+
+export const getBacklogData = createSelector(
+  [backlogCreatedSelector, backlogClosedSelector],
+  (createdTickets, closedTickets) => {
+    const startDate = parseISO(DATE_PRESETS['1 year'].startDate);
+    const columns = getDateRange({
+      startDate,
+      endDate: parseISO(DATE_PRESETS['1 year'].endDate)
+    });
+    let totals = columns.map(day => ({
+      date: parseISO(day),
+      dateStamp: day
+    }));
+    let totalsPerType = {};
+
+    if (
+      Object.keys(createdTickets).length &&
+      Object.keys(closedTickets).length
+    ) {
+      Object.keys(createdTickets).forEach((dept, index) => {
+        const created = indexBy(createdTickets[dept], 'day');
+        const closed = indexBy(closedTickets[dept], 'day');
+        let count = 0;
+
+        const olderTicketIndices = Object.keys(created).filter(key =>
+          isBefore(parseISO(key), startDate)
+        );
+        count = olderTicketIndices.reduce(
+          (memo, index) => memo + Number(created[index].count),
+          0
+        );
+
+        totalsPerType[dept] = {
+          count,
+          name: dept,
+          color: CHART_COLORS[index % CHART_COLORS.length]
+        };
+
+        totals = totals.map(day => {
+          const createdCount =
+            created[day.dateStamp] && created[day.dateStamp].count
+              ? Number(created[day.dateStamp].count)
+              : 0;
+          const closedCount =
+            closed[day.dateStamp] && closed[day.dateStamp]
+              ? Number(closed[day.dateStamp].count)
+              : 0;
+
+          count = count + createdCount - closedCount;
+          if (count < 0) count = 0;
+          totalsPerType[dept].count += count;
+
+          return {
+            ...day,
+            [dept]: count
+          };
+        });
+      });
+    }
+
+    const legend = legendData(totalsPerType);
+
+    return {
+      columns,
+      types: totalsPerType,
+      legendData: legend,
+      data: totals
+    };
   }
 );
