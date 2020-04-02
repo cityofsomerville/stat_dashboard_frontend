@@ -7,11 +7,14 @@ export default class GroupedBarChart extends Chart {
   constructor(args) {
     super({
       ...args,
+      chartType: 'Grouped Bar Chart',
       legend: true,
       margin: { top: 10, right: 10, bottom: 20, left: 35 }
     });
-    this.keys = args.columns.slice(1);
-    this.groupKey = args.columns[0];
+    this.columns = this.data.columns;
+    this.data = this.data.data;
+    this.keys = this.columns.slice(1);
+    this.groupKey = this.columns[0];
 
     this.color = d3.scaleOrdinal().range(CHART_COLORS.map(c => c.background));
 
@@ -22,15 +25,12 @@ export default class GroupedBarChart extends Chart {
     const self = this;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    self.xAxis = self.chart.append('g');
-
-    self.yAxis = self.chart.append('g');
-
     self.dataContainer = self.chart
       .append('g')
       .selectAll('g')
       .data(self.data)
       .join('g')
+      .attr('aria-label', d => d.Date)
       .on('mouseover', d => {
         self.tooltip
           .html(
@@ -51,6 +51,12 @@ export default class GroupedBarChart extends Chart {
       .selectAll('rect')
       .data(d => self.keys.map(key => ({ key, value: d[key] })))
       .join('rect')
+      .attr('aria-label', d =>
+        self.getLabel({
+          [d.key]: d.value
+        })
+      )
+      .attr('role', 'presentation')
       .attr('fill', d => self.color(d.key));
 
     self.legend = self.chart

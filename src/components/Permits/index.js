@@ -54,6 +54,7 @@ const Permits = ({
       </SectionDescription>
     </SectionHeading>
     <ExploreData
+      section="Permits and Licenses"
       namespace="permits_licenses"
       selectedDatePreset="7 days"
       selectedCategoryPreset="All Permit Types"

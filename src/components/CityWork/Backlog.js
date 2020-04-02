@@ -26,6 +26,8 @@ const InternalWork = ({ fetchBacklogData, backlogData }) => {
             data={backlogData}
             name="backlog"
             cachebust={backlogData}
+            title="Open Work Backlog Chart"
+            description="Displaying the number of open work orders each day for the past 365 days, grouped by department in descending order by work order count."
           />
           <Legend legendData={backlogData.legendData} />
         </DataCol>

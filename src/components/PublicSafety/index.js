@@ -43,6 +43,7 @@ const PublicSafety = ({
       </SectionDescription>
     </SectionHeading>
     <ExploreData
+      section="Public Safety"
       namespace="public_safety"
       selectedDatePreset="7 days"
       selectedCategoryPreset="Quality of Life"

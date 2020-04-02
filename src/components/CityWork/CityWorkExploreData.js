@@ -16,6 +16,7 @@ export default connect(
     const hierarchy = getCategoryHierarchy(state);
     return {
       namespace: 'citywork',
+      section: 'City Work',
       selectedCategoryPreset: 'Weekly Trends',
       selectedDatePreset: '7 days',
 

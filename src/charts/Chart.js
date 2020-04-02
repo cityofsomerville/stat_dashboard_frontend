@@ -11,7 +11,15 @@ const debounce = (func, delay) => {
 };
 
 export default class Chart {
-  constructor({ targetId, ratio, margin, data }) {
+  constructor({
+    targetId,
+    ratio,
+    margin,
+    data,
+    title,
+    description,
+    chartType = 'Chart'
+  }) {
     this.targetId = targetId;
     this.targetElement = document.getElementById(targetId);
 
@@ -19,6 +27,9 @@ export default class Chart {
     this.containerWidth = 800;
     this.width = 800;
     this.height = 500;
+    this.chartType = chartType;
+    this.title = title;
+    this.description = description;
     this.ratio = ratio || 2 / 3;
     this.margin = margin || { top: 0, right: 20, bottom: 20, left: 20 };
 
@@ -28,12 +39,31 @@ export default class Chart {
     this.chart = d3
       .select(`#${targetId}`)
       .append('svg:svg')
+      .attr('role', 'group')
+      .attr('tabindex', 0)
+      .attr('aria-roledescription', 'chart')
+      .attr('aria-label', this.chartType)
+      .attr('aria-describedby', `${targetId}-title ${targetId}-desc`)
       .attr('class', 'chart');
+
+    this.chart
+      .append('title')
+      .attr('id', `${targetId}-title`)
+      .text(this.title);
+
+    this.chart
+      .append('desc')
+      .attr('id', `${targetId}-desc`)
+      .text(this.description);
 
     this.main = this.chart
       .append('g')
       .attr('class', 'main')
       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+
+    this.xAxis = this.chart.append('g').attr('aria-hidden', true);
+
+    this.yAxis = this.chart.append('g').attr('aria-hidden', true);
 
     this.tooltip = d3
       .select('body')
@@ -41,6 +71,18 @@ export default class Chart {
       .attr('class', 'tooltip rounded border p-1 bg-light')
       .style('max-width', '18rem')
       .attr('id', `tooltip-${targetId}`);
+  }
+
+  getLabel(data) {
+    return Object.keys(data)
+      .map(key => `${key}: ${data[key]}`)
+      .join('. '); // so screen reader will pause
+  }
+
+  getTooltip(data) {
+    return Object.keys(data)
+      .map(key => `<span><strong>${key}:</strong> ${data[key]}</span>`)
+      .join('<br/>');
   }
 
   resize() {

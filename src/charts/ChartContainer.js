@@ -9,11 +9,17 @@ export default class ChartContainer extends React.Component {
 
   componentDidMount() {
     if (this.props.data && this.props.data.length) {
-      this.chart = new this.props.chartClass({
-        data: this.props.data,
-        targetId: `chart-container-${this.props.name}`
-      });
+      this.initChart();
     }
+  }
+
+  initChart() {
+    this.chart = new this.props.chartClass({
+      data: this.props.data,
+      title: this.props.title,
+      description: this.props.description,
+      targetId: `chart-container-${this.props.name}`
+    });
   }
 
   componentWillUnmount() {
@@ -22,10 +28,7 @@ export default class ChartContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.cachebust !== prevProps.cachebust) {
-      this.chart = new this.props.chartClass({
-        data: this.props.data,
-        targetId: `chart-container-${this.props.name}`
-      });
+      this.initChart();
     }
   }
 
