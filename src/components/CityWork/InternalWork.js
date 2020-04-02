@@ -27,6 +27,8 @@ const InternalWork = ({ internalWeeklyTrends, internalTreemapData }) => (
           data={internalTreemapData}
           name="internal_treemap"
           cachebust={`${internalTreemapData.length}`}
+          title="Internal Tickets, by Department"
+          description="Displaying all internally filed tickets opened within the past 7 days, organized by department in reverse order by ticket count."
         />
       </DataCol>
       <WeeklyTrends metrics={internalWeeklyTrends}>

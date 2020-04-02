@@ -205,7 +205,7 @@ class ExploreData extends React.Component {
               name={`explore-data-${this.props.namespace}`}
               cachebust={this.props.params}
               title={`${this.props.section} Tickets Opened This Week`}
-              description={description}
+              description={`Displaying ticket counts per ${this.props.section} category per day for the past ${this.state.selectedDatePreset}`}
             />
           </DataCol>
           <DataCol>
