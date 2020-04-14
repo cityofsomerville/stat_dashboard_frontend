@@ -39,7 +39,20 @@ const PublicSafety = ({
     <SectionHeading>
       <PublicSafetyKeyMetrics />
       <SectionDescription>
-        <p>Public Safety incident data is explored below. Data is broken down by type between quality of life, criminal incidents, motor vehicle citations, and traffic enforcement. Use the dropdown menu below to populate a stacked bar chart and map of incidents. Click <A HREF="data.somervillema.gov">here</A>to explore this data.</p>
+        <p>
+          Public Safety incident data is explored below. Data is broken down by
+          type between quality of life, criminal incidents, motor vehicle
+          citations, and traffic enforcement. Use the dropdown menu below to
+          populate a stacked bar chart and map of incidents. Explore the{' '}
+          <a
+            href="https://data.somervillema.gov/browse?category=Public+Safety&tags=dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            raw public safety data
+          </a>{' '}
+          here.
+        </p>
       </SectionDescription>
     </SectionHeading>
     <ExploreData

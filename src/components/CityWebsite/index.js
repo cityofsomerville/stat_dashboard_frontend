@@ -30,7 +30,11 @@ const CityWebsite = ({ fetchWebsiteData, keyMetrics, chartData }) => {
           <p>
             Residents, visitors, and workers use the city website to find
             information about living, visiting, and doing business in
-            Somerville.
+            Somerville. Explore{' '}
+            <a href="https://data.somervillema.gov/City-Services/Somerville_Analytics/754v-8e35">
+              the full analytics dataset here
+            </a>
+            .
           </p>
         </SectionDescription>
       </SectionHeading>
