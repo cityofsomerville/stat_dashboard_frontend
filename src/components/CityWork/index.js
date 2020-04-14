@@ -42,10 +42,19 @@ const CityWork = ({ fetchActionsByDay, fetchTypesTickets, fetchAverages }) => {
         <CityWorkKeyMetrics />
         <SectionDescription>
           <p>
-            This section provides detailed information about the tasks,
-            requests, and improvements handled each day by various city
+            Welcome to the SomerStat Daily Dashboard. City staff use this
+            dashboard to identify and evaluate trends and emergent issues in
+            Somerville. This section provides detailed information about the
+            tasks, requests, and improvements handled each day by various city
             departments. Much of this work begins as constituent 311 reports
-            submitted online, through the app, or over the phone.
+            submitted online, through the app, or over the phone. Click the tabs
+            below to dig in to specific call types, review work initiated by
+            City staff, or check in on the number of work orders that the City
+            is currently tracking. You can also access{' '}
+            <a href="https://data.somervillema.gov/browse?category=City+Services&tags=dashboard">
+              the full 311 dataset here
+            </a>
+            .
           </p>
         </SectionDescription>
       </SectionHeading>

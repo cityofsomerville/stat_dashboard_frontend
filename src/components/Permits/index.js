@@ -48,8 +48,18 @@ const Permits = ({
       <PermitsKeyMetrics />
       <SectionDescription>
         <p>
-          This section explores data on building permits of various types that
-          have been recently issued.
+          This section explores data on building permits and licenses that have
+          been recently issued. You can click on the dot to see what type of
+          permit was issued as well as the fee and the submitted description of
+          the work being done. Access{' '}
+          <a
+            href="https://data.somervillema.gov/dataset/Somerville_Permits/vxgw-vmky"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            the full permits dataset here
+          </a>
+          .
         </p>
       </SectionDescription>
     </SectionHeading>
