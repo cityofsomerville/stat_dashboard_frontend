@@ -8,7 +8,7 @@ export default class ChartContainer extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.data && this.props.data.length) {
+    if (this.props.data) {
       this.initChart();
     }
   }
@@ -23,7 +23,9 @@ export default class ChartContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    this.chart.cleanChart();
+    if (this.chart) {
+      this.chart.cleanChart();
+    }
   }
 
   componentDidUpdate(prevProps) {
