@@ -76,7 +76,6 @@ function SEO({ description, lang, meta, title }) {
         crossorigin=""
       />
       <link rel="stylesheet" href="https://use.typekit.net/kfw4cim.css" />
-      <html />
     </Helmet>
   );
 }
