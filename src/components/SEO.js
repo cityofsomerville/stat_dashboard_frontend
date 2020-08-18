@@ -75,6 +75,7 @@ function SEO({ description, lang, meta, title }) {
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""
       />
+      <link rel="stylesheet" href="https://use.typekit.net/kfw4cim.css" />
       <html />
     </Helmet>
   );

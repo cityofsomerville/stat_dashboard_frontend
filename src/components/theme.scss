@@ -1,3 +1,4 @@
+// Official Somerville Website Colors
 $light-green: #4EAF48;
 $dark-green: #397F34;
 $charcoal: #2B2B2B;
@@ -7,5 +8,11 @@ $light-gray: #D5D5D5;
 $orange: #EE6C43;
 $red: #DF3114;
 $blue: #0D7CB7;
+
+$green: $dark-green;
+$dark: $charcoal;
+
+// Official Somerville Website Font
+$font-family-sans-serif: 'proxima-nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 
 @import "node_modules/bootstrap/scss/bootstrap";
