@@ -32,9 +32,10 @@ export default class Chart {
     this.description = description;
     this.ratio = ratio || 2 / 3;
     this.margin = margin || { top: 0, right: 20, bottom: 20, left: 20 };
+    this.onResize = this.onResize.bind(this);
 
     this.cleanChart();
-    window.addEventListener('resize', this.onResize.bind(this));
+    window.addEventListener('resize', this.onResize);
 
     this.chart = d3
       .select(`#${targetId}`)
@@ -104,7 +105,7 @@ export default class Chart {
   }
 
   cleanChart() {
-    window.removeEventListener('resize', this.onResize.bind(this));
+    window.removeEventListener('resize', this.onResize);
     this.targetElement.innerHTML = '';
 
     const tooltip = document.getElementById(`tooltip-${this.targetId}`);

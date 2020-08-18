@@ -27,9 +27,7 @@ module.exports = {
         icon: `src/images/grand-union.jpg` // This path is relative to the root of the site.
       }
     },
-    'gatsby-plugin-resolve-src'
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // `gatsby-plugin-offline`,
+    'gatsby-plugin-resolve-src',
+    'gatsby-plugin-sass'
   ]
 };

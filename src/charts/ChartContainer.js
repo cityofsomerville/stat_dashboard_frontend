@@ -14,6 +14,9 @@ export default class ChartContainer extends React.Component {
   }
 
   initChart() {
+    if (this.chart) {
+      this.chart.cleanChart();
+    }
     this.chart = new this.props.chartClass({
       data: this.props.data,
       title: this.props.title,
