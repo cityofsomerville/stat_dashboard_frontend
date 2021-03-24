@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import store from 'data/store';
+import theme from 'components/theme.scss';
 
 const Layout = ({ children }) => {
   // TODO: query for language (if possible) and set here on-the-fly
