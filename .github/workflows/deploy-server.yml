@@ -34,3 +34,4 @@ jobs:
         # port: ${{ secrets.PORT }}
         source: "public/*"
         target: ${{ secrets.SERVER_PATH }}
+        strip_components: 1
