@@ -17,8 +17,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: copy file via ssh password
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
     - run: npm run build
+
+    - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
         node-version: ${{ matrix.node-version }}
